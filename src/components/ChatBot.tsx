@@ -130,7 +130,7 @@ const ChatBot = ({ isOpen, onToggle }: ChatBotProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-4 w-80 h-96 bg-card border border-border rounded-lg shadow-lg flex flex-col z-50">
+    <div className="fixed bottom-24 right-4 w-80 h-96  border border-border rounded-lg shadow-lg flex flex-col z-50">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border bg-primary text-primary-foreground rounded-t-lg">
         <div className="flex items-center gap-2">

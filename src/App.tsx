@@ -9,6 +9,8 @@ import PropertyDetails from "./pages/PropertyDetails";
 import About from "./pages/About";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import AdminLegal from "./pages/AdminLegal";
+import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import { AdminProtectedRoute } from "./components/AdminProtectedRoute";
 
@@ -25,10 +27,16 @@ const App = () => (
           <Route path="/properties" element={<Properties />} />
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/about" element={<About />} />
+          <Route path="/legal" element={<Legal />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={
             <AdminProtectedRoute>
               <Admin />
+            </AdminProtectedRoute>
+          } />
+          <Route path="/admin/legal" element={
+            <AdminProtectedRoute>
+              <AdminLegal />
             </AdminProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

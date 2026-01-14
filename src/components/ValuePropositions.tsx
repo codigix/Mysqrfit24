@@ -28,7 +28,7 @@ const ValuePropositions = () => {
     <section className="py-20 bg-housiey-dark">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-housiey-dark-foreground mb-3">
+          <h2 className="text-md md:text-4xl font-bold text-housiey-dark-foreground mb-3">
             MySqfit Unique Features
           </h2>
           <p className="text-housiey-dark-foreground/70 max-w-2xl mx-auto">
@@ -42,7 +42,7 @@ const ValuePropositions = () => {
             return (
               <div 
                 key={index} 
-                className="bg-card p-6 rounded-2xl text-center shadow-card hover:shadow-elegant transition-shadow duration-300"
+                className=" p-6 rounded-2xl text-center shadow-card hover:shadow-elegant transition-shadow duration-300"
               >
                 <div className="w-14 h-14 bg-housiey-green rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon className="h-7 w-7 text-housiey-green-foreground" />

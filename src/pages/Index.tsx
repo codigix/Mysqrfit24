@@ -1,20 +1,22 @@
 import { useState } from 'react';
-import { useProperties } from '@/hooks/useProperties';
-import { PropertyFilters } from '@/components/PropertyFilters';
-import { PropertyTabs } from '@/components/PropertyTabs';
+import { BestListingsSection } from '@/components/BestListingsSection';
 import { Navigation } from '@/components/Navigation';
-import { PropertyFilters as IPropertyFilters } from '@/types/property';
+import { StatsSection } from '@/components/StatsSection';
+import { Testimonials } from '@/components/Testimonials';
+import { FeaturedNeighborhoods } from '@/components/FeaturedNeighborhoods';
+import { BlogSection } from '@/components/BlogSection';
+import { NewsletterSection } from '@/components/NewsletterSection';
+import { CategoriesSection } from '@/components/CategoriesSection';
 import ChatBot from '@/components/ChatBot';
 import ChatBotIcon from '@/components/ChatBotIcon';
 import HeroSection from '@/components/HeroSection';
-import ValuePropositions from '@/components/ValuePropositions';
 import { Link } from 'react-router-dom';
 import logoImage from '@/assets/mysqfit.png';
+import { Button } from '@/components/ui/button';
+
 
 const Index = () => {
-  const [filters, setFilters] = useState<IPropertyFilters>({});
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
-  const { data: properties, isLoading, error } = useProperties(filters);
 
   return (
     <div className="min-h-screen bg-background">
@@ -23,47 +25,92 @@ const Index = () => {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Value Propositions */}
-      <ValuePropositions />
+      {/* Statistics Section */}
+      
+      {/* Best Listings Section */}
+      <BestListingsSection />
+      <FeaturedNeighborhoods />
+      <Testimonials />
+<StatsSection />
 
-      {/* Filters Section */}
-      <section className="py-16 px-4 bg-muted/10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-              Find Your Perfect Property
-            </h2>
-            <p className="text-muted-foreground">
-              Use our filters to narrow down your search
-            </p>
+      {/* Testimonials Section */}
+      
+
+      {/* Featured Neighborhoods Section */}
+      
+
+      {/* Blog Section */}
+      <BlogSection />
+
+      {/* Categories Section */}
+      <CategoriesSection />
+
+      {/* Newsletter Section */}
+      <NewsletterSection />
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-primary to-primary/80">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
+            Your digital presence is about to take off
+          </h2>
+          <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
+            Ready to find your dream property or list your home?
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              size="lg"
+              className="bg-white text-primary hover:bg-white/90 font-semibold px-8"
+            >
+              Contact Us
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white text-primary-foreground hover:bg-white/10 font-semibold px-8"
+            >
+              Search Listings
+            </Button>
           </div>
-          <PropertyFilters filters={filters} onFiltersChange={setFilters} />
-        </div>
-      </section>
-
-      {/* Property Tabs */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <PropertyTabs filters={filters} />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-housiey-dark py-12 px-4">
+      <footer className="bg-housiey-dark text-housiey-dark-foreground py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col items-center justify-center space-y-6">
-            <Link to="/" className="flex items-center">
-              <img src={logoImage} className="h-auto w-44" alt="MySqft 24" />
-            </Link>
-          <div className="flex items-center gap-6 text-housiey-dark-foreground/80 text-sm">
-              <Link to="/" className="hover:text-housiey-red transition-colors">Home</Link>
-              <Link to="/properties" className="hover:text-housiey-red transition-colors">Properties</Link>
-              <Link to="/about" className="hover:text-housiey-red transition-colors">About Us</Link>
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <Link to="/" className="flex items-center mb-4">
+                <img src={logoImage} className="h-10 w-auto" alt="MySqft 24" />
+              </Link>
+              <p className="text-sm opacity-80">
+                Connecting you with premium properties worldwide.
+              </p>
             </div>
-            <div className="w-full max-w-md h-px bg-housiey-dark-foreground/20" />
-            <p className="text-housiey-dark-foreground/60 text-sm text-center">
-              © 2024 MySqfit. Connecting you with premium properties worldwide.
-            </p>
+            <div>
+              <h4 className="font-semibold mb-4 text-housiey-dark-foreground">Quick Links</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/" className="opacity-80 hover:opacity-100 transition-opacity">Home</Link></li>
+                <li><Link to="/properties" className="opacity-80 hover:opacity-100 transition-opacity">Properties</Link></li>
+                <li><Link to="/about" className="opacity-80 hover:opacity-100 transition-opacity">About Us</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-housiey-dark-foreground">Resources</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Contact</a></li>
+                <li><a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Terms of Use</a></li>
+                <li><a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Privacy Policy</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-housiey-dark-foreground">Contact</h4>
+              <p className="text-sm opacity-80 mb-2">120 Main St, Napa, CA</p>
+              <p className="text-sm opacity-80">Tel: +1 206-741-0340</p>
+            </div>
+          </div>
+          <div className="border-t border-housiey-dark-foreground/20 pt-8 text-center text-sm opacity-80">
+            <p>© 2024 MySqft24. All rights reserved.</p>
           </div>
         </div>
       </footer>

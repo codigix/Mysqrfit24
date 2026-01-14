@@ -54,7 +54,7 @@ export const Property360View = ({
         canvas.width / 2, canvas.height / 2, 0,
         canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 2
       );
-      gradient.addColorStop(0, 'hsl(var(--background))');
+      gradient.addColorStop(0, '#fbf9f6');
       gradient.addColorStop(1, 'hsl(var(--muted))');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);

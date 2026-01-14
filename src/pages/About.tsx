@@ -85,7 +85,7 @@ const About = () => {
                 <Card key={stat.label} className="text-center">
                   <CardContent className="pt-6">
                     <Icon className="w-8 h-8 text-housiey-red mx-auto mb-3" />
-                    <div className="text-3xl font-bold text-foreground mb-1">{stat.value}</div>
+                    <div className="text-md font-bold text-foreground mb-1">{stat.value}</div>
                     <div className="text-sm text-muted-foreground">{stat.label}</div>
                   </CardContent>
                 </Card>
@@ -100,7 +100,7 @@ const About = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-6">Our Story</h2>
+              <h2 className="text-md font-bold text-foreground mb-6">Our Story</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
                   MySqfit was born out of frustration with the traditional real estate industry. 
@@ -127,7 +127,7 @@ const About = () => {
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-housiey-red text-housiey-red-foreground p-6 rounded-xl">
-                <div className="text-3xl font-bold">5+</div>
+                <div className="text-md font-bold">5+</div>
                 <div className="text-sm">Years of Excellence</div>
               </div>
             </div>
@@ -139,7 +139,7 @@ const About = () => {
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-3">Our Values</h2>
+            <h2 className="text-md font-bold text-foreground mb-3">Our Values</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               These core values guide everything we do at MySqfit
             </p>
@@ -168,7 +168,7 @@ const About = () => {
       <section className="py-16 px-4 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-3">Meet Our Team</h2>
+            <h2 className="text-md font-bold text-foreground mb-3">Meet Our Team</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               The passionate people behind MySqfit working to transform your property journey
             </p>
@@ -198,7 +198,7 @@ const About = () => {
       {/* Contact CTA Section */}
       <section className="py-16 px-4 bg-housiey-dark">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-housiey-dark-foreground mb-4">
+          <h2 className="text-md font-bold text-housiey-dark-foreground mb-4">
             Ready to Find Your Dream Property?
           </h2>
           <p className="text-housiey-dark-foreground/80 mb-8 max-w-xl mx-auto">

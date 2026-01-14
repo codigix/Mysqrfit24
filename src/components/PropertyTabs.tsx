@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useProperties } from '@/hooks/useProperties';
-import { PropertyCard } from '@/components/PropertyCard';
+import { PremiumPropertyCard } from '@/components/PremiumPropertyCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { PropertyFilters as IPropertyFilters } from '@/types/property';
 import { Building, Home, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -85,9 +84,9 @@ export const PropertyTabs = ({ filters }: PropertyTabsProps) => {
       ) : properties.length === 0 ? (
         <EmptyState icon={EmptyIcon} title={emptyTitle} description={emptyDescription} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {properties.slice(0, 9).map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <PremiumPropertyCard key={property.id} property={property} />
           ))}
         </div>
       )}

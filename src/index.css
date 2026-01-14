@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Italiana&family=Roboto:wght@300;400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,80 +10,80 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 15%;
+    --background: #fbf9f6;
+    --foreground: 25 30% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card-foreground: 25 30% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
+    --popover-foreground: 25 30% 20%;
 
-    --primary: 4 85% 45%;
+    --primary: 25 60% 35%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 0deg 0% 0.78%;
+    --secondary: 36 60% 50%;
     --secondary-foreground: 0 0% 15%;
 
-    --muted: 0 0% 52%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 25 15% 65%;
+    --muted-foreground: 25 15% 45%;
 
-    --accent: 0deg 0% 0.78%;
+    --accent: 36 60% 50%;
     --accent-foreground: 0 0% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 25 20% 88%;
+    --input: 25 20% 92%;
+    --ring: 25 60% 35%;
 
-    --radius: 0.5rem;
+    --radius: 0.375rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 25 20% 95%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-foreground: 25 30% 20%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary: 25 60% 35%;
 
     --sidebar-primary-foreground: 0 0% 98%;
 
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 36 60% 50%;
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-accent-foreground: 0 0% 15%;
 
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 25 20% 88%;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 25 60% 35%;
     
-    /* Housiey Color Palette */
-    --housiey-red: 4 85% 45%;
+    /* WpResidence Color Palette */
+    --housiey-red: 25 60% 35%;
     --housiey-red-foreground: 0 0% 98%;
-    --housiey-dark: 0deg 0% 0.78%;
+    --housiey-dark: 25 40% 25%;
     --housiey-dark-foreground: 0 0% 98%;
-    --housiey-gray: 0 0% 52%;
-    --housiey-gray-foreground: 0 0% 98%;
-    --housiey-light: 0 0% 99%;
+    --housiey-gray: 25 15% 65%;
+    --housiey-gray-foreground: 0 0% 20%;
+    --housiey-light: 35 20% 95%;
     --housiey-light-foreground: 0 0% 15%;
-    --housiey-green: 94 25% 85%;
-    --housiey-green-foreground: 0 0% 15%;
+    --housiey-green: 120 40% 45%;
+    --housiey-green-foreground: 0 0% 98%;
     
-    /* Modern Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--housiey-red)) 0%, hsl(4 95% 55%) 50%, hsl(15 85% 50%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(var(--housiey-dark)) 0%, hsl(0 0% 25%) 50%, hsl(var(--housiey-gray)) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(var(--housiey-green)) 0%, hsl(120 30% 90%) 50%, hsl(var(--housiey-light)) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(var(--housiey-light)) 0%, hsl(0 0% 96%) 100%);
-    --gradient-overlay: linear-gradient(135deg, hsl(var(--housiey-red) / 0.8) 0%, hsl(var(--housiey-dark) / 0.9) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--housiey-green) / 0.1) 100%);
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(25 60% 35%) 0%, hsl(25 50% 40%) 50%, hsl(25 40% 30%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(25 40% 25%) 0%, hsl(25 35% 28%) 50%, hsl(36 60% 40%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(36 60% 50%) 0%, hsl(36 50% 55%) 50%, hsl(36 40% 60%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(35 20% 97%) 100%);
+    --gradient-overlay: linear-gradient(135deg, hsl(25 60% 35% / 0.85) 0%, hsl(25 40% 25% / 0.95) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(35 20% 95%) 0%, hsl(36 60% 50% / 0.08) 100%);
     
-    /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.15);
-    --shadow-card: 0 4px 20px -4px hsl(var(--primary) / 0.1);
-    --shadow-glow: 0 0 40px hsl(var(--accent) / 0.2);
+    /* Premium Shadows */
+    --shadow-elegant: 0 20px 40px -10px hsl(25 30% 15% / 0.12);
+    --shadow-card: 0 4px 16px -2px hsl(25 30% 15% / 0.08);
+    --shadow-glow: 0 0 50px hsl(36 60% 50% / 0.15);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background:#fbf9f6;
     --foreground: 210 40% 98%;
 
     --card: 222.2 84% 4.9%;
@@ -126,6 +128,11 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Frank Ruhl Libre', sans-serif;
   }
 }
 

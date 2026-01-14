@@ -325,7 +325,7 @@ const Admin = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Admin Panel</h1>
+            <h1 className="text-md font-bold">Admin Panel</h1>
             <p className="text-muted-foreground mt-2">Manage your property listings and inquiries</p>
           </div>
           

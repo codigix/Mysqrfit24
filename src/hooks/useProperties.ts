@@ -1,44 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { Property, PropertyFilters } from '@/types/property';
 import { useToast } from '@/hooks/use-toast';
+import { apiService } from '@/services/api';
 
 export const useProperties = (filters?: PropertyFilters) => {
   return useQuery({
     queryKey: ['properties', filters],
     queryFn: async () => {
-      let query = supabase
-        .from('properties')
-        .select('*')
-        .eq('status', 'available')
-        .order('is_featured', { ascending: false })
-        .order('created_at', { ascending: false });
-
-      if (filters?.type) {
-        query = query.eq('type', filters.type);
-      }
-      if (filters?.property_type) {
-        query = query.eq('property_type', filters.property_type);
-      }
-      if (filters?.location) {
-        query = query.ilike('location', `%${filters.location}%`);
-      }
-      if (filters?.min_price) {
-        query = query.gte('price', filters.min_price);
-      }
-      if (filters?.max_price) {
-        query = query.lte('price', filters.max_price);
-      }
-      if (filters?.bedrooms) {
-        query = query.eq('bedrooms', filters.bedrooms);
-      }
-      if (filters?.bathrooms) {
-        query = query.eq('bathrooms', filters.bathrooms);
-      }
-
-      const { data, error } = await query;
-      if (error) throw error;
-      return data as Property[];
+      return apiService.properties.list(filters);
     },
   });
 };
@@ -47,14 +16,7 @@ export const useProperty = (id: string) => {
   return useQuery({
     queryKey: ['property', id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data as Property | null;
+      return apiService.properties.get(id);
     },
     enabled: !!id,
   });
@@ -66,14 +28,7 @@ export const useCreateProperty = () => {
 
   return useMutation({
     mutationFn: async (property: Omit<Property, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('properties')
-        .insert([property])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as Property;
+      return apiService.properties.create(property);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
@@ -98,15 +53,7 @@ export const useUpdateProperty = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...property }: Partial<Property> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('properties')
-        .update(property)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data as Property;
+      return apiService.properties.update(id, property);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
@@ -131,12 +78,7 @@ export const useDeleteProperty = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('properties')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      return apiService.properties.delete(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
