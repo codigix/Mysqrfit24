@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Link } from 'react-router-dom';
 import logoImage from '@/assets/mysqfit.png';
 import { Building, Users, Target, Award, Phone, Mail, MapPin, Linkedin, Twitter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { getFileUrl } from '@/services/api';
 
 const About = () => {
   const stats = [
@@ -31,29 +33,46 @@ const About = () => {
     },
   ];
 
-  const team = [
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const data = await apiService.team.list();
+        setTeamMembers(data);
+      } catch (error) {
+        console.error('Error fetching team members:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTeam();
+  }, []);
+
+  const displayTeam = teamMembers.length > 0 ? teamMembers : [
     {
       name: 'Rahul Sharma',
       role: 'Founder & CEO',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
+      image_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
       bio: '15+ years in real estate with a vision to make property buying transparent.',
     },
     {
       name: 'Priya Patel',
       role: 'Head of Operations',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face',
+      image_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face',
       bio: 'Expert in streamlining processes and ensuring seamless customer experiences.',
     },
     {
       name: 'Amit Kumar',
       role: 'Chief Technology Officer',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
+      image_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
       bio: 'Tech enthusiast building innovative solutions for the real estate industry.',
     },
     {
       name: 'Sneha Reddy',
       role: 'Head of Customer Success',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
+      image_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
       bio: 'Dedicated to ensuring every customer finds their perfect property.',
     },
   ];
@@ -121,7 +140,7 @@ const About = () => {
             <div className="relative">
               <div className="aspect-video rounded-2xl overflow-hidden bg-housiey-dark">
                 <img 
-                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop"
+                  src={getFileUrl("https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop")}
                   alt="Modern building"
                   className="w-full h-full object-cover opacity-80"
                 />
@@ -175,11 +194,11 @@ const About = () => {
           </div>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((member) => (
+            {displayTeam.map((member) => (
               <Card key={member.name} className="overflow-hidden group hover:shadow-elegant transition-shadow">
                 <div className="aspect-square overflow-hidden">
                   <img 
-                    src={member.image}
+                    src={getFileUrl(member.image_url)}
                     alt={member.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

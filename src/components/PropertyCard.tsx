@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { MapPin, Bed, Bath, Square, MessageCircle, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Property360View } from './Property360View';
+import { getFileUrl } from '@/services/api';
 
 interface PropertyCardProps {
   property: Property;
@@ -89,7 +90,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         {property.images && property.images.length > 0 ? (
           <>
             <img
-              src={property.images[currentImageIndex] || '/placeholder.svg'}
+              src={getFileUrl(property.images[currentImageIndex] || '') || '/placeholder.svg'}
               alt={`${property.title} - Image ${currentImageIndex + 1}`}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
@@ -254,7 +255,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         isOpen={show360View}
         onClose={() => setShow360View(false)}
         propertyTitle={property.title}
-        imageUrl={property.images?.[0]}
+        imageUrl={getFileUrl(property.images?.[0] || '')}
         address={property.address}
       />
     </Card>

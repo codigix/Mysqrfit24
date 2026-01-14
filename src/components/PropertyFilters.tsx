@@ -16,7 +16,7 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
   const [isOpen, setIsOpen] = useState(false);
   const [localFilters, setLocalFilters] = useState<IPropertyFilters>(filters);
 
-  const handleFilterChange = (key: keyof IPropertyFilters, value: any) => {
+  const handleFilterChange = <K extends keyof IPropertyFilters>(key: K, value: IPropertyFilters[K]) => {
     const newFilters = { ...localFilters, [key]: value };
     setLocalFilters(newFilters);
   };

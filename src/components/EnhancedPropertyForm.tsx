@@ -99,7 +99,7 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
     try {
       setLoading(true);
 
-      if (!formData.title || !formData.price || !formData.location || !formData.address) {
+      if (!formData.title || !formData.price || !formData.location || !formData.address || !formData.developer_name || !formData.developer_phone) {
         toast.error('Please fill in all required fields');
         return;
       }

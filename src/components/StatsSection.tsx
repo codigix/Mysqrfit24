@@ -1,26 +1,61 @@
-import { TrendingUp, Home, Users } from 'lucide-react';
+import { TrendingUp, Home, Users, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { apiService } from '@/services/api';
+import { SiteSetting } from '@/types/site';
 
 export const StatsSection = () => {
+  const [settings, setSettings] = useState<SiteSetting[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await apiService.settings.getAll();
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings for stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const getSettingValue = (key: string, defaultValue: string) => {
+    const setting = settings.find(s => s.setting_key === key);
+    return setting?.setting_value || defaultValue;
+  };
+
   const stats = [
     {
       icon: Home,
-      number: '7,000+',
+      number: getSettingValue('stats_sold_homes', '7,000+'),
       label: 'SOLD HOMES',
       description: 'Premium properties sold'
     },
     {
       icon: TrendingUp,
-      number: '$1B+',
+      number: getSettingValue('stats_sales_volume', '$1B+'),
       label: 'IN SALES',
       description: 'Total transaction volume'
     },
     {
       icon: Users,
-      number: '1,000+',
+      number: getSettingValue('stats_satisfied_customers', '1,000+'),
       label: 'SATISFIED CUSTOMERS',
       description: 'Happy homeowners'
     }
   ];
+
+  if (isLoading) {
+    return (
+      <section className="py-16 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
+        <div className="max-w-6xl mx-auto flex justify-center items-center min-h-[200px]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 px-4 bg-gradient-to-r from-primary/5 to-accent/5">

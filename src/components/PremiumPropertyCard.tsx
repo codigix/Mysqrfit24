@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getFileUrl } from '@/services/api';
 
 interface PremiumPropertyCardProps {
   property: Property;
@@ -72,7 +73,7 @@ export const PremiumPropertyCard = ({ property }: PremiumPropertyCardProps) => {
         {property.images && property.images.length > 0 ? (
           <>
             <img
-              src={property.images[currentImageIndex] || '/placeholder.svg'}
+              src={getFileUrl(property.images[currentImageIndex]) || '/placeholder.svg'}
               alt={`${property.title} - Image ${currentImageIndex + 1}`}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />

@@ -424,7 +424,7 @@ const AdminLegal = () => {
                         onChange={handleFileUpload}
                         disabled={uploading}
                         className="hidden"
-                        accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.zip"
+                        accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.webp,.avif,.zip"
                       />
                       <div className="flex flex-col items-center gap-2">
                         <FileUp className="w-8 h-8 text-gray-400" />
@@ -432,7 +432,7 @@ const AdminLegal = () => {
                           Click to upload or drag and drop
                         </p>
                         <p className="text-xs text-gray-500">
-                          PDF, DOC, DOCX, TXT, JPG, PNG, GIF, ZIP (Max 50MB)
+                          PDF, DOC, DOCX, TXT, Images (JPG, PNG, WEBP, AVIF), ZIP (Max 50MB)
                         </p>
                       </div>
                     </label>

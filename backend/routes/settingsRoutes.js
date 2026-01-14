@@ -10,8 +10,8 @@ import { adminRequired } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', adminRequired, getSettings);
-router.get('/:key', adminRequired, getSetting);
+router.get('/', getSettings);
+router.get('/:key', getSetting);
 router.post('/', adminRequired, createSetting);
 router.put('/:key', adminRequired, updateSetting);
 router.delete('/:key', adminRequired, deleteSetting);

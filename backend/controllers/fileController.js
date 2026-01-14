@@ -46,8 +46,21 @@ export const uploadFile = async (req, res) => {
       uploadedAt: new Date(),
     });
   } catch (error) {
-    console.error('File upload error:', error);
-    res.status(500).json({ error: 'Failed to upload file' });
+    console.error('File upload error detailed:', {
+      message: error.message,
+      stack: error.stack,
+      file: req.file ? {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      } : 'No file',
+      user: req.user ? req.user.id : 'No user'
+    });
+    res.status(500).json({ 
+      error: 'Failed to upload file', 
+      details: error.message,
+      code: error.code
+    });
   }
 };
 

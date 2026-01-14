@@ -54,6 +54,9 @@ export const getFileMimeType = (filename) => {
     '.jpeg': 'image/jpeg',
     '.png': 'image/png',
     '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.avif': 'image/avif',
+    '.svg': 'image/svg+xml',
     '.zip': 'application/zip',
   };
   return mimeTypes[ext] || 'application/octet-stream';

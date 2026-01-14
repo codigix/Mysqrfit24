@@ -10,13 +10,8 @@ export default defineConfig(({ mode }) => ({
     port: 8081,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
-      },
-      '/admin': {
-        target: 'http://localhost:5174',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/admin/, ''),
       },
     },
   },

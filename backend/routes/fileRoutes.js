@@ -12,19 +12,18 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const allowedMimes = [
       'application/pdf',
-      'image/jpeg',
-      'image/png',
-      'image/gif',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'text/plain',
       'application/zip',
+      'application/x-zip-compressed',
     ];
 
-    if (allowedMimes.includes(file.mimetype)) {
+    // Accept all images and defined document types
+    if (file.mimetype.startsWith('image/') || allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type'), false);
+      cb(new Error(`Invalid file type: ${file.mimetype}`), false);
     }
   },
 });

@@ -1,8 +1,11 @@
 import mysql from 'mysql2/promise';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const dummyProperties = [
   {

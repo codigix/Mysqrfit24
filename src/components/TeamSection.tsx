@@ -1,38 +1,73 @@
-import { Mail, Phone } from 'lucide-react';
+import { Mail, Phone, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-
-const team = [
-  {
-    name: "Sarah Mitchell",
-    role: "Senior Real Estate Agent",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
-    email: "sarah@example.com",
-    phone: "+1 (555) 123-4567"
-  },
-  {
-    name: "Michael Chen",
-    role: "Property Specialist",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
-    email: "michael@example.com",
-    phone: "+1 (555) 234-5678"
-  },
-  {
-    name: "Jennifer Lopez",
-    role: "Investment Consultant",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop",
-    email: "jennifer@example.com",
-    phone: "+1 (555) 345-6789"
-  },
-  {
-    name: "David Richardson",
-    role: "Luxury Homes Expert",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop",
-    email: "david@example.com",
-    phone: "+1 (555) 456-7890"
-  }
-];
+import { useEffect, useState } from 'react';
+import { apiService, getFileUrl } from '@/services/api';
+import { TeamMember } from '@/types/site';
 
 export const TeamSection = () => {
+  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const data = await apiService.team.list();
+        setMembers(data);
+      } catch (error) {
+        console.error('Error fetching team members:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTeam();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
+        <div className="max-w-6xl mx-auto flex justify-center items-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </section>
+    );
+  }
+
+  const displayMembers = members.length > 0 ? members : [
+    {
+      id: '1',
+      name: "Sarah Mitchell",
+      role: "Senior Real Estate Agent",
+      image_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
+      email: "sarah@example.com",
+      phone: "+1 (555) 123-4567"
+    },
+    {
+      id: '2',
+      name: "Michael Chen",
+      role: "Property Specialist",
+      image_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
+      email: "michael@example.com",
+      phone: "+1 (555) 234-5678"
+    },
+    {
+      id: '3',
+      name: "Jennifer Lopez",
+      role: "Investment Consultant",
+      image_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop",
+      email: "jennifer@example.com",
+      phone: "+1 (555) 345-6789"
+    },
+    {
+      id: '4',
+      name: "David Richardson",
+      role: "Luxury Homes Expert",
+      image_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop",
+      email: "david@example.com",
+      phone: "+1 (555) 456-7890"
+    }
+  ];
+
   return (
     <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
       <div className="max-w-6xl mx-auto">
@@ -47,12 +82,12 @@ export const TeamSection = () => {
         </div>
 
         <div className="grid md:grid-cols-4 gap-6">
-          {team.map((member, idx) => (
-            <Card key={idx} className="border-0 overflow-hidden hover:shadow-elegant transition-all duration-300 group">
+          {displayMembers.map((member, idx) => (
+            <Card key={member.id || idx} className="border-0 overflow-hidden hover:shadow-elegant transition-all duration-300 group">
               <CardContent className="p-0">
                 <div className="relative h-64 overflow-hidden">
                   <img
-                    src={member.image}
+                    src={getFileUrl(member.image_url)}
                     alt={member.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

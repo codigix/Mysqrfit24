@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const initDatabase = async () => {
   try {
@@ -14,7 +14,7 @@ const initDatabase = async () => {
     const connection = await mysql.createConnection({
       host: process.env.DB_HOST || 'localhost',
       user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
+      password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT || 3306,
     });
 

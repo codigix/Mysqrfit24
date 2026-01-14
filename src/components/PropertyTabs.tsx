@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProperties } from '@/hooks/useProperties';
 import { PremiumPropertyCard } from '@/components/PremiumPropertyCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PropertyFilters as IPropertyFilters } from '@/types/property';
+import { Property, PropertyFilters as IPropertyFilters } from '@/types/property';
 import { Building, Home, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ export const PropertyTabs = ({ filters }: PropertyTabsProps) => {
     </div>
   );
 
-  const EmptyState = ({ icon: Icon, title, description }: { icon: any; title: string; description: string }) => (
+  const EmptyState = ({ icon: Icon, title, description }: { icon: React.ComponentType<{ className?: string }>; title: string; description: string }) => (
     <div className="text-center py-16">
       <Icon className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
       <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
@@ -56,10 +56,10 @@ export const PropertyTabs = ({ filters }: PropertyTabsProps) => {
   }: {
     title: string;
     subtitle: string;
-    properties: any[];
+    properties: Property[];
     isLoading: boolean;
     isFeatured?: boolean;
-    emptyIcon: any;
+    emptyIcon: React.ComponentType<{ className?: string }>;
     emptyTitle: string;
     emptyDescription: string;
     viewAllLink: string;

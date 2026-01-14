@@ -3,7 +3,7 @@ import { Heart, Home, Building2, Warehouse, DoorOpen, Square, Factory, ShoppingC
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { apiService } from '@/services/api';
+import { apiService, getFileUrl } from '@/services/api';
 
 interface Property {
   id: string | number;
@@ -113,7 +113,7 @@ const ListingCard = ({ property }: ListingCardProps) => {
           {/* Image */}
           <div className="relative aspect-[4/3] overflow-hidden bg-muted rounded-lg">
             <img
-              src={property.image || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=400&fit=crop'}
+              src={getFileUrl(property.image || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=400&fit=crop')}
               alt={property.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
@@ -223,10 +223,10 @@ const transformProperty = (prop: Property): ListProperty => {
     status: getStatus(prop.type),
     statusColor: getStatusColor(prop.type),
     size: sizeValue > 0 ? `${sizeValue.toLocaleString()} sqm` : 'N/A',
-    image: prop.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=400&fit=crop',
+    image: prop.images?.[0] ? getFileUrl(prop.images[0]) : getFileUrl('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=400&fit=crop'),
     agent: {
       name: prop.developer_name || 'Agent',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop'
+      avatar: getFileUrl('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop')
     },
     propertyType: `${prop.property_type}${prop.type === 'sale' ? '-sale' : prop.type === 'lease' ? '-lease' : ''}`,
     price: formatPrice(prop.price, prop.type),

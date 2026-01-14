@@ -5,7 +5,7 @@ export const createInquiry = async (req, res) => {
   try {
     const { property_type, budget, location, contact, name, email, phone, message } = req.body;
 
-    if (!property_type || !location || !contact) {
+    if (!property_type || !location) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -16,7 +16,7 @@ export const createInquiry = async (req, res) => {
       `INSERT INTO chatbot_inquiries (
         id, property_type, budget, location, contact, name, email, phone, message
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [inquiryId, property_type, budget, location, contact, name || null, email || null, phone || null, message || null]
+      [inquiryId, property_type, budget, location, contact || null, name || null, email || null, phone || null, message || null]
     );
     connection.release();
 

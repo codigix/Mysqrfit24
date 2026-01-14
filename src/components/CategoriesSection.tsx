@@ -1,6 +1,7 @@
 import { Building, Landmark, TreePine, Wine } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { getFileUrl } from '@/services/api';
 
 const categories = [
   {
@@ -50,7 +51,7 @@ export const CategoriesSection = () => {
               <Card key={idx} className="border-0 overflow-hidden hover:shadow-elegant transition-all duration-300 group cursor-pointer">
                 <CardContent className="p-0 relative h-64 flex items-end">
                   <img
-                    src={category.image}
+                    src={getFileUrl(category.image)}
                     alt={category.name}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

@@ -1,18 +1,39 @@
-import { Mail } from 'lucide-react';
+import { Mail, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
+import { apiService } from '@/services/api';
+import { useToast } from '@/components/ui/use-toast';
 
 export const NewsletterSection = () => {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+
+    try {
+      setIsLoading(true);
+      await apiService.newsletter.subscribe(email);
       setSubscribed(true);
       setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+      toast({
+        title: "Success",
+        description: "Thank you for subscribing to our newsletter!",
+      });
+      setTimeout(() => setSubscribed(false), 5000);
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to subscribe. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,8 +68,16 @@ export const NewsletterSection = () => {
               type="submit"
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold whitespace-nowrap"
+              disabled={isLoading}
             >
-              Subscribe
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Subscribing...
+                </>
+              ) : (
+                'Subscribe'
+              )}
             </Button>
           </form>
 

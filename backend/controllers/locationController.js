@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
 
 export const getLocations = async (req, res) => {
@@ -32,27 +33,39 @@ export const getLocationById = async (req, res) => {
 export const createLocation = async (req, res) => {
   try {
     const { name, description, image_url, lat, lng } = req.body;
+    
+    console.log('Creating location with data:', { name, description, image_url, lat, lng });
 
     if (!name) {
       return res.status(400).json({ error: 'Location name is required' });
     }
 
-    const [result] = await pool.query(
-      'INSERT INTO locations (name, description, image_url, lat, lng, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
-      [name, description || null, image_url || null, lat || null, lng || null]
+    const locationId = uuidv4();
+
+    // Ensure lat/lng are either numbers or null, not empty strings or undefined
+    const latitude = (lat !== undefined && lat !== '') ? parseFloat(lat) : null;
+    const longitude = (lng !== undefined && lng !== '') ? parseFloat(lng) : null;
+
+    await pool.query(
+      'INSERT INTO locations (id, name, description, image_url, lat, lng, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())',
+      [locationId, name, description || null, image_url || null, latitude, longitude]
     );
 
     res.status(201).json({
-      id: result.insertId,
+      id: locationId,
       name,
       description,
       image_url,
-      lat,
-      lng,
+      lat: latitude,
+      lng: longitude,
     });
   } catch (error) {
-    console.error('Error creating location:', error);
-    res.status(500).json({ error: 'Failed to create location' });
+    console.error('CRITICAL: Error creating location:', error);
+    res.status(500).json({ 
+      error: 'Internal Server Error', 
+      details: error.message,
+      code: error.code 
+    });
   }
 };
 

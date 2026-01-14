@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProperty } from '@/hooks/useProperties';
+import { Property } from '@/types/property';
 import { Navigation } from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,8 +42,30 @@ import {
   Video
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { toast } from 'sonner';
+import { apiService, getFileUrl } from '@/services/api';
 
-const mockPropertyData: { [key: string]: any } = {
+interface ExtendedProperty extends Property {
+  city?: string;
+  floorPlanImage?: string;
+  videoThumbnail?: string;
+  videoUrl?: string;
+  propertyId?: string;
+  rooms?: number;
+  garages?: number;
+  yearBuilt?: number;
+  lotSize?: number;
+  reviews?: Array<{
+    id: number;
+    author: string;
+    rating: number;
+    comment: string;
+    date: string;
+  }>;
+  developer_avatar?: string;
+}
+
+const mockPropertyData: Record<string, ExtendedProperty> = {
   '1': {
     id: '1',
     title: 'Luxury Apartment in City Center',
@@ -363,12 +386,72 @@ const PropertyDetails = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedTourDate, setSelectedTourDate] = useState('');
+  const [selectedTourDate, setSelectedTourDate] = useState('Dec 05');
+  const [selectedTime, setSelectedTime] = useState('');
   const [tourType, setTourType] = useState('in-person');
   const [showPhotosModal, setShowPhotosModal] = useState(false);
   const [showWalkthroughPlayer, setShowWalkthroughPlayer] = useState(false);
   const [showMapPlayer, setShowMapPlayer] = useState(false);
   const [isTabsSticky, setIsTabsSticky] = useState(false);
+  const [inquiryLoading, setInquiryLoading] = useState(false);
+  const [sidebarInquiry, setSidebarInquiry] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [mainFormInquiry, setMainFormInquiry] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleSidebarSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!sidebarInquiry.name || !sidebarInquiry.email || !sidebarInquiry.message) {
+      toast.error('Please fill in name, email, and message');
+      return;
+    }
+
+    try {
+      setInquiryLoading(true);
+      await apiService.contact.send({
+        ...sidebarInquiry,
+        property_id: id,
+        subject: `Inquiry for ${property?.title}`
+      });
+      toast.success('Inquiry sent successfully!');
+      setSidebarInquiry({ name: '', email: '', phone: '', message: '' });
+    } catch (error) {
+      toast.error('Failed to send inquiry');
+    } finally {
+      setInquiryLoading(false);
+    }
+  };
+
+  const handleMainFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mainFormInquiry.name || !mainFormInquiry.email || !mainFormInquiry.message) {
+      toast.error('Please fill in name, email, and message');
+      return;
+    }
+
+    try {
+      setInquiryLoading(true);
+      await apiService.contact.send({
+        ...mainFormInquiry,
+        property_id: id,
+        subject: `Schedule Tour for ${property?.title} (${tourType} on ${selectedTourDate}${selectedTime ? ' at ' + selectedTime : ''})`
+      });
+      toast.success('Request sent successfully!');
+      setMainFormInquiry({ name: '', email: '', phone: '', message: '' });
+    } catch (error) {
+      toast.error('Failed to send request');
+    } finally {
+      setInquiryLoading(false);
+    }
+  };
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const overviewRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
@@ -456,7 +539,7 @@ const PropertyDetails = () => {
     ];
   };
 
-  const handleViewDetails = (prop: any) => {
+  const handleViewDetails = (prop: Partial<ExtendedProperty>) => {
     navigate(`/property/${prop.id}`);
   };
 
@@ -580,7 +663,7 @@ const PropertyDetails = () => {
           {/* Left - Main Banner Image */}
           <div className="relative  overflow-hidden bg-white h-96 group">
             <img
-              src={property.images?.[0] || '/placeholder.svg'}
+              src={getFileUrl(property.images?.[0] || '') || '/placeholder.svg'}
               alt="Property"
               className="w-full h-full object-cover"
             />
@@ -593,7 +676,7 @@ const PropertyDetails = () => {
                 </Badge>
               )}
               <Badge className={property.type === 'sale' ? 'bg-yellow-600' : 'bg-accent'}>
-                {property.type === 'sale' ? 'Sold' : 'For Rent'}
+                {property.type === 'sale' ? 'For Sale' : 'For Rent'}
               </Badge>
             </div>
 
@@ -619,7 +702,7 @@ const PropertyDetails = () => {
                 className="relative  overflow-hidden bg-white h-48 cursor-pointer group"
               >
                 <img
-                  src={image}
+                  src={getFileUrl(image)}
                   alt={`Gallery ${index}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
@@ -634,7 +717,7 @@ const PropertyDetails = () => {
                 className="relative  overflow-hidden bg-white h-48 cursor-pointer group bg-black/20"
               >
                 <img
-                  src={property.images[4]}
+                  src={getFileUrl(property.images[4])}
                   alt="More photos"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
@@ -667,7 +750,7 @@ const PropertyDetails = () => {
               <div className="flex-1 overflow-y-auto">
                 <div className="relative h-96 bg-white flex items-center justify-center">
                   <img
-                    src={property.images?.[currentImageIndex] || '/placeholder.svg'}
+                    src={getFileUrl(property.images?.[currentImageIndex] || '') || '/placeholder.svg'}
                     alt="Property"
                     className="w-full h-full object-cover"
                   />
@@ -1435,7 +1518,7 @@ const PropertyDetails = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       <div>
                         <img
-                          src={property.images[0]}
+                          src={getFileUrl(property.images[0] || '')}
                           alt="Property"
                           className="w-full h-96 rounded-lg object-cover"
                         />
@@ -1448,36 +1531,28 @@ const PropertyDetails = () => {
                               <ChevronLeft className="h-5 w-5" />
                             </button>
                             <div className="flex gap-4">
-                              <div className="text-center">
-                                <p className="text-sm text-muted-foreground">Thu</p>
-                                <p className="text-lg font-semibold text-foreground">04</p>
-                                <p className="text-sm text-muted-foreground">Dec</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-sm text-muted-foreground">Fri</p>
-                                <p className="text-lg font-semibold text-amber-700">05</p>
-                                <p className="text-sm text-muted-foreground">Dec</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-sm text-muted-foreground">Sat</p>
-                                <p className="text-lg font-semibold text-foreground">06</p>
-                                <p className="text-sm text-muted-foreground">Dec</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-sm text-muted-foreground">Sun</p>
-                                <p className="text-lg font-semibold text-foreground">07</p>
-                                <p className="text-sm text-muted-foreground">Dec</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-sm text-muted-foreground">Mon</p>
-                                <p className="text-lg font-semibold text-foreground">08</p>
-                                <p className="text-sm text-muted-foreground">Dec</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-sm text-muted-foreground">Tue</p>
-                                <p className="text-lg font-semibold text-foreground">09</p>
-                                <p className="text-sm text-muted-foreground">Dec</p>
-                              </div>
+                              {[
+                                { day: 'Thu', date: '04', month: 'Dec' },
+                                { day: 'Fri', date: '05', month: 'Dec' },
+                                { day: 'Sat', date: '06', month: 'Dec' },
+                                { day: 'Sun', date: '07', month: 'Dec' },
+                                { day: 'Mon', date: '08', month: 'Dec' },
+                                { day: 'Tue', date: '09', month: 'Dec' },
+                              ].map((item) => {
+                                const dateStr = `${item.month} ${item.date}`;
+                                const isSelected = selectedTourDate === dateStr;
+                                return (
+                                  <div 
+                                    key={dateStr}
+                                    className="text-center cursor-pointer group"
+                                    onClick={() => setSelectedTourDate(dateStr)}
+                                  >
+                                    <p className={`text-sm ${isSelected ? 'text-amber-700 font-bold' : 'text-muted-foreground'}`}>{item.day}</p>
+                                    <p className={`text-lg font-semibold ${isSelected ? 'text-amber-700' : 'text-foreground'}`}>{item.date}</p>
+                                    <p className={`text-sm ${isSelected ? 'text-amber-700 font-bold' : 'text-muted-foreground'}`}>{item.month}</p>
+                                  </div>
+                                );
+                              })}
                             </div>
                             <button className="text-muted-foreground hover:text-foreground">
                               <ChevronRight className="h-5 w-5" />
@@ -1486,27 +1561,33 @@ const PropertyDetails = () => {
                         </div>
 
                         <div>
-                          <Select>
+                          <Select value={selectedTime} onValueChange={setSelectedTime}>
                             <SelectTrigger className="bg-white">
                               <SelectValue placeholder="Please select the time" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="09:00">09:00 AM</SelectItem>
-                              <SelectItem value="10:00">10:00 AM</SelectItem>
-                              <SelectItem value="11:00">11:00 AM</SelectItem>
-                              <SelectItem value="14:00">02:00 PM</SelectItem>
-                              <SelectItem value="15:00">03:00 PM</SelectItem>
-                              <SelectItem value="16:00">04:00 PM</SelectItem>
+                              <SelectItem value="09:00 AM">09:00 AM</SelectItem>
+                              <SelectItem value="10:00 AM">10:00 AM</SelectItem>
+                              <SelectItem value="11:00 AM">11:00 AM</SelectItem>
+                              <SelectItem value="02:00 PM">02:00 PM</SelectItem>
+                              <SelectItem value="03:00 PM">03:00 PM</SelectItem>
+                              <SelectItem value="04:00 PM">04:00 PM</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="flex gap-3">
-                          <Button className="flex-1 gap-2 bg-white border border-foreground text-foreground hover:bg-gray-50">
+                          <Button 
+                            className={`flex-1 gap-2 border ${tourType === 'in-person' ? 'bg-foreground text-white' : 'bg-white border-foreground text-foreground hover:bg-gray-50'}`}
+                            onClick={() => setTourType('in-person')}
+                          >
                             <User className="h-4 w-4" />
                             In Person
                           </Button>
-                          <Button className="flex-1 gap-2 bg-white border border-muted-foreground text-muted-foreground hover:bg-gray-50">
+                          <Button 
+                            className={`flex-1 gap-2 border ${tourType === 'video-chat' ? 'bg-foreground text-white' : 'bg-white border-muted-foreground text-muted-foreground hover:bg-gray-50'}`}
+                            onClick={() => setTourType('video-chat')}
+                          >
                             <Video className="h-4 w-4" />
                             Video Chat
                           </Button>
@@ -1515,31 +1596,54 @@ const PropertyDetails = () => {
                         <div className='grid grid-cols-2 mb-4 gap-2'>
                           <div>
                             <label className="text-xs text-muted-foreground mb-2 block">Your Name</label>
-                            <Input placeholder="Your Name" className="bg-gray-50" />
+                            <Input 
+                              placeholder="Your Name" 
+                              className="bg-gray-50"
+                              value={mainFormInquiry.name}
+                              onChange={(e) => setMainFormInquiry({...mainFormInquiry, name: e.target.value})}
+                            />
                           </div>
 
                           <div>
                             <label className="text-xs text-muted-foreground mb-2 block">Your Email</label>
-                            <Input type="email" placeholder="Your Email" className="bg-gray-50" />
+                            <Input 
+                              type="email" 
+                              placeholder="Your Email" 
+                              className="bg-gray-50"
+                              value={mainFormInquiry.email}
+                              onChange={(e) => setMainFormInquiry({...mainFormInquiry, email: e.target.value})}
+                            />
                           </div>
 
                           <div>
                             <label className="text-xs text-muted-foreground mb-2 block">Your Phone</label>
-                            <Input type="tel" placeholder="Your Phone" className="bg-gray-50" />
+                            <Input 
+                              type="tel" 
+                              placeholder="Your Phone" 
+                              className="bg-gray-50"
+                              value={mainFormInquiry.phone}
+                              onChange={(e) => setMainFormInquiry({...mainFormInquiry, phone: e.target.value})}
+                            />
                           </div>
 
                           <div>
                             <label className="text-xs text-muted-foreground mb-2 block">Message</label>
                             <textarea
-                              placeholder={` massege`}
+                              placeholder={` message`}
                               className="w-full p-2 border border-input rounded-md bg-gray-50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                               rows={1}
+                              value={mainFormInquiry.message}
+                              onChange={(e) => setMainFormInquiry({...mainFormInquiry, message: e.target.value})}
                             />
                           </div>
                         </div>
 
-                        <Button className="w-full bg-amber-700 hover:bg-amber-800 text-white">
-                          Send Email
+                        <Button 
+                          className="w-full bg-amber-700 hover:bg-amber-800 text-white"
+                          onClick={handleMainFormSubmit}
+                          disabled={inquiryLoading}
+                        >
+                          {inquiryLoading ? 'Sending...' : 'Send Email'}
                         </Button>
                       </div>
                     </div>
@@ -1671,26 +1775,57 @@ const PropertyDetails = () => {
                     </a>
                   </div>
 
-                  <form className="space-y-4 ">
+                  <form className="space-y-4 " onSubmit={handleSidebarSubmit}>
                     <div>
                       <label className="text-sm font-medium text-foreground block mb-2">Your Name</label>
-                      <input type="text" placeholder="John Doe" className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                      <input 
+                        type="text" 
+                        placeholder="John Doe" 
+                        className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={sidebarInquiry.name}
+                        onChange={(e) => setSidebarInquiry({...sidebarInquiry, name: e.target.value})}
+                        required
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground block mb-2">Email</label>
-                      <input type="email" placeholder="john@example.com" className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                      <input 
+                        type="email" 
+                        placeholder="john@example.com" 
+                        className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={sidebarInquiry.email}
+                        onChange={(e) => setSidebarInquiry({...sidebarInquiry, email: e.target.value})}
+                        required
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground block mb-2">Phone</label>
-                      <input type="tel" placeholder="+1 (555) 000-0000" className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                      <input 
+                        type="tel" 
+                        placeholder="+1 (555) 000-0000" 
+                        className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={sidebarInquiry.phone}
+                        onChange={(e) => setSidebarInquiry({...sidebarInquiry, phone: e.target.value})}
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-foreground block mb-2">Message</label>
-                      <textarea placeholder="I'm interested in this property..." rows={4} className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"></textarea>
+                      <textarea 
+                        placeholder="I'm interested in this property..." 
+                        rows={4} 
+                        className="w-full px-3 py-2 border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                        value={sidebarInquiry.message}
+                        onChange={(e) => setSidebarInquiry({...sidebarInquiry, message: e.target.value})}
+                        required
+                      ></textarea>
                     </div>
-                    <Button className="w-full gap-2">
+                    <Button 
+                      className="w-full gap-2"
+                      type="submit"
+                      disabled={inquiryLoading}
+                    >
                       <MessageSquare className="h-4 w-4" />
-                      Send Inquiry
+                      {inquiryLoading ? 'Sending...' : 'Send Inquiry'}
                     </Button>
                   </form>
 

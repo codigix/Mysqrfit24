@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Home, Building, Users, Menu, Phone, Settings } from 'lucide-react';
@@ -9,6 +9,7 @@ import { apiService } from '@/services/api';
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(!!apiService.auth.getToken());
 
   const navItems = [
@@ -20,9 +21,9 @@ export const Navigation = () => {
   const goToAdminPanel = () => {
     const token = apiService.auth.getToken();
     if (token) {
-      window.open('http://localhost:5174/dashboard', '_blank');
+      navigate('/admin/dashboard');
     } else {
-      window.location.href = '/admin/login';
+      navigate('/admin/login');
     }
   };
 
