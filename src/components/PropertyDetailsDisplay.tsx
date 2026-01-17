@@ -188,7 +188,7 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
         {/* Property Details Card */}
         <Card>
           <CardContent className="pt-6">
-            <h3 className="text-xl font-semibold mb-4">Property Details</h3>
+            <h3 className="text-xl font-semibold mb-4">Overview</h3>
             <div className="space-y-3">
               {property.property_type && (
                 <div className="flex justify-between items-center pb-3 border-b">
@@ -273,8 +273,21 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
                   <div className="flex justify-between items-center pb-2 text-sm">
                     <span className="text-gray-600">Coordinates:</span>
                     <span className="font-semibold">
-                      {property.latitude.toFixed(4)}, {property.longitude.toFixed(4)}
+                      {Number(property.latitude).toFixed(4)}, {Number(property.longitude).toFixed(4)}
                     </span>
+                  </div>
+                </div>
+              )}
+              
+              {property.features && property.features.length > 0 && (
+                <div className="pt-3">
+                  <p className="text-gray-600 text-sm mb-3 font-semibold">Features & Amenities</p>
+                  <div className="flex flex-wrap gap-2">
+                    {property.features.map((feature) => (
+                      <Badge key={feature} variant="secondary" className="text-xs">
+                        {feature}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
               )}

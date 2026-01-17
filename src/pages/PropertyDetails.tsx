@@ -192,7 +192,7 @@ const PropertyDetails = () => {
   const [tourType, setTourType] = useState('in-person');
   const [showPhotosModal, setShowPhotosModal] = useState(false);
   const [showWalkthroughPlayer, setShowWalkthroughPlayer] = useState(false);
-  const [showMapPlayer, setShowMapPlayer] = useState(false);
+  const [showMapPlayer, setShowMapPlayer] = useState(true);
   const [isTabsSticky, setIsTabsSticky] = useState(false);
   const [inquiryLoading, setInquiryLoading] = useState(false);
 
@@ -779,30 +779,41 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                    <div className="space-y-6">
                       <div>
                         <p className="text-sm text-muted-foreground mb-2">Full Address</p>
-                        <p className="font-semibold text-foreground">{property.address}</p>
+                        <p className="font-semibold text-foreground text-lg">{property.address}</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-2">Location / Area</p>
-                        <p className="font-semibold text-foreground">{property.location}</p>
-                      </div>
+                      
+                      {property.location && (
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-2">Location / Area</p>
+                          <p className="font-semibold text-foreground">{property.location}</p>
+                        </div>
+                      )}
+                      
+                      {property.latitude && property.longitude && (
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-2">Coordinates</p>
+                          <p className="font-mono text-sm text-foreground">{Number(property.latitude).toFixed(4)}, {Number(property.longitude).toFixed(4)}</p>
+                        </div>
+                      )}
+                      
+                      <Button 
+                        className="gap-2 bg-foreground text-white hover:bg-foreground/90 w-full"
+                        onClick={() => {
+                          const lat = property.latitude;
+                          const lng = property.longitude;
+                          const mapsUrl = (lat && lng) 
+                            ? `https://maps.google.com/?q=${lat},${lng}`
+                            : `https://maps.google.com/?q=${encodeURIComponent(property.address || '')}`;
+                          window.open(mapsUrl, '_blank');
+                        }}
+                      >
+                        <MapIcon className="h-4 w-4" />
+                        Open In Google Maps
+                      </Button>
                     </div>
-                    <Button 
-                      className="gap-2 bg-foreground text-white hover:bg-foreground/90"
-                      onClick={() => {
-                        const lat = property.latitude;
-                        const lng = property.longitude;
-                        const mapsUrl = (lat && lng) 
-                          ? `https://maps.google.com/?q=${lat},${lng}`
-                          : `https://maps.google.com/?q=${encodeURIComponent(property.address || '')}`;
-                        window.open(mapsUrl, '_blank');
-                      }}
-                    >
-                      <MapIcon className="h-4 w-4" />
-                      Open In Google Maps
-                    </Button>
                   </AccordionContent>
                 </AccordionItem>
 
@@ -957,56 +968,77 @@ const PropertyDetails = () => {
                   <AccordionContent>
                     {(property.map_virtual_tour_url || property.address) ? (
                       <div className="space-y-4">
-                        <div className="relative h-96 bg-gray-100 rounded-xl overflow-hidden">
+                        {property.address && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <p className="text-sm text-blue-600 font-medium">📍 {property.address}</p>
+                            {property.latitude && property.longitude && (
+                              <p className="text-xs text-blue-500 mt-2 font-mono">{Number(property.latitude).toFixed(6)}, {Number(property.longitude).toFixed(6)}</p>
+                            )}
+                          </div>
+                        )}
+                        <div className="relative bg-gray-100 rounded-xl overflow-hidden shadow-md" style={{ height: '500px' }}>
                           <iframe
                             title="Map Location"
                             width="100%"
                             height="100%"
                             frameBorder="0"
-                            src={showMapPlayer ? (
+                            style={{ border: 0 }}
+                            src={
                               property.map_virtual_tour_url 
                                 ? getEmbedUrl(property.map_virtual_tour_url) 
                                 : (property.latitude && property.longitude)
-                                  ? `https://maps.google.com/maps?q=${property.latitude},${property.longitude}&output=embed`
-                                  : `https://maps.google.com/maps?q=${encodeURIComponent(property.address || '')}&output=embed`
-                            ) : ''}
-                            allowFullScreen
-                          ></iframe>
-                          {!showMapPlayer && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 cursor-pointer" onClick={() => setShowMapPlayer(true)}>
-                              <Button 
-                                className="gap-2 bg-primary hover:bg-primary/90"
-                              >
-                                <MapIcon className="h-4 w-4" />
-                                Load Map
-                              </Button>
-                            </div>
-                          )}
-                          {showMapPlayer && (
-                            <button
-                              onClick={() => setShowMapPlayer(false)}
-                              className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
-                            >
-                              Close
-                            </button>
-                          )}
-                        </div>
-                        <Button 
-                          variant="outline"
-                          className="gap-2 w-full"
-                          onClick={() => {
-                            if (property.map_virtual_tour_url) {
-                              window.open(property.map_virtual_tour_url, '_blank');
-                            } else if (property.latitude && property.longitude) {
-                              window.open(`https://www.google.com/maps?q=${property.latitude},${property.longitude}`, '_blank');
-                            } else if (property.address) {
-                              window.open(`https://www.google.com/maps/search/?q=${encodeURIComponent(property.address)}`, '_blank');
+                                  ? `https://maps.google.com/maps?q=${property.latitude},${property.longitude}&output=embed&z=16&hl=en`
+                                  : `https://maps.google.com/maps?q=${encodeURIComponent(property.address || 'India')}&output=embed&z=14&hl=en`
                             }
-                          }}
-                        >
-                          <MapIcon className="h-4 w-4" />
-                          Open in New Tab
-                        </Button>
+                            allowFullScreen={true}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          ></iframe>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button 
+                            variant="outline"
+                            className="gap-2 text-sm"
+                            onClick={() => {
+                              if (property.map_virtual_tour_url) {
+                                window.open(property.map_virtual_tour_url, '_blank');
+                              } else if (property.latitude && property.longitude) {
+                                window.open(`https://www.google.com/maps?q=${property.latitude},${property.longitude}&z=16`, '_blank');
+                              } else if (property.address) {
+                                window.open(`https://www.google.com/maps/search/${encodeURIComponent(property.address)}`, '_blank');
+                              }
+                            }}
+                          >
+                            <MapIcon className="h-4 w-4" />
+                            View Map
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            className="gap-2 text-sm"
+                            onClick={() => {
+                              if (property.latitude && property.longitude) {
+                                window.open(`https://www.google.com/maps/@${property.latitude},${property.longitude},0a,75y`, '_blank');
+                              } else if (property.address) {
+                                window.open(`https://www.google.com/maps/search/${encodeURIComponent(property.address)}/@0,0,0a,0d`, '_blank');
+                              }
+                            }}
+                          >
+                            🛰️ Satellite
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            className="gap-2 text-sm"
+                            onClick={() => {
+                              if (property.latitude && property.longitude) {
+                                window.open(`https://www.google.com/maps/dir//${property.latitude},${property.longitude}`, '_blank');
+                              } else if (property.address) {
+                                window.open(`https://www.google.com/maps/dir//${encodeURIComponent(property.address)}`, '_blank');
+                              }
+                            }}
+                          >
+                            📍 Directions
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div className="h-96 bg-white rounded-xl flex items-center justify-center overflow-hidden">

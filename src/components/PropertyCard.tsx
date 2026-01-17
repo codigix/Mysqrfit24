@@ -210,10 +210,12 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 <span>{property.bathrooms}</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
-              <Square className="w-4 h-4" />
-              <span>{property.area.toLocaleString()} sqft</span>
-            </div>
+            {property.area && (
+              <div className="flex items-center gap-1">
+                <Square className="w-4 h-4" />
+                <span>{property.area.toLocaleString()} sqft</span>
+              </div>
+            )}
           </div>
 
           {/* Features */}

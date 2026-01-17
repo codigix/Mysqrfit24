@@ -116,11 +116,11 @@ const Index = () => {
       </footer>
 
       {/* ChatBot */}
-      <ChatBotIcon onClick={() => setIsChatBotOpen(true)} />
+      {/* <ChatBotIcon onClick={() => setIsChatBotOpen(true)} />
       <ChatBot
         isOpen={isChatBotOpen}
         onToggle={() => setIsChatBotOpen(!isChatBotOpen)}
-      />
+      /> */}
     </div>
   );
 };
