@@ -95,7 +95,7 @@ export const AdminPropertyModal = ({
         amenities: Array.isArray(property.features) ? property.features : [],
         images: Array.isArray(property.images) ? property.images : [],
         virtual_walkthrough_url: property.virtual_walkthrough_url || '',
-        video_tour_url: (property as any).video_tour_url || '',
+        video_tour_url: property.video_tour_url || '',
         map_virtual_tour_url: property.map_virtual_tour_url || '',
         is_featured: property.is_featured || false,
       });
@@ -641,12 +641,27 @@ export const AdminPropertyModal = ({
               </AccordionContent>
             </AccordionItem>
 
-            {/* Video Tour */}
+            {/* Video & Virtual Tour */}
             <AccordionItem value="videotour" className="border border-gray-200 rounded-lg">
               <AccordionTrigger className="bg-white px-4 py-3 hover:bg-gray-50 font-semibold">
-                🎥 Video Tour
+                🎥 Video & Virtual Tour
               </AccordionTrigger>
               <AccordionContent className="bg-white p-4 space-y-4">
+                <div>
+                  <Label className="font-semibold">360° Virtual Walkthrough URL</Label>
+                  <Input
+                    value={formData.virtual_walkthrough_url}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        virtual_walkthrough_url: e.target.value,
+                      })
+                    }
+                    placeholder="https://my.matterport.com/show/..."
+                    type="url"
+                  />
+                  <p className="text-sm text-gray-500 mt-2">Enter the URL for your 360° virtual walkthrough (e.g., Matterport, Kuula)</p>
+                </div>
                 <div>
                   <Label className="font-semibold">YouTube Video Link</Label>
                   <Input

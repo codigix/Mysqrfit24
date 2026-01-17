@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getFileUrl, apiService } from '@/services/api';
 import { SiteSetting } from '@/types/site';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState('');
   const [propertyType, setPropertyType] = useState('');
-  const [selectedItems, setSelectedItems] = useState('2 items selected');
+  const [bedrooms, setBedrooms] = useState('');
   const [settings, setSettings] = useState<SiteSetting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,6 +34,12 @@ const HeroSection = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const params = new URLSearchParams();
+    if (selectedLocation) params.append('location', selectedLocation);
+    if (propertyType) params.append('type', propertyType);
+    if (bedrooms) params.append('bedrooms', bedrooms);
+    
+    navigate(`/properties?${params.toString()}`);
   };
 
   const heroTitle = getSettingValue('hero_title', "The Finest Napa's\nReal Estate Properties");
@@ -90,15 +98,17 @@ const HeroSection = () => {
                 <option value="commercial">Commercial</option>
               </select>
 
-              {/* Items Selected */}
+              {/* Bedrooms */}
               <select
-                value={selectedItems}
-                onChange={(e) => setSelectedItems(e.target.value)}
+                value={bedrooms}
+                onChange={(e) => setBedrooms(e.target.value)}
                 className="px-6 py-3 rounded-full bg-transparent text-foreground font-medium cursor-pointer focus:outline-none text-sm border-l border-border"
               >
-                <option value="2 items selected">2 items selected</option>
-                <option value="1 item selected">1 item selected</option>
-                <option value="3 items selected">3 items selected</option>
+                <option value="">Bedrooms</option>
+                <option value="1">1+ BHK</option>
+                <option value="2">2+ BHK</option>
+                <option value="3">3+ BHK</option>
+                <option value="4">4+ BHK</option>
               </select>
 
               {/* Search Button */}

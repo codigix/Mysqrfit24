@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useProperties } from '@/hooks/useProperties';
 import { PropertyCard } from '@/components/PropertyCard';
 import { PropertyFilters } from '@/components/PropertyFilters';
@@ -8,7 +9,26 @@ import { PropertyFilters as IPropertyFilters } from '@/types/property';
 import { Building } from 'lucide-react';
 
 const Properties = () => {
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<IPropertyFilters>({});
+
+  useEffect(() => {
+    const location = searchParams.get('location');
+    const type = searchParams.get('type') as IPropertyFilters['type'];
+    const property_type = searchParams.get('property_type');
+    const bedrooms = searchParams.get('bedrooms');
+
+    const initialFilters: IPropertyFilters = {};
+    if (location) initialFilters.location = location;
+    if (type) initialFilters.type = type;
+    if (property_type) initialFilters.property_type = property_type;
+    if (bedrooms) initialFilters.bedrooms = Number(bedrooms);
+
+    if (Object.keys(initialFilters).length > 0) {
+      setFilters(initialFilters);
+    }
+  }, [searchParams]);
+
   const { data: properties, isLoading, error } = useProperties(filters);
 
   return (
