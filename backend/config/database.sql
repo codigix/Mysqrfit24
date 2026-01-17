@@ -18,22 +18,32 @@ CREATE TABLE IF NOT EXISTS properties (
   id VARCHAR(36) PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   description LONGTEXT,
+  min_price DECIMAL(15, 2),
+  max_price DECIMAL(15, 2),
   price DECIMAL(15, 2) NOT NULL,
-  type ENUM('sale', 'rent') NOT NULL,
-  property_type ENUM('apartment', 'house', 'villa', 'commercial', 'land') NOT NULL,
+  type ENUM('sale', 'rent', 'lease') NOT NULL,
+  property_type ENUM('apartment', 'house', 'villa', 'commercial', 'land', 'flats', 'rowhouses', 'godowns', 'shops', 'openland') NOT NULL,
   bedrooms INT,
   bathrooms INT,
   area DECIMAL(10, 2),
+  plot_area DECIMAL(10, 2),
   location VARCHAR(255),
   address VARCHAR(255),
   latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
+  facing VARCHAR(50),
+  flooring VARCHAR(100),
+  parking INT,
+  age INT,
+  furnishing ENUM('unfurnished', 'semi-furnished', 'furnished') DEFAULT 'unfurnished',
   features JSON,
   images JSON,
   developer_name VARCHAR(255),
+  developer_email VARCHAR(255),
   developer_phone VARCHAR(20),
   developer_whatsapp VARCHAR(20),
   virtual_walkthrough_url VARCHAR(500),
+  video_tour_url VARCHAR(500),
   map_virtual_tour_url VARCHAR(500),
   is_featured BOOLEAN DEFAULT FALSE,
   status ENUM('available', 'sold', 'rented') DEFAULT 'available',
@@ -209,6 +219,16 @@ CREATE TABLE IF NOT EXISTS site_settings (
   FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL,
   INDEX idx_setting_key (setting_key)
 );
+
+INSERT INTO site_settings (id, setting_key, setting_value, setting_type, description) VALUES
+(UUID(), 'hero_title', 'The Finest Napa\'s\nReal Estate Properties', 'text', 'Main title displayed on the home page hero section'),
+(UUID(), 'stats_sold_homes', '7,000+', 'text', 'Number of homes sold displayed in stats section'),
+(UUID(), 'stats_sales_volume', '$1B+', 'text', 'Total sales volume displayed in stats section'),
+(UUID(), 'stats_satisfied_customers', '1,000+', 'text', 'Number of satisfied customers displayed in stats section'),
+(UUID(), 'site_name', 'MySqrfit', 'text', 'The name of the website'),
+(UUID(), 'contact_email', 'contact@mysqrfit.com', 'text', 'Main contact email address'),
+(UUID(), 'phone_number', '+1 (555) 123-4567', 'text', 'Main contact phone number')
+ON DUPLICATE KEY UPDATE updated_at = NOW();
 
 CREATE TABLE IF NOT EXISTS files (
   id VARCHAR(36) PRIMARY KEY,

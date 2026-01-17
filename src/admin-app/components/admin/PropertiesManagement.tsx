@@ -85,7 +85,8 @@ const PropertiesManagement = () => {
                 <th className="text-left py-4 px-6 font-semibold">Title</th>
                 <th className="text-left py-4 px-6 font-semibold">Type</th>
                 <th className="text-left py-4 px-6 font-semibold">Location</th>
-                <th className="text-left py-4 px-6 font-semibold">Price</th>
+                <th className="text-left py-4 px-6 font-semibold">Price Range</th>
+                <th className="text-left py-4 px-6 font-semibold">Developer Email</th>
                 <th className="text-left py-4 px-6 font-semibold">Beds/Baths</th>
                 <th className="text-center py-4 px-6 font-semibold">Featured</th>
                 <th className="text-right py-4 px-6 font-semibold">Actions</th>
@@ -112,7 +113,14 @@ const PropertiesManagement = () => {
                   </td>
                   <td className="py-4 px-6 text-gray-600">{property.location}</td>
                   <td className="py-4 px-6 font-semibold text-gray-900">
-                    ₹{(property.price || 0).toLocaleString()}
+                    {property.min_price && property.max_price ? (
+                      `₹${property.min_price.toLocaleString()} - ₹${property.max_price.toLocaleString()}`
+                    ) : (
+                      `₹${(property.price || 0).toLocaleString()}`
+                    )}
+                  </td>
+                  <td className="py-4 px-6 text-gray-600 truncate max-w-[150px]">
+                    {property.developer_email || '-'}
                   </td>
                   <td className="py-4 px-6 text-gray-600">
                     {property.bedrooms || '-'}/{property.bathrooms || '-'}

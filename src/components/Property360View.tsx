@@ -43,6 +43,12 @@ export const Property360View = ({
     const img = new Image();
     img.crossOrigin = 'anonymous';
     
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+    const mutedColor = `hsl(${computedStyle.getPropertyValue('--muted').trim() || '0 0% 0%'})`;
+    const primaryColor = `hsl(${computedStyle.getPropertyValue('--primary').trim() || '0 0% 0%'})`;
+    const primaryFGColor = `hsl(${computedStyle.getPropertyValue('--primary-foreground').trim() || '0 0% 100%'})`;
+
     const draw = () => {
       if (!ctx || !canvas) return;
       
@@ -55,7 +61,7 @@ export const Property360View = ({
         canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 2
       );
       gradient.addColorStop(0, '#fbf9f6');
-      gradient.addColorStop(1, 'hsl(var(--muted))');
+      gradient.addColorStop(1, mutedColor);
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -78,10 +84,10 @@ export const Property360View = ({
         // Draw placeholder circle with property info
         ctx.beginPath();
         ctx.arc(0, 0, 100, 0, 2 * Math.PI);
-        ctx.fillStyle = 'hsl(var(--primary))';
+        ctx.fillStyle = primaryColor;
         ctx.fill();
         
-        ctx.fillStyle = 'hsl(var(--primary-foreground))';
+        ctx.fillStyle = primaryFGColor;
         ctx.font = '16px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('360° View', 0, -10);
@@ -92,7 +98,7 @@ export const Property360View = ({
       ctx.restore();
       
       // Draw rotation indicator
-      ctx.strokeStyle = 'hsl(var(--primary))';
+      ctx.strokeStyle = primaryColor;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(canvas.width / 2, canvas.height / 2, 120 * zoom, 0, 2 * Math.PI);
@@ -103,7 +109,7 @@ export const Property360View = ({
       const markerY = canvas.height / 2 + Math.sin((rotation * Math.PI) / 180) * 120 * zoom;
       ctx.beginPath();
       ctx.arc(markerX, markerY, 5, 0, 2 * Math.PI);
-      ctx.fillStyle = 'hsl(var(--primary))';
+      ctx.fillStyle = primaryColor;
       ctx.fill();
     };
 

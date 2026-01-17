@@ -25,14 +25,23 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [copiedPhone, setCopiedPhone] = useState(false);
 
-  const formatPrice = (price: number, type: string) => {
-    const formatted = new Intl.NumberFormat('en-IN', {
+  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
+    const formatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(price);
-    return type === 'rent' ? `${formatted}/month` : formatted;
+    });
+
+    if (type === 'sale') {
+      if (minPrice && maxPrice && minPrice !== maxPrice) {
+        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
+      }
+      return formatter.format(price || minPrice || 0);
+    } else {
+      const formatted = formatter.format(price || minPrice || 0);
+      return `${formatted} / month`;
+    }
   };
 
   const nextImage = () => {
@@ -171,7 +180,7 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
         </div>
 
         <div className="text-4xl font-bold text-primary">
-          {formatPrice(property.price, property.type)}
+          {formatPrice(property.price, property.type, property.min_price, property.max_price)}
         </div>
       </div>
 
@@ -209,9 +218,48 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
                 <div className="flex justify-between items-center pb-3 border-b">
                   <div className="flex items-center gap-2 text-gray-600">
                     <Square className="w-5 h-5" />
-                    Area
+                    Living Area
                   </div>
                   <span className="font-semibold">{property.area.toLocaleString()} sqm</span>
+                </div>
+              )}
+              {property.plot_area && (
+                <div className="flex justify-between items-center pb-3 border-b">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Square className="w-5 h-5" />
+                    Plot Area
+                  </div>
+                  <span className="font-semibold">{property.plot_area.toLocaleString()} sqm</span>
+                </div>
+              )}
+              {property.parking !== null && property.parking !== undefined && (
+                <div className="flex justify-between items-center pb-3 border-b">
+                  <span className="text-gray-600">Parking Spaces:</span>
+                  <span className="font-semibold">{property.parking}</span>
+                </div>
+              )}
+              {property.age !== null && property.age !== undefined && (
+                <div className="flex justify-between items-center pb-3 border-b">
+                  <span className="text-gray-600">Property Age:</span>
+                  <span className="font-semibold">{property.age} Years</span>
+                </div>
+              )}
+              {property.facing && (
+                <div className="flex justify-between items-center pb-3 border-b">
+                  <span className="text-gray-600">Facing:</span>
+                  <span className="font-semibold capitalize">{property.facing}</span>
+                </div>
+              )}
+              {property.furnishing && (
+                <div className="flex justify-between items-center pb-3 border-b">
+                  <span className="text-gray-600">Furnishing:</span>
+                  <span className="font-semibold capitalize">{property.furnishing}</span>
+                </div>
+              )}
+              {property.flooring && (
+                <div className="flex justify-between items-center pb-3 border-b">
+                  <span className="text-gray-600">Flooring:</span>
+                  <span className="font-semibold capitalize">{property.flooring}</span>
                 </div>
               )}
               {property.address && (
@@ -264,6 +312,12 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
                 <div>
                   <p className="text-gray-600 text-sm mb-2">WhatsApp</p>
                   <p className="text-lg font-semibold">{property.developer_whatsapp}</p>
+                </div>
+              )}
+              {property.developer_email && (
+                <div>
+                  <p className="text-gray-600 text-sm mb-2">Email</p>
+                  <p className="text-lg font-semibold">{property.developer_email}</p>
                 </div>
               )}
               <div className="flex gap-2 pt-4">

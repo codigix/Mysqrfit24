@@ -34,6 +34,8 @@ export const AdminPropertyModal = ({
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    min_price: '',
+    max_price: '',
     price: '',
     type: 'sale' as 'sale' | 'rent' | 'lease',
     property_type: 'apartment' as string,
@@ -51,11 +53,13 @@ export const AdminPropertyModal = ({
     age: '',
     furnishing: 'unfurnished',
     developer_name: '',
+    developer_email: '',
     developer_phone: '',
     developer_whatsapp: '',
     amenities: [] as string[],
     images: [] as string[],
     virtual_walkthrough_url: '',
+    video_tour_url: '',
     map_virtual_tour_url: '',
     is_featured: false,
   });
@@ -66,28 +70,32 @@ export const AdminPropertyModal = ({
       setFormData({
         title: property.title,
         description: property.description || '',
+        min_price: property.min_price?.toString() || '',
+        max_price: property.max_price?.toString() || '',
         price: property.price.toString(),
         type: property.type as 'sale' | 'rent' | 'lease',
         property_type: property.property_type,
         bedrooms: property.bedrooms?.toString() || '',
         bathrooms: property.bathrooms?.toString() || '',
         area: property.area?.toString() || '',
-        plot_area: '',
-        location: property.location,
-        address: property.address,
+        plot_area: property.plot_area?.toString() || '',
+        location: property.location || '',
+        address: property.address || '',
         latitude: property.latitude?.toString() || '',
         longitude: property.longitude?.toString() || '',
-        facing: '',
-        flooring: '',
-        parking: '',
-        age: '',
-        furnishing: 'unfurnished',
-        developer_name: property.developer_name,
-        developer_phone: property.developer_phone,
+        facing: property.facing || '',
+        flooring: property.flooring || '',
+        parking: property.parking?.toString() || '',
+        age: property.age?.toString() || '',
+        furnishing: property.furnishing || 'unfurnished',
+        developer_name: property.developer_name || '',
+        developer_email: property.developer_email || '',
+        developer_phone: property.developer_phone || '',
         developer_whatsapp: property.developer_whatsapp || '',
         amenities: Array.isArray(property.features) ? property.features : [],
         images: Array.isArray(property.images) ? property.images : [],
         virtual_walkthrough_url: property.virtual_walkthrough_url || '',
+        video_tour_url: (property as any).video_tour_url || '',
         map_virtual_tour_url: property.map_virtual_tour_url || '',
         is_featured: property.is_featured || false,
       });
@@ -100,6 +108,8 @@ export const AdminPropertyModal = ({
     setFormData({
       title: '',
       description: '',
+      min_price: '',
+      max_price: '',
       price: '',
       type: 'sale',
       property_type: 'apartment',
@@ -117,11 +127,13 @@ export const AdminPropertyModal = ({
       age: '',
       furnishing: 'unfurnished',
       developer_name: '',
+      developer_email: '',
       developer_phone: '',
       developer_whatsapp: '',
       amenities: [],
       images: [],
       virtual_walkthrough_url: '',
+      video_tour_url: '',
       map_virtual_tour_url: '',
       is_featured: false,
     });
@@ -142,30 +154,79 @@ export const AdminPropertyModal = ({
     try {
       setLoading(true);
 
-      if (!formData.title || !formData.price || !formData.location || !formData.address) {
-        toast.error('Please fill in all required fields');
+      const missingFields = [];
+      if (!formData.title?.trim()) missingFields.push('Title');
+      
+      if (formData.type === 'sale') {
+        if (!formData.min_price) missingFields.push('Min Price');
+        if (!formData.max_price) missingFields.push('Max Price');
+      } else {
+        if (!formData.price) missingFields.push('Rent Price');
+      }
+
+      if (!formData.type) missingFields.push('Type');
+      if (!formData.property_type) missingFields.push('Property Type');
+      if (!formData.location?.trim()) missingFields.push('Location');
+      if (!formData.address?.trim()) missingFields.push('Address');
+      if (!formData.developer_name?.trim()) missingFields.push('Developer Name');
+      if (!formData.developer_phone?.trim()) missingFields.push('Developer Phone');
+
+      if (missingFields.length > 0) {
+        toast.error(`Required fields missing: ${missingFields.join(', ')}`);
+        setLoading(false);
         return;
+      }
+
+      let minPrice = parseFloat(formData.min_price);
+      let maxPrice = parseFloat(formData.max_price);
+      let priceValue = parseFloat(formData.price);
+
+      if (formData.type === 'sale') {
+        if (isNaN(minPrice) || isNaN(maxPrice)) {
+          toast.error('Please enter valid price range');
+          setLoading(false);
+          return;
+        }
+        priceValue = minPrice;
+      } else {
+        if (isNaN(priceValue)) {
+          toast.error('Please enter valid rent price');
+          setLoading(false);
+          return;
+        }
+        minPrice = priceValue;
+        maxPrice = priceValue;
       }
 
       const payload = {
         title: formData.title,
         description: formData.description,
-        price: parseFloat(formData.price),
+        min_price: minPrice,
+        max_price: maxPrice,
+        price: priceValue,
         type: formData.type,
         property_type: formData.property_type,
         bedrooms: formData.bedrooms ? parseInt(formData.bedrooms, 10) : null,
         bathrooms: formData.bathrooms ? parseInt(formData.bathrooms, 10) : null,
         area: formData.area ? parseFloat(formData.area) : null,
+        plot_area: formData.plot_area ? parseFloat(formData.plot_area) : null,
         location: formData.location,
         address: formData.address,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+        facing: formData.facing || null,
+        flooring: formData.flooring || null,
+        parking: formData.parking ? parseInt(formData.parking, 10) : null,
+        age: formData.age ? parseInt(formData.age, 10) : null,
+        furnishing: formData.furnishing,
         developer_name: formData.developer_name,
+        developer_email: formData.developer_email || null,
         developer_phone: formData.developer_phone,
         developer_whatsapp: formData.developer_whatsapp || null,
         features: formData.amenities.length > 0 ? formData.amenities : null,
         images: formData.images.length > 0 ? formData.images : null,
         virtual_walkthrough_url: formData.virtual_walkthrough_url || null,
+        video_tour_url: formData.video_tour_url || null,
         map_virtual_tour_url: formData.map_virtual_tour_url || null,
         is_featured: formData.is_featured,
       };
@@ -220,16 +281,6 @@ export const AdminPropertyModal = ({
                     />
                   </div>
                   <div>
-                    <Label className="font-semibold">Price *</Label>
-                    <Input
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      placeholder="1000000"
-                      required
-                    />
-                  </div>
-                  <div>
                     <Label className="font-semibold">Type *</Label>
                     <select
                       value={formData.type}
@@ -246,6 +297,41 @@ export const AdminPropertyModal = ({
                       <option value="lease">Lease</option>
                     </select>
                   </div>
+                  {formData.type === 'sale' ? (
+                    <>
+                      <div>
+                        <Label className="font-semibold">Min Price *</Label>
+                        <Input
+                          type="number"
+                          value={formData.min_price}
+                          onChange={(e) => setFormData({ ...formData, min_price: e.target.value })}
+                          placeholder="e.g. 500000"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label className="font-semibold">Max Price *</Label>
+                        <Input
+                          type="number"
+                          value={formData.max_price}
+                          onChange={(e) => setFormData({ ...formData, max_price: e.target.value })}
+                          placeholder="e.g. 1000000"
+                          required
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <Label className="font-semibold">Rent Price (per month) *</Label>
+                      <Input
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        placeholder="e.g. 25000"
+                        required
+                      />
+                    </div>
+                  )}
                   <div>
                     <Label className="font-semibold">Property Type *</Label>
                     <select
@@ -555,26 +641,26 @@ export const AdminPropertyModal = ({
               </AccordionContent>
             </AccordionItem>
 
-            {/* Virtual Walkthrough */}
-            <AccordionItem value="walkthrough" className="border border-gray-200 rounded-lg">
+            {/* Video Tour */}
+            <AccordionItem value="videotour" className="border border-gray-200 rounded-lg">
               <AccordionTrigger className="bg-white px-4 py-3 hover:bg-gray-50 font-semibold">
-                🔄 360° Virtual Walkthrough
+                🎥 Video Tour
               </AccordionTrigger>
               <AccordionContent className="bg-white p-4 space-y-4">
                 <div>
-                  <Label className="font-semibold">Virtual Walkthrough URL</Label>
+                  <Label className="font-semibold">YouTube Video Link</Label>
                   <Input
-                    value={formData.virtual_walkthrough_url}
+                    value={formData.video_tour_url}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        virtual_walkthrough_url: e.target.value,
+                        video_tour_url: e.target.value,
                       })
                     }
-                    placeholder="https://www.youtube.com/watch?v=... or Matterport/Kuula link"
+                    placeholder="https://www.youtube.com/watch?v=..."
                     type="url"
                   />
-                  <p className="text-sm text-gray-500 mt-2">Enter the URL for your 360° virtual walkthrough. Supports YouTube, Matterport, Kuula, and similar platforms. YouTube links will be automatically converted to embed format.</p>
+                  <p className="text-sm text-gray-500 mt-2">Enter the YouTube video link for the property tour.</p>
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -632,7 +718,18 @@ export const AdminPropertyModal = ({
                       required
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div>
+                    <Label className="font-semibold">Email Address</Label>
+                    <Input
+                      value={formData.developer_email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, developer_email: e.target.value })
+                      }
+                      placeholder="developer@example.com"
+                      type="email"
+                    />
+                  </div>
+                  <div>
                     <Label className="font-semibold">WhatsApp Number (Optional)</Label>
                     <Input
                       value={formData.developer_whatsapp}

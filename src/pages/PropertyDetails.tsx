@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProperty } from '@/hooks/useProperties';
+import { useProperty, useProperties } from '@/hooks/useProperties';
 import { Property } from '@/types/property';
 import { Navigation } from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,35 @@ import {
   BarChart3,
   Clock,
   Phone,
-  Video
+  Video,
+  Waves,
+  Home,
+  Baby,
+  Trophy,
+  Dumbbell,
+  Music,
+  Wind,
+  Flame,
+  Zap,
+  Droplets,
+  ChefHat,
+  Layout,
+  Box,
+  Trash2,
+  Fan,
+  Wifi,
+  Tv,
+  Monitor,
+  Car,
+  ShieldCheck,
+  Trees,
+  Flower2,
+  Warehouse,
+  ParkingCircle,
+  ArrowUpCircle,
+  Table,
+  Bike,
+  CircleDot
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -65,323 +93,96 @@ interface ExtendedProperty extends Property {
   developer_avatar?: string;
 }
 
-const mockPropertyData: Record<string, ExtendedProperty> = {
-  '1': {
-    id: '1',
-    title: 'Luxury Apartment in City Center',
-    price: 1000000,
-    type: 'sale',
-    property_type: 'apartment',
-    address: '123 Sunset Avenue, Napa Valley, CA',
-    location: 'Napa Valley',
-    city: 'Napa Valley',
-    bedrooms: 2,
-    bathrooms: 5,
-    area: 29000,
-    description: 'Beautiful luxury apartment with modern amenities. Perfect for a growing family with spacious rooms and excellent natural lighting. This property features high-end finishes, smart home technology, and premium fixtures throughout.',
-    images: [
-      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['garage', 'garden', 'pool', 'security', 'wifi', 'balcony'],
-    is_featured: true,
-    status: 'Available',
-    developer_name: 'John Smith',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'john.smith@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    latitude: 38.2975,
-    longitude: -122.2869,
-    propertyId: '72',
-    rooms: 5,
-    garages: 2,
-    yearBuilt: 2002,
-    lotSize: 9820,
-    reviews: [
-      { id: 1, author: 'Sarah Johnson', rating: 5, comment: 'Absolutely beautiful property! The photos do not do it justice. Highly recommend!', date: '2024-06-15' },
-      { id: 2, author: 'Mike Davis', rating: 5, comment: 'Outstanding location and amazing amenities. Great investment!', date: '2024-05-20' }
-    ]
-  },
-  '2': {
-    id: '2',
-    title: 'Modern Home For Sale',
-    price: 7750000,
-    type: 'sale',
-    property_type: 'apartment',
-    address: '456 Oak Street, San Francisco, CA',
-    location: 'San Francisco',
-    city: 'San Francisco',
-    bedrooms: 5,
-    bathrooms: 6,
-    area: 4500,
-    description: 'Stunning modern apartment with panoramic city views. Features contemporary design, smart home technology, and premium finishes.',
-    images: [
-      'https://images.unsplash.com/photo-1576941089067-2de3dd663161?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1576941089067-2de3dd663161?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['garage', 'gym', 'wifi', 'security', 'balcony'],
-    is_featured: true,
-    status: 'Available',
-    developer_name: 'Sarah Johnson',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'sarah@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
-    latitude: 37.7749,
-    longitude: -122.4194,
-    propertyId: '73',
-    rooms: 8,
-    garages: 3,
-    yearBuilt: 2018,
-    lotSize: 5500,
-    reviews: []
-  },
-  '3': {
-    id: '3',
-    title: 'Spacious Home For Sale',
-    price: 8000000,
-    type: 'sale',
-    property_type: 'house',
-    address: '789 Maple Drive, Los Angeles, CA',
-    location: 'Los Angeles',
-    city: 'Los Angeles',
-    bedrooms: 2,
-    bathrooms: 4,
-    area: 5500,
-    description: 'Luxurious spacious home with high-end finishes and premium location.',
-    images: [
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['pool', 'garden', 'security', 'fireplace', 'wifi'],
-    is_featured: false,
-    status: 'Available',
-    developer_name: 'Mike Davis',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'mike@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
-    latitude: 34.0522,
-    longitude: -118.2437,
-    propertyId: '74',
-    rooms: 4,
-    garages: 2,
-    yearBuilt: 2015,
-    lotSize: 7200,
-    reviews: []
-  },
-  '4': {
-    id: '4',
-    title: 'Modern Penthouse Apartment',
-    price: 200000,
-    type: 'rent',
-    property_type: 'apartment',
-    address: '321 Downtown Plaza, New York, NY',
-    location: 'New York',
-    city: 'New York',
-    bedrooms: 2,
-    bathrooms: 2.5,
-    area: 2500,
-    description: 'Stunning penthouse apartment with breathtaking views of the skyline.',
-    images: [
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1576941089067-2de3dd663161?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['gym', 'wifi', 'security', 'balcony'],
-    is_featured: true,
-    status: 'Available',
-    developer_name: 'Emma Wilson',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'emma@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    latitude: 40.7128,
-    longitude: -74.0060,
-    propertyId: '75',
-    rooms: 3,
-    garages: 1,
-    yearBuilt: 2020,
-    lotSize: 1500,
-    reviews: []
-  },
-  '5': {
-    id: '5',
-    title: 'Luxury Villa',
-    price: 12000000,
-    type: 'sale',
-    property_type: 'villa',
-    address: '555 Hilltop Lane, Malibu, CA',
-    location: 'Malibu',
-    city: 'Malibu',
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 6500,
-    description: 'Spectacular luxury villa with ocean views, private beach access, and world-class amenities.',
-    images: [
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['pool', 'garden', 'security', 'gym', 'fireplace'],
-    is_featured: true,
-    status: 'Available',
-    developer_name: 'Robert Brown',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'robert@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    latitude: 34.0195,
-    longitude: -118.6919,
-    propertyId: '76',
-    rooms: 6,
-    garages: 3,
-    yearBuilt: 2010,
-    lotSize: 12000,
-    reviews: []
-  },
-  '6': {
-    id: '6',
-    title: 'Cozy Studio Apartment',
-    price: 120000,
-    type: 'rent',
-    property_type: 'studio',
-    address: '654 College Avenue, Boston, MA',
-    location: 'Boston',
-    city: 'Boston',
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 3500,
-    description: 'Charming studio apartment perfect for students or young professionals.',
-    images: [
-      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['wifi', 'security'],
-    is_featured: false,
-    status: 'Available',
-    developer_name: 'Lisa Anderson',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'lisa@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    latitude: 42.3601,
-    longitude: -71.0589,
-    propertyId: '77',
-    rooms: 2,
-    garages: 0,
-    yearBuilt: 2008,
-    lotSize: 900,
-    reviews: []
-  },
-  '7': {
-    id: '7',
-    title: 'Commercial Office Space',
-    price: 500000,
-    type: 'rent',
-    property_type: 'commercial',
-    address: '999 Business Park, Austin, TX',
-    location: 'Austin',
-    city: 'Austin',
-    bedrooms: 0,
-    bathrooms: 2,
-    area: 12000,
-    description: 'Premium commercial office space in prime business district.',
-    images: [
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['security', 'wifi', 'parking'],
-    is_featured: false,
-    status: 'Available',
-    developer_name: 'James Martinez',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'james@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    latitude: 30.2672,
-    longitude: -97.7431,
-    propertyId: '78',
-    rooms: 10,
-    garages: 4,
-    yearBuilt: 2012,
-    lotSize: 15000,
-    reviews: []
-  },
-  '8': {
-    id: '8',
-    title: 'Retail Shop Downtown',
-    price: 350000,
-    type: 'rent',
-    property_type: 'shop',
-    address: '888 Main Street, Seattle, WA',
-    location: 'Seattle',
-    city: 'Seattle',
-    bedrooms: 0,
-    bathrooms: 1,
-    area: 8000,
-    description: 'High-traffic retail location perfect for boutiques and specialty shops.',
-    images: [
-      'https://images.unsplash.com/photo-1559056199-641a0ac8b3f4?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&h=800&fit=crop',
-    ],
-    floorPlanImage: 'https://images.unsplash.com/photo-1585399543128-47f1d4f1b8a7?w=600&h=600&fit=crop',
-    videoThumbnail: 'https://images.unsplash.com/photo-1559056199-641a0ac8b3f4?w=800&h=450&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/AjJcVMtxMo0',
-    features: ['security', 'parking'],
-    is_featured: false,
-    status: 'Available',
-    developer_name: 'Patricia Lee',
-    developer_phone: '+1 206-741-0340',
-    developer_whatsapp: '+1 206-741-0340',
-    developer_email: 'patricia@realestate.com',
-    developer_avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-    latitude: 47.6062,
-    longitude: -122.3321,
-    propertyId: '79',
-    rooms: 5,
-    garages: 2,
-    yearBuilt: 2014,
-    lotSize: 5000,
-    reviews: []
-  },
+const mockPropertyData: Record<string, ExtendedProperty> = {};
+
+const AMENITY_ICONS: Record<string, any> = {
+  'Vitrified Tiles': Grid3x3,
+  'Granite Kitchen': ChefHat,
+  'Stainless Steel Sink': Droplets,
+  'Branded Fittings': Star,
+  'Equipped Kitchen': ChefHat,
+  'Media Room': Film,
+  'Gym': Dumbbell,
+  'Laundry': Box,
+  'Central Air': Wind,
+  'Natural Gas': Flame,
+  'Electricity': Zap,
+  'Ventilation': Fan,
+  'Heating': Flame,
+  'Water': Droplets,
+  'Swimming Pool': Waves,
+  'Club House': Home,
+  'Kids Play Area': Baby,
+  'Basketball Court': Trophy,
+  'Gymnasium': Dumbbell,
+  'Party Lawn': Trees,
+  'Back yard': Trees,
+  'Pool': Waves,
+  'Garage Attached': Car,
+  'Chair Accessible': User,
+  'Smoke detectors': ShieldCheck,
+  'Elevator': ArrowUpCircle,
+  'Washer and dryer': Box,
+  'Fireplace': Flame,
+  'WiFi': Wifi,
+  'Security': ShieldCheck,
+  'Parking Spaces': ParkingCircle,
+  'Car Parking': Car,
+  'Lift Service': ArrowUpCircle,
+  'Playground': Baby,
+  'Water Supply': Droplets,
+  'High-speed WiFi': Wifi,
+  'Power Backup': Zap,
+  'Club Assembly': Home,
+  'Balcony': Layout,
+  'Garden': Flower2,
+  'Terrace': Layout,
+  'CCTV': Video,
+  'Gated Community': ShieldCheck,
+  'Intercom': Phone,
+  'Community Center': Home,
 };
+
+const AmenityBox = ({ name }: { name: string }) => {
+  const Icon = AMENITY_ICONS[name] || Check;
+  return (
+    <div className="flex flex-col items-center justify-center p-3 border border-gray-100 rounded-xl bg-white shadow-sm hover:shadow-md transition-all hover:-translate-y-1 aspect-square text-center group">
+      <div className="mb-2 p-2 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+        <Icon className="h-6 w-6 text-primary" />
+      </div>
+      <span className="text-[10px] md:text-xs font-medium text-gray-700 leading-tight">{name}</span>
+    </div>
+  );
+};
+
+const INTERNAL_AMENITIES = [
+  'Gym', 'Lift Service', 'High-speed WiFi', 'Power Backup', 'Balcony', 
+  'Terrace', 'Elevator', 'Intercom', 'Equipped Kitchen', 'Media Room', 
+  'Laundry', 'Vitrified Tiles', 'Granite Kitchen', 
+  'Stainless Steel Sink', 'Branded Fittings', 'Chair Accessible', 'Washer and dryer'
+];
+
+const EXTERNAL_AMENITIES = [
+  'Swimming Pool', 'Park', 'Parking Spaces', 'Security', 'Car Parking', 
+  'Playground', 'Water Supply', 'Club Assembly', 'Garden', 'CCTV', 
+  'Gated Community', 'Community Center', 'Party Lawn', 'Back yard', 
+  'Pool', 'Garage Attached', 'Basketball Court', 'Gymnasium'
+];
+
+const UTILITY_AMENITIES = [
+  'Central Air', 'Natural Gas', 'Electricity', 'Ventilation', 'Heating', 'Water', 'Smoke detectors', 'Fireplace', 'WiFi'
+];
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { data: dbProperty, isLoading } = useProperty(id!);
+  const { data: similarListings } = useProperties({ 
+    property_type: dbProperty?.property_type,
+    type: dbProperty?.type
+  });
   const mockProperty = mockPropertyData[id || '1'];
-  const { data: dbProperty } = useProperty(id!);
-  const property = mockProperty || dbProperty;
+  const property = dbProperty || (isLoading ? null : mockProperty);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -394,6 +195,17 @@ const PropertyDetails = () => {
   const [showMapPlayer, setShowMapPlayer] = useState(false);
   const [isTabsSticky, setIsTabsSticky] = useState(false);
   const [inquiryLoading, setInquiryLoading] = useState(false);
+
+  const features = property?.features || [];
+  const internal = features.filter(f => INTERNAL_AMENITIES.some(a => a.toLowerCase() === f.toLowerCase()));
+  const external = features.filter(f => EXTERNAL_AMENITIES.some(a => a.toLowerCase() === f.toLowerCase()));
+  const utility = features.filter(f => UTILITY_AMENITIES.some(a => a.toLowerCase() === f.toLowerCase()));
+  const other = features.filter(f => 
+    !INTERNAL_AMENITIES.some(a => a.toLowerCase() === f.toLowerCase()) && 
+    !EXTERNAL_AMENITIES.some(a => a.toLowerCase() === f.toLowerCase()) && 
+    !UTILITY_AMENITIES.some(a => a.toLowerCase() === f.toLowerCase())
+  );
+
   const [sidebarInquiry, setSidebarInquiry] = useState({
     name: '',
     email: '',
@@ -460,23 +272,28 @@ const PropertyDetails = () => {
   const featuresRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
-  const virtualTourRef = useRef<HTMLDivElement>(null);
-  const calculatorRef = useRef<HTMLDivElement>(null);
   const floorPlansRef = useRef<HTMLDivElement>(null);
-  const statisticsRef = useRef<HTMLDivElement>(null);
   const scheduleRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
   const similarRef = useRef<HTMLDivElement>(null);
 
-  const formatPrice = (price: number, type: string) => {
-    const formatted = new Intl.NumberFormat('en-IN', {
+  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
+    const formatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(price);
+    });
 
-    return type === 'rent' ? `${formatted}/month` : formatted;
+    if (type === 'sale') {
+      if (minPrice && maxPrice && minPrice !== maxPrice) {
+        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
+      }
+      return formatter.format(price || minPrice || 0);
+    } else {
+      const formatted = formatter.format(price || minPrice || 0);
+      return `${formatted} / month`;
+    }
   };
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
@@ -505,38 +322,21 @@ const PropertyDetails = () => {
   };
 
   const getSimilarProperties = () => {
-    return [
-      {
-        id: '1',
-        title: 'Luxury Villa with Pool',
-        price: property?.price ? Math.round(property.price * 0.95) : 500000,
-        image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=300&fit=crop',
-        beds: property?.bedrooms || 3,
-        baths: property?.bathrooms || 2,
-        area: property?.area || 2000,
-        status: 'Featured',
-      },
-      {
-        id: '2',
-        title: 'Modern Apartment',
-        price: property?.price ? Math.round(property.price * 1.05) : 550000,
-        image: 'https://images.unsplash.com/photo-1576941089067-2de3dd663161?w=400&h=300&fit=crop',
-        beds: (property?.bedrooms || 3) - 1,
-        baths: property?.bathrooms || 2,
-        area: (property?.area || 2000) - 200,
-        status: 'For Sale',
-      },
-      {
-        id: '2',
-        title: 'Modern Apartment',
-        price: property?.price ? Math.round(property.price * 1.05) : 550000,
-        image: 'https://images.unsplash.com/photo-1576941089067-2de3dd663161?w=400&h=300&fit=crop',
-        beds: (property?.bedrooms || 3) - 1,
-        baths: property?.bathrooms || 2,
-        area: (property?.area || 2000) - 200,
-        status: 'For Sale',
-      },
-    ];
+    if (!similarListings) return [];
+    
+    return similarListings
+      .filter(p => p.id !== property?.id)
+      .slice(0, 3)
+      .map(p => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        image: getFileUrl(p.images?.[0] || ''),
+        beds: p.bedrooms || 0,
+        baths: p.bathrooms || 0,
+        area: p.area || 0,
+        status: p.is_featured ? 'Featured' : (p.type === 'sale' ? 'For Sale' : 'For Rent'),
+      }));
   };
 
   const handleViewDetails = (prop: Partial<ExtendedProperty>) => {
@@ -555,6 +355,17 @@ const PropertyDetails = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navigation />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!property) {
     return (
@@ -610,6 +421,11 @@ const PropertyDetails = () => {
       
       return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
     }
+
+    if (url.includes('google.com/maps') || url.includes('maps.google.com') || url.includes('maps.app.goo.gl')) {
+      if (url.includes('embed')) return url;
+      return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
+    }
     
     return url;
   };
@@ -637,10 +453,7 @@ const PropertyDetails = () => {
             { id: 'features', label: 'Features', ref: featuresRef },
             { id: 'video', label: 'Video', ref: videoRef },
             { id: 'map', label: 'Map', ref: mapRef },
-            { id: 'virtualTour', label: 'Virtual Tour', ref: virtualTourRef },
-            { id: 'calculator', label: 'Calculator', ref: calculatorRef },
             { id: 'floorPlans', label: 'Floor Plans', ref: floorPlansRef },
-            { id: 'statistics', label: 'Statistics', ref: statisticsRef },
             { id: 'schedule', label: 'Schedule a tour', ref: scheduleRef },
             { id: 'similar', label: 'Similar Listings', ref: similarRef },
           ].map((tab) => (
@@ -815,8 +628,14 @@ const PropertyDetails = () => {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-sm text-muted-foreground mb-1">${(property.price / property.area).toFixed(0)} per sqft</p>
-              <p className="text-3xl font-bold text-primary mb-4">${(property.price / 1000000).toFixed(1)}M</p>
+              {property.area && (
+                <p className="text-sm text-muted-foreground mb-1">
+                  {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format((property.min_price || property.price) / property.area)} per sqft
+                </p>
+              )}
+              <p className="text-3xl font-bold text-primary mb-4">
+                {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+              </p>
               <div className="flex gap-2 justify-end">
                 <Button 
                   size="sm" 
@@ -892,54 +711,54 @@ const PropertyDetails = () => {
                     <p className="font-semibold text-foreground">{property.propertyId}</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-7 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                   <div className="flex flex-col items-center">
                     <div className="flex items-center gap-1 mb-2">
                       <Bed className="w-5 h-5 text-primary" />
-                      <span className="font-bold text-lg text-foreground">{property.bedrooms}</span>
+                      <span className="font-bold text-lg text-foreground">{property.bedrooms || 0}</span>
                     </div>
                     <p className="text-xs text-muted-foreground text-center">Bedrooms</p>
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="flex items-center gap-1 mb-2">
-                      <MessageSquare className="w-5 h-5 text-primary" />
-                      <span className="font-bold text-lg text-foreground">{property.rooms}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground text-center">Rooms</p>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center gap-1 mb-2">
                       <Bath className="w-5 h-5 text-primary" />
-                      <span className="font-bold text-lg text-foreground">{property.bathrooms}</span>
+                      <span className="font-bold text-lg text-foreground">{property.bathrooms || 0}</span>
                     </div>
                     <p className="text-xs text-muted-foreground text-center">Bathrooms</p>
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="flex items-center gap-1 mb-2">
-                      <Square className="w-5 h-5 text-primary" />
-                      <span className="font-bold text-lg text-foreground">{property.garages}</span>
+                      <Car className="w-5 h-5 text-primary" />
+                      <span className="font-bold text-lg text-foreground">{property.parking || 0}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground text-center">Garages</p>
+                    <p className="text-xs text-muted-foreground text-center">Parking</p>
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="flex items-center gap-1 mb-2">
                       <Maximize2 className="w-5 h-5 text-primary" />
-                      <span className="font-bold text-lg text-foreground">{(property.area / 1000).toFixed(1)}K</span>
+                      <span className="font-bold text-lg text-foreground">{property.area || 0}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground text-center">Property Size</p>
+                    <p className="text-xs text-muted-foreground text-center">Living Area (sqm)</p>
                   </div>
-                  <div className="col-span-2 flex flex-col items-center">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-1 mb-2">
+                      <Square className="w-5 h-5 text-primary" />
+                      <span className="font-bold text-lg text-foreground">{property.plot_area || 0}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground text-center">Plot Area (sqm)</p>
+                  </div>
+                  <div className="flex flex-col items-center">
                     <div className="flex items-center gap-1 mb-2">
                       <Calendar className="w-5 h-5 text-primary" />
-                      <span className="font-bold text-lg text-foreground">{property.yearBuilt}</span>
+                      <span className="font-bold text-lg text-foreground">{property.age || 0}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground text-center">Year Built</p>
+                    <p className="text-xs text-muted-foreground text-center">Age (Years)</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             <div ref={descriptionRef}>
-              <Accordion type="multiple" defaultValue={["description", "address", "details", "features", "walkthrough", "map", "virtualtour", "calculator", "statistics", "schedule"]} className="space-y-2">
+              <Accordion type="multiple" defaultValue={["description", "address", "details", "features", "walkthrough", "map", "virtualtour", "calculator", "statistics", "schedule", "reviews"]} className="space-y-2">
                 <AccordionItem value="description" className="  px-6 bg-white rounded-lg">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
@@ -960,32 +779,24 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                       <div>
-                        <p className="text-sm text-muted-foreground mb-2">Address</p>
+                        <p className="text-sm text-muted-foreground mb-2">Full Address</p>
                         <p className="font-semibold text-foreground">{property.address}</p>
-                        <p className="text-sm text-muted-foreground mt-4 mb-2">State/County</p>
-                        <p className="font-semibold text-foreground">California</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground mb-2">City</p>
-                        <p className="font-semibold text-foreground">{property.city}</p>
-                        <p className="text-sm text-muted-foreground mt-4 mb-2">Zip</p>
-                        <p className="font-semibold text-foreground">98107</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-2">Area</p>
+                        <p className="text-sm text-muted-foreground mb-2">Location / Area</p>
                         <p className="font-semibold text-foreground">{property.location}</p>
-                        <p className="text-sm text-muted-foreground mt-4 mb-2">Country</p>
-                        <p className="font-semibold text-foreground">United States</p>
                       </div>
                     </div>
                     <Button 
                       className="gap-2 bg-foreground text-white hover:bg-foreground/90"
                       onClick={() => {
-                        const lat = property.latitude || 40.7128;
-                        const lng = property.longitude || -74.0060;
-                        const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
+                        const lat = property.latitude;
+                        const lng = property.longitude;
+                        const mapsUrl = (lat && lng) 
+                          ? `https://maps.google.com/?q=${lat},${lng}`
+                          : `https://maps.google.com/?q=${encodeURIComponent(property.address || '')}`;
                         window.open(mapsUrl, '_blank');
                       }}
                     >
@@ -1003,90 +814,60 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Property Id</p>
-                        <p className="font-semibold text-foreground">{property.propertyId}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Property ID</span>
+                        <span className="font-semibold text-foreground">{property.id.slice(0, 8)}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Price</p>
-                        <p className="font-semibold text-foreground">${(property.price / 1000000).toFixed(1)}M</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Property Type</span>
+                        <span className="font-semibold text-foreground capitalize">{property.property_type}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Price Info</p>
-                        <p className="font-semibold text-foreground">${(property.price / property.area).toFixed(0)} per sqft</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Status</span>
+                        <span className="font-semibold text-foreground capitalize">{property.status || 'Available'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Property Size</p>
-                        <p className="font-semibold text-foreground">{(property.area / 1000).toFixed(1)}K ft²</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Price</span>
+                        <span className="font-semibold text-foreground">
+                          {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(property.price)}
+                        </span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Property Lot Size</p>
-                        <p className="font-semibold text-foreground">{(property.lotSize / 1000).toFixed(1)}K ft²</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Bedrooms</span>
+                        <span className="font-semibold text-foreground">{property.bedrooms || '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Rooms</p>
-                        <p className="font-semibold text-foreground">{property.rooms}</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Bathrooms</span>
+                        <span className="font-semibold text-foreground">{property.bathrooms || '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Bedrooms</p>
-                        <p className="font-semibold text-foreground">{property.bedrooms}</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Living Area</span>
+                        <span className="font-semibold text-foreground">{property.area ? `${property.area} sqm` : '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Bathrooms</p>
-                        <p className="font-semibold text-foreground">{property.bathrooms}</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Plot Area</span>
+                        <span className="font-semibold text-foreground">{property.plot_area ? `${property.plot_area} sqm` : '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Custom ID</p>
-                        <p className="font-semibold text-foreground">147</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Parking Spaces</span>
+                        <span className="font-semibold text-foreground">{property.parking || '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Year Built</p>
-                        <p className="font-semibold text-foreground">{property.yearBuilt}</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Property Age</span>
+                        <span className="font-semibold text-foreground">{property.age ? `${property.age} Years` : '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Garages</p>
-                        <p className="font-semibold text-foreground">{property.garages}</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Facing</span>
+                        <span className="font-semibold text-foreground capitalize">{property.facing || '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Garage Size</p>
-                        <p className="font-semibold text-foreground">2 cars</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Furnishing</span>
+                        <span className="font-semibold text-foreground capitalize">{property.furnishing || '-'}</span>
                       </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Available from</p>
-                        <p className="font-semibold text-foreground">2021-09-22</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Basement</p>
-                        <p className="font-semibold text-foreground">cement</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">External Construction</p>
-                        <p className="font-semibold text-foreground">No</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Exterior Material</p>
-                        <p className="font-semibold text-foreground">wood</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Roofing</p>
-                        <p className="font-semibold text-foreground">No</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Structure Type</p>
-                        <p className="font-semibold text-foreground">Brick</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Floors No</p>
-                        <p className="font-semibold text-foreground">1</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Property Type</p>
-                        <p className="font-semibold capitalize text-foreground">{property.property_type}</p>
-                      </div>
-                      <div className='flex gap-3'>
-                        <p className="text-sm text-muted-foreground mb-1">Status</p>
-                        <p className="font-semibold text-foreground">{property.status}</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Flooring</span>
+                        <span className="font-semibold text-foreground capitalize">{property.flooring || '-'}</span>
                       </div>
                     </div>
                   </AccordionContent>
@@ -1100,200 +881,95 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="space-y-8">
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-4">Interior Details</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Equipped Kitchen</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Media Room</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Gym</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Laundry</span>
+                    <div className="space-y-10 py-6 px-2">
+                      {internal.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-lg text-foreground mb-6 flex items-center gap-3">
+                            <div className="w-1.5 h-6 bg-primary rounded-full"></div>
+                            Internal Amenities
+                          </h4>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            {internal.map((item) => (
+                              <AmenityBox key={item} name={item} />
+                            ))}
                           </div>
                         </div>
-                      </div>
+                      )}
+                      
+                      {external.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-lg text-foreground mb-6 flex items-center gap-3">
+                            <div className="w-1.5 h-6 bg-primary rounded-full"></div>
+                            External Amenities
+                          </h4>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            {external.map((item) => (
+                              <AmenityBox key={item} name={item} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {utility.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-lg text-foreground mb-6 flex items-center gap-3">
+                            <div className="w-1.5 h-6 bg-primary rounded-full"></div>
+                            Utilities & Others
+                          </h4>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            {utility.map((item) => (
+                              <AmenityBox key={item} name={item} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-4">Outdoor Details</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Back yard</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Hot Bath</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Basketball court</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Pool</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Garage Attached</span>
+                      {other.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-lg text-foreground mb-6 flex items-center gap-3">
+                            <div className="w-1.5 h-6 bg-primary rounded-full"></div>
+                            Other Features
+                          </h4>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            {other.map((item) => (
+                              <AmenityBox key={item} name={item} />
+                            ))}
                           </div>
                         </div>
-                      </div>
+                      )}
 
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-4">Utilities</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Central Air</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Natural Gas</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Electricity</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Ventilation</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Heating</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Water</span>
-                          </div>
+                      {(!property.features || property.features.length === 0) && (
+                        <div className="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                          <Star className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+                          <p className="text-gray-500 font-medium">No specific features listed for this property.</p>
                         </div>
-                      </div>
-
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-4">Other Features</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Chair Accessible</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Smoke detectors</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Elevator</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Washer and dryer</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">Fireplace</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Check className="w-5 h-5 text-primary" />
-                            <span className="text-foreground">WiFi</span>
-                          </div>
-                        </div>
-                      </div>
+                      )}
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="walkthrough" className="px-6 bg-white rounded-lg">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center gap-3">
-                      <Maximize2 className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">360° Virtual Walkthrough</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    {property.virtual_walkthrough_url ? (
-                      <div className="space-y-4">
-                        {showWalkthroughPlayer ? (
-                          <div className="relative h-96 bg-black rounded-xl overflow-hidden">
-                            <iframe
-                              title="360° Virtual Walkthrough"
-                              width="100%"
-                              height="100%"
-                              frameBorder="0"
-                              src={getEmbedUrl(property.virtual_walkthrough_url)}
-                              allowFullScreen
-                            ></iframe>
-                            <button
-                              onClick={() => setShowWalkthroughPlayer(false)}
-                              className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
-                            >
-                              Close
-                            </button>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="relative h-80 bg-muted rounded-xl overflow-hidden group mb-6 cursor-pointer" onClick={() => setShowWalkthroughPlayer(true)}>
-                              <img
-                                src={property.videoThumbnail}
-                                alt="360° Virtual Tour Thumbnail"
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                                <PlayCircle className="h-20 w-20 text-white group-hover:scale-110 transition-transform" />
-                              </div>
-                            </div>
-                            <p className="text-muted-foreground leading-relaxed">
-                              Explore the property in stunning detail with our interactive 360-degree virtual tour.
-                            </p>
-                            <Button 
-                              className="gap-2 w-full bg-primary hover:bg-primary/90"
-                              onClick={() => setShowWalkthroughPlayer(true)}
-                            >
-                              <PlayCircle className="h-4 w-4" />
-                              Open 360° Virtual Walkthrough
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="relative h-80 bg-muted rounded-xl overflow-hidden group mb-6">
-                        <img
-                          src={property.videoThumbnail}
-                          alt="360° Virtual Tour Thumbnail"
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                          <PlayCircle className="h-20 w-20 text-white group-hover:scale-110 transition-transform" />
-                        </div>
-                      </div>
-                    )}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="map" className="px-6 bg-white rounded-lg ">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
                       <MapIcon className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Map Virtual Tour</span>
+                      <span className="font-semibold">Map Location</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    {property.map_virtual_tour_url ? (
+                    {(property.map_virtual_tour_url || property.address) ? (
                       <div className="space-y-4">
                         <div className="relative h-96 bg-gray-100 rounded-xl overflow-hidden">
                           <iframe
-                            title="Map Virtual Tour"
+                            title="Map Location"
                             width="100%"
                             height="100%"
                             frameBorder="0"
-                            src={showMapPlayer ? property.map_virtual_tour_url : ''}
+                            src={showMapPlayer ? (
+                              property.map_virtual_tour_url 
+                                ? getEmbedUrl(property.map_virtual_tour_url) 
+                                : (property.latitude && property.longitude)
+                                  ? `https://maps.google.com/maps?q=${property.latitude},${property.longitude}&output=embed`
+                                  : `https://maps.google.com/maps?q=${encodeURIComponent(property.address || '')}&output=embed`
+                            ) : ''}
                             allowFullScreen
                           ></iframe>
                           {!showMapPlayer && (
@@ -1318,7 +994,15 @@ const PropertyDetails = () => {
                         <Button 
                           variant="outline"
                           className="gap-2 w-full"
-                          onClick={() => window.open(property.map_virtual_tour_url, '_blank')}
+                          onClick={() => {
+                            if (property.map_virtual_tour_url) {
+                              window.open(property.map_virtual_tour_url, '_blank');
+                            } else if (property.latitude && property.longitude) {
+                              window.open(`https://www.google.com/maps?q=${property.latitude},${property.longitude}`, '_blank');
+                            } else if (property.address) {
+                              window.open(`https://www.google.com/maps/search/?q=${encodeURIComponent(property.address)}`, '_blank');
+                            }
+                          }}
                         >
                           <MapIcon className="h-4 w-4" />
                           Open in New Tab
@@ -1326,7 +1010,7 @@ const PropertyDetails = () => {
                       </div>
                     ) : (
                       <div className="h-96 bg-white rounded-xl flex items-center justify-center overflow-hidden">
-                        <p className="text-muted-foreground">No map virtual tour available</p>
+                        <p className="text-muted-foreground">No map location available</p>
                       </div>
                     )}
                   </AccordionContent>
@@ -1340,170 +1024,28 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="space-y-4">
-                      <div className="relative h-80 bg-muted rounded-xl overflow-hidden">
-                        <img
-                          src={property.videoThumbnail}
-                          alt="Video Tour Thumbnail"
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer" onClick={() => {
-                          const modal = document.createElement('div');
-                          modal.innerHTML = `
-                            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;">
-                              <iframe width="90%" height="90%" frameborder="0" src="${property.videoUrl}?autoplay=1" allow="autoplay" style="border-radius: 8px;"></iframe>
-                            </div>
-                          `;
-                          document.body.appendChild(modal);
-                          modal.addEventListener('click', () => modal.remove());
-                        }}>
-                          <PlayCircle className="h-20 w-20 text-white hover:scale-110 transition-transform" />
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Watch our professional video tour of the property.
-                      </p>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="calculator" className="px-6 bg-white rounded-lg">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center gap-3">
-                      <DollarSign className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Calculator</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      <div className="flex flex-col items-center justify-center">
-                        <ResponsiveContainer width="100%" height={300}>
-                          <PieChart>
-                            <Pie
-                              data={[
-                                { name: 'Principal and Interest', value: 387.72 },
-                                { name: 'Property Tax', value: 100 },
-                                { name: 'HOA fee', value: 25 }
-                              ]}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={60}
-                              outerRadius={100}
-                              dataKey="value"
-                            >
-                              <Cell fill="#1e40af" />
-                              <Cell fill="#0ea5e9" />
-                              <Cell fill="#f87171" />
-                            </Pie>
-                            <Tooltip />
-                          </PieChart>
-                        </ResponsiveContainer>
-                        <div className="text-center mt-4">
-                          <p className="text-3xl font-bold text-foreground">$512.72</p>
-                          <p className="text-sm text-muted-foreground">per month</p>
-                        </div>
-                        <div className="flex gap-6 mt-4 text-sm flex-wrap justify-center">
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-blue-900 rounded-full"></div>
-                            <span className="text-foreground">Principal and Interest</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-cyan-500 rounded-full"></div>
-                            <span className="text-foreground">Property Tax</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                            <span className="text-foreground">HOA fee</span>
-                          </div>
-                        </div>
-                      </div>
-
+                    {property.video_tour_url ? (
                       <div className="space-y-4">
-                        <div>
-                          <label className="text-sm text-muted-foreground mb-2 block">Home Price</label>
-                          <Input type="number" defaultValue="100000" placeholder="Home Price" className="bg-gray-50" />
+                        <div className="relative h-96 bg-black rounded-xl overflow-hidden">
+                          <iframe
+                            title="Video Tour"
+                            width="100%"
+                            height="100%"
+                            frameBorder="0"
+                            src={getEmbedUrl(property.video_tour_url)}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm text-muted-foreground mb-2 block">Down Payment</label>
-                            <Input type="number" defaultValue="20000" placeholder="Down Payment" className="bg-gray-50" />
-                          </div>
-                          <div>
-                            <label className="text-sm text-muted-foreground mb-2 block">Down Payment %</label>
-                            <Input type="number" defaultValue="20" placeholder="%" className="bg-gray-50" />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground mb-2 block">Term (in years)</label>
-                          <Input type="number" defaultValue="30" placeholder="Term" className="bg-gray-50" />
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground mb-2 block">Interest Rate</label>
-                          <Input type="number" defaultValue="4.125" placeholder="Interest" className="bg-gray-50" step="0.01" />
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground mb-2 block">Property Tax</label>
-                          <Input type="number" defaultValue="125" placeholder="Property Tax" className="bg-gray-50" />
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground mb-2 block">Homeowners Association Fee</label>
-                          <Input type="number" defaultValue="0" placeholder="HOA Fee" className="bg-gray-50" />
-                        </div>
+                        <p className="text-muted-foreground leading-relaxed">
+                          Watch our professional video tour of the property.
+                        </p>
                       </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="statistics" className="px-6 bg-white rounded-lg">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center gap-3">
-                      <BarChart3 className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">Statistics</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="w-full h-96">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={[
-                            { name: 'Nov 20, 2025', views: 4.9 },
-                            { name: 'Nov 21, 2025', views: 4.8 },
-                            { name: 'Nov 22, 2025', views: 4.7 },
-                            { name: 'Nov 23, 2025', views: 5.9 },
-                            { name: 'Nov 24, 2025', views: 5.95 },
-                            { name: 'Nov 25, 2025', views: 4.5 },
-                            { name: 'Nov 26, 2025', views: 4.3 },
-                            { name: 'Nov 27, 2025', views: 4.2 },
-                            { name: 'Nov 28, 2025', views: 4.1 },
-                            { name: 'Nov 29, 2025', views: 4.0 },
-                            { name: 'Nov 30, 2025', views: 4.2 },
-                            { name: 'Dec 1, 2025', views: 5.0 },
-                            { name: 'Dec 2, 2025', views: 5.0 },
-                            { name: 'Dec 3, 2025', views: 4.8 }
-                          ]}
-                          margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-45}
-                            textAnchor="end"
-                            height={100}
-                            tick={{ fontSize: 12 }}
-                          />
-                          <YAxis
-                            domain={[4.0, 6.0]}
-                            tick={{ fontSize: 12 }}
-                          />
-                          <Tooltip
-                            contentStyle={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '0.5rem' }}
-                            label={{ value: 'Property Views', position: 'top' }}
-                          />
-                          <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                          <Bar dataKey="views" fill="#d1d5db" name="Property Views" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
+                    ) : (
+                      <div className="h-40 flex items-center justify-center bg-muted rounded-xl">
+                        <p className="text-muted-foreground">No video tour available for this property.</p>
+                      </div>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
 
@@ -1649,6 +1191,43 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
+
+                <AccordionItem value="reviews" className="px-6 bg-white rounded-lg">
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">Property Reviews</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-6 py-4">
+                      {property.reviews && property.reviews.length > 0 ? (
+                        property.reviews.map((review: any) => (
+                          <div key={review.id} className="border-b last:border-0 pb-6 last:pb-0">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-bold text-foreground">{review.author}</h4>
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className={`h-3 w-3 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2">{review.comment}</p>
+                            <p className="text-xs text-gray-400">{new Date(review.date || review.created_at).toLocaleDateString()}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-8">
+                          <MessageSquare className="h-12 w-12 text-gray-200 mx-auto mb-3" />
+                          <p className="text-muted-foreground">No reviews yet for this property.</p>
+                        </div>
+                      )}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               </Accordion>
             </div>
 
@@ -1657,7 +1236,7 @@ const PropertyDetails = () => {
               <h3 className="text-2xl font-bold mb-6 text-foreground">Similar Properties</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {getSimilarProperties().map((prop) => (
-                  <Card className="overflow-hidden border-0 transition-all duration-300 group cursor-pointer " onClick={() => handleViewDetails(prop)}>
+                  <Card key={prop.id} className="overflow-hidden border-0 transition-all duration-300 group cursor-pointer " onClick={() => handleViewDetails(prop)}>
                     <CardContent className="p-0">
                       <div className="relative">
                         {/* Image */}
@@ -1766,13 +1345,15 @@ const PropertyDetails = () => {
                       </div>
                     </a>
 
-                    <a href={`https://wa.me/${property.developer_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-lg bg-background hover:bg-white/80 transition-colors">
-                      <MessageSquare className="h-5 w-5 text-primary" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted-foreground">WhatsApp</p>
-                        <p className="text-sm font-semibold">{property.developer_whatsapp}</p>
-                      </div>
-                    </a>
+                    {property.developer_whatsapp && (
+                      <a href={`https://wa.me/${property.developer_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-lg bg-background hover:bg-white/80 transition-colors">
+                        <MessageSquare className="h-5 w-5 text-primary" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-muted-foreground">WhatsApp</p>
+                          <p className="text-sm font-semibold">{property.developer_whatsapp}</p>
+                        </div>
+                      </a>
+                    )}
                   </div>
 
                   <form className="space-y-4 " onSubmit={handleSidebarSubmit}>

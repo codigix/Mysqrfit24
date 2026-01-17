@@ -43,15 +43,23 @@ export const PremiumPropertyCard = ({ property }: PremiumPropertyCardProps) => {
     );
   };
 
-  const formatPrice = (price: number, type: string) => {
-    const formatted = new Intl.NumberFormat('en-US', {
+  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
+    const formatter = new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(price);
+    });
 
-    return type === 'rent' ? `${formatted}/month` : formatted;
+    if (type === 'sale') {
+      if (minPrice && maxPrice && minPrice !== maxPrice) {
+        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
+      }
+      return formatter.format(price || minPrice || 0);
+    } else {
+      const formatted = formatter.format(price || minPrice || 0);
+      return `${formatted} / month`;
+    }
   };
 
   const handleViewDetails = () => {
@@ -137,11 +145,11 @@ export const PremiumPropertyCard = ({ property }: PremiumPropertyCardProps) => {
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-md font-bold text-primary">
-              {formatPrice(property.price, property.type)}
+              {formatPrice(property.price, property.type, property.min_price, property.max_price)}
             </span>
             {property.area > 0 && (
               <span className="text-sm text-muted-foreground">
-                ${(property.price / property.area).toFixed(0)}/sqft
+                ₹{(property.price / property.area).toFixed(0)}/sqft
               </span>
             )}
           </div>

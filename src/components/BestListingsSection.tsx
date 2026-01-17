@@ -9,6 +9,8 @@ interface Property {
   id: string | number;
   title: string;
   price: number;
+  min_price?: number;
+  max_price?: number;
   type: 'sale' | 'rent' | 'lease';
   property_type: string;
   bedrooms?: number;
@@ -189,11 +191,23 @@ const ListingCard = ({ property }: ListingCardProps) => {
 };
 
 const transformProperty = (prop: Property): ListProperty => {
-  const formatPrice = (price: number, type: string) => {
-    if (type === 'rent' || type === 'lease') {
-      return `$${price}/month`;
+  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
+    const formatter = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+
+    if (type === 'sale') {
+      if (minPrice && maxPrice && minPrice !== maxPrice) {
+        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
+      }
+      return formatter.format(price || minPrice || 0);
+    } else {
+      const formatted = formatter.format(price || minPrice || 0);
+      return `${formatted} / month`;
     }
-    return `$${price.toLocaleString()}`;
   };
 
   const getStatusColor = (type: string) => {
@@ -229,7 +243,7 @@ const transformProperty = (prop: Property): ListProperty => {
       avatar: getFileUrl('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop')
     },
     propertyType: `${prop.property_type}${prop.type === 'sale' ? '-sale' : prop.type === 'lease' ? '-lease' : ''}`,
-    price: formatPrice(prop.price, prop.type),
+    price: formatPrice(prop.price, prop.type, prop.min_price, prop.max_price),
     badges: [getStatus(prop.type)]
   };
 };

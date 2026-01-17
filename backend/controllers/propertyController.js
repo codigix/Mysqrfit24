@@ -155,108 +155,126 @@ export const createProperty = async (req, res) => {
     const {
       title,
       description,
+      min_price,
+      max_price,
       price,
       type,
       property_type,
       bedrooms,
       bathrooms,
       area,
+      plot_area,
       location,
       address,
       latitude,
       longitude,
+      facing,
+      flooring,
+      parking,
+      age,
+      furnishing,
       features,
       images,
       developer_name,
+      developer_email,
       developer_phone,
       developer_whatsapp,
       virtual_walkthrough_url,
+      video_tour_url,
       map_virtual_tour_url,
       is_featured,
     } = req.body;
 
-    if (!title || !price || !type || !property_type || !location || !address || !developer_name || !developer_phone) {
+    if (!title || price === undefined || !type || !property_type || !location || !address || !developer_name || !developer_phone) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const propertyId = uuidv4();
 
+    const parseNumeric = (val) => {
+      if (val === undefined || val === '' || val === null) return null;
+      const parsed = parseFloat(val);
+      return isNaN(parsed) ? null : parsed;
+    };
+
     const connection = await pool.getConnection();
-    await connection.query(
-      `INSERT INTO properties (
-        id, title, description, price, type, property_type, bedrooms, bathrooms,
-        area, location, address, latitude, longitude, features, images,
-        developer_name, developer_phone, developer_whatsapp, virtual_walkthrough_url,
-        map_virtual_tour_url, is_featured, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')`,
-      [
-        propertyId,
-        title,
-        description,
-        price,
-        type,
-        property_type,
-        bedrooms || null,
-        bathrooms || null,
-        area,
-        location,
-        address,
-        latitude || null,
-        longitude || null,
-        features ? JSON.stringify(features) : '[]',
-        images ? JSON.stringify(images) : '[]',
-        developer_name,
-        developer_phone,
-        developer_whatsapp || null,
-        virtual_walkthrough_url || null,
-        map_virtual_tour_url || null,
-        is_featured ? 1 : 0,
-      ]
-    );
-    connection.release();
+    try {
+      const minPriceValue = parseNumeric(min_price);
+      const maxPriceValue = parseNumeric(max_price);
+      const priceValue = parseNumeric(price) || minPriceValue || 0;
 
-    const [newProperty] = await pool.getConnection().then(conn =>
-      conn.query('SELECT * FROM properties WHERE id = ?', [propertyId]).then(result => {
-        conn.release();
-        return result;
-      })
-    );
+      await connection.query(
+        `INSERT INTO properties (
+          id, title, description, min_price, max_price, price, type, property_type, bedrooms, bathrooms,
+          area, plot_area, location, address, latitude, longitude, facing, flooring,
+          parking, age, furnishing, features, images,
+          developer_name, developer_email, developer_phone, developer_whatsapp, virtual_walkthrough_url,
+          video_tour_url, map_virtual_tour_url, is_featured, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')`,
+        [
+          propertyId,
+          title,
+          description || null,
+          minPriceValue,
+          maxPriceValue,
+          priceValue,
+          type,
+          property_type,
+          parseNumeric(bedrooms),
+          parseNumeric(bathrooms),
+          parseNumeric(area),
+          parseNumeric(plot_area),
+          location,
+          address,
+          parseNumeric(latitude),
+          parseNumeric(longitude),
+          facing || null,
+          flooring || null,
+          parseNumeric(parking),
+          parseNumeric(age),
+          furnishing || 'unfurnished',
+          features ? (typeof features === 'string' ? features : JSON.stringify(features)) : '[]',
+          images ? (typeof images === 'string' ? images : JSON.stringify(images)) : '[]',
+          developer_name,
+          developer_email || null,
+          developer_phone,
+          developer_whatsapp || null,
+          virtual_walkthrough_url || null,
+          video_tour_url || null,
+          map_virtual_tour_url || null,
+          is_featured ? 1 : 0,
+        ]
+      );
 
-    if (newProperty.length > 0) {
-      let features = [];
-      let images = [];
-      
-      if (newProperty[0].features) {
-        if (Array.isArray(newProperty[0].features)) {
-          features = newProperty[0].features;
-        } else {
-          try {
-            features = JSON.parse(newProperty[0].features);
-          } catch {
-            features = newProperty[0].features.split(',').map(f => f.trim()).filter(f => f);
-          }
-        }
+      const [rows] = await connection.query('SELECT * FROM properties WHERE id = ?', [propertyId]);
+      connection.release();
+
+      if (rows.length === 0) {
+        return res.status(500).json({ error: 'Failed to retrieve created property' });
       }
+
+      const property = rows[0];
       
-      if (newProperty[0].images) {
-        if (Array.isArray(newProperty[0].images)) {
-          images = newProperty[0].images;
-        } else {
-          try {
-            images = JSON.parse(newProperty[0].images);
-          } catch {
-            images = newProperty[0].images.split(',').map(i => i.trim()).filter(i => i);
-          }
-        }
+      // Parse JSON fields if they are strings
+      if (property.features && typeof property.features === 'string') {
+        try { property.features = JSON.parse(property.features); } catch (e) { property.features = []; }
       }
-      
-      newProperty[0].features = features;
-      newProperty[0].images = images;
-      res.status(201).json(newProperty[0]);
+      if (property.images && typeof property.images === 'string') {
+        try { property.images = JSON.parse(property.images); } catch (e) { property.images = []; }
+      }
+
+      res.status(201).json(property);
+    } catch (dbError) {
+      connection.release();
+      console.error('Database Insert Error:', dbError);
+      return res.status(500).json({ 
+        error: 'Database error during property creation',
+        details: dbError.message 
+      });
     }
   } catch (error) {
     console.error('Create property error:', error);
-    res.status(500).json({ error: 'Failed to create property' });
+    res.status(500).json({ error: 'Internal server error during property creation' });
   }
 };
 
@@ -276,13 +294,28 @@ export const updateProperty = async (req, res) => {
     const setClause = [];
     const values = [];
 
+    const jsonFields = ['features', 'images'];
+    const numericFields = ['price', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'area', 'plot_area', 'latitude', 'longitude', 'parking', 'age'];
+
+    const parseNumeric = (val) => {
+      if (val === undefined || val === '' || val === null) return null;
+      const parsed = parseFloat(val);
+      return isNaN(parsed) ? null : parsed;
+    };
+
     for (const [key, value] of Object.entries(updates)) {
-      if (['features', 'images'].includes(key)) {
+      if (jsonFields.includes(key)) {
         setClause.push(`${key} = ?`);
-        values.push(JSON.stringify(value));
-      } else if (value !== undefined && value !== null) {
+        values.push(value ? (typeof value === 'string' ? value : JSON.stringify(value)) : '[]');
+      } else if (numericFields.includes(key)) {
         setClause.push(`${key} = ?`);
-        values.push(value);
+        values.push(parseNumeric(value));
+      } else if (key === 'is_featured') {
+        setClause.push(`${key} = ?`);
+        values.push(value ? 1 : 0);
+      } else if (key !== 'id' && key !== 'created_at' && key !== 'updated_at') {
+        setClause.push(`${key} = ?`);
+        values.push(value !== undefined && value !== '' ? value : null);
       }
     }
 
@@ -294,49 +327,41 @@ export const updateProperty = async (req, res) => {
     setClause.push('updated_at = NOW()');
     values.push(id);
 
-    await connection.query(
-      `UPDATE properties SET ${setClause.join(', ')} WHERE id = ?`,
-      values
-    );
+    try {
+      await connection.query(
+        `UPDATE properties SET ${setClause.join(', ')} WHERE id = ?`,
+        values
+      );
 
-    const [updated] = await connection.query('SELECT * FROM properties WHERE id = ?', [id]);
-    connection.release();
+      const [rows] = await connection.query('SELECT * FROM properties WHERE id = ?', [id]);
+      connection.release();
 
-    if (updated.length > 0) {
-      let features = [];
-      let images = [];
-      
-      if (updated[0].features) {
-        if (Array.isArray(updated[0].features)) {
-          features = updated[0].features;
-        } else {
-          try {
-            features = JSON.parse(updated[0].features);
-          } catch {
-            features = updated[0].features.split(',').map(f => f.trim()).filter(f => f);
-          }
-        }
+      if (rows.length === 0) {
+        return res.status(500).json({ error: 'Failed to retrieve updated property' });
       }
+
+      const property = rows[0];
       
-      if (updated[0].images) {
-        if (Array.isArray(updated[0].images)) {
-          images = updated[0].images;
-        } else {
-          try {
-            images = JSON.parse(updated[0].images);
-          } catch {
-            images = updated[0].images.split(',').map(i => i.trim()).filter(i => i);
-          }
-        }
+      // Parse JSON fields if they are strings
+      if (property.features && typeof property.features === 'string') {
+        try { property.features = JSON.parse(property.features); } catch (e) { property.features = []; }
       }
-      
-      updated[0].features = features;
-      updated[0].images = images;
-      res.json(updated[0]);
+      if (property.images && typeof property.images === 'string') {
+        try { property.images = JSON.parse(property.images); } catch (e) { property.images = []; }
+      }
+
+      res.json(property);
+    } catch (dbError) {
+      connection.release();
+      console.error('Database Update Error:', dbError);
+      return res.status(500).json({ 
+        error: 'Database error during property update',
+        details: dbError.message 
+      });
     }
   } catch (error) {
     console.error('Update property error:', error);
-    res.status(500).json({ error: 'Failed to update property' });
+    res.status(500).json({ error: 'Internal server error during property update' });
   }
 };
 

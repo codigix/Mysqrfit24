@@ -201,7 +201,9 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
             {/* Price Range */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Min Price</Label>
+                <Label className="text-sm font-medium">
+                  {localFilters.type === 'rent' || localFilters.type === 'lease' ? 'Min Rent' : 'Min Price'}
+                </Label>
                 <Input
                   type="number"
                   placeholder="₹ Min"
@@ -211,7 +213,9 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Max Price</Label>
+                <Label className="text-sm font-medium">
+                  {localFilters.type === 'rent' || localFilters.type === 'lease' ? 'Max Rent' : 'Max Price'}
+                </Label>
                 <Input
                   type="number"
                   placeholder="₹ Max"

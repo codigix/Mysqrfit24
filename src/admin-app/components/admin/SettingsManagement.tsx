@@ -36,7 +36,7 @@ const SettingsManagement = () => {
       const setting = settings.find((s) => s.setting_key === key);
       if (!setting) return;
 
-      let value = editing[key];
+      let value = editing[key] !== undefined ? editing[key] : setting.setting_value;
       if (setting.setting_type === 'number') {
         value = parseFloat(value).toString();
       } else if (setting.setting_type === 'boolean') {
@@ -45,7 +45,9 @@ const SettingsManagement = () => {
 
       await apiService.settings.update(key, value);
       toast.success('Setting updated');
-      setEditing({ ...editing, [key]: '' });
+      const newEditing = { ...editing };
+      delete newEditing[key];
+      setEditing(newEditing);
       fetchSettings();
     } catch (error) {
       toast.error('Failed to save setting');
