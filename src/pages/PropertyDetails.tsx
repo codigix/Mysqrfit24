@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProperty, useProperties } from '@/hooks/useProperties';
+import { useProperty, useProperties, useSimilarProperties } from '@/hooks/useProperties';
 import { Property } from '@/types/property';
 import { Navigation } from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -177,10 +177,7 @@ const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: dbProperty, isLoading } = useProperty(id!);
-  const { data: similarListings } = useProperties({ 
-    property_type: dbProperty?.property_type,
-    type: dbProperty?.type
-  });
+  const { data: similarListings } = useSimilarProperties(id!);
   const mockProperty = mockPropertyData[id || '1'];
   const property = dbProperty || (isLoading ? null : mockProperty);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -325,7 +322,6 @@ const PropertyDetails = () => {
     if (!similarListings) return [];
     
     return similarListings
-      .filter(p => p.id !== property?.id)
       .slice(0, 3)
       .map(p => ({
         id: p.id,
@@ -1267,72 +1263,79 @@ const PropertyDetails = () => {
             <div ref={similarRef}>
               <h3 className="text-2xl font-bold mb-6 text-foreground">Similar Properties</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {getSimilarProperties().map((prop) => (
-                  <Card key={prop.id} className="overflow-hidden border-0 transition-all duration-300 group cursor-pointer " onClick={() => handleViewDetails(prop)}>
-                    <CardContent className="p-0">
-                      <div className="relative">
-                        {/* Image */}
-                        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                          <img
-                            src={prop.image}
-                            alt={prop.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-
-                          {/* Status Badges */}
-                          <div className="absolute top-4 left-4 flex gap-2">
-                            <Badge className="bg-blue-600 text-white font-semibold px-3 py-1">
-                              {prop.status}
-                            </Badge>
-                          </div>
-
-                          {/* Heart Icon */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setIsFavorited(!isFavorited);
-                            }}
-                            className="absolute bottom-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-all"
-                          >
-                            <Heart
-                              className={`h-6 w-6 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
+                {getSimilarProperties().length > 0 ? (
+                  getSimilarProperties().map((prop) => (
+                    <Card key={prop.id} className="overflow-hidden border-0 transition-all duration-300 group cursor-pointer " onClick={() => handleViewDetails(prop)}>
+                      <CardContent className="p-0">
+                        <div className="relative">
+                          {/* Image */}
+                          <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                            <img
+                              src={prop.image}
+                              alt={prop.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                          </button>
-                        </div>
 
-                        {/* Content */}
-                        <div className="p-4">
-                          <div className="mb-3">
-                            <p className="text-md font-bold text-primary">
-                              ₹{prop.price?.toLocaleString()}
-                            </p>
-                            <p className="text-md font-medium text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-                              {prop.title}
-                            </p>
+                            {/* Status Badges */}
+                            <div className="absolute top-4 left-4 flex gap-2">
+                              <Badge className="bg-blue-600 text-white font-semibold px-3 py-1">
+                                {prop.status}
+                              </Badge>
+                            </div>
+
+                            {/* Heart Icon */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsFavorited(!isFavorited);
+                              }}
+                              className="absolute bottom-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-all"
+                            >
+                              <Heart
+                                className={`h-6 w-6 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
+                              />
+                            </button>
                           </div>
 
-                          {/* Details */}
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            {prop.beds > 0 && (
+                          {/* Content */}
+                          <div className="p-4">
+                            <div className="mb-3">
+                              <p className="text-md font-bold text-primary">
+                                ₹{prop.price?.toLocaleString()}
+                              </p>
+                              <p className="text-md font-medium text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                                {prop.title}
+                              </p>
+                            </div>
+
+                            {/* Details */}
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              {prop.beds > 0 && (
+                                <div className="flex items-center gap-1 text-xs">
+                                  <span className="font-semibold text-foreground">{prop.beds}</span>
+                                  <span>Beds</span>
+                                </div>
+                              )}
                               <div className="flex items-center gap-1 text-xs">
-                                <span className="font-semibold text-foreground">{prop.beds}</span>
-                                <span>Beds</span>
+                                <span className="font-semibold text-foreground">{prop.baths}</span>
+                                <span>Baths</span>
                               </div>
-                            )}
-                            <div className="flex items-center gap-1 text-xs">
-                              <span className="font-semibold text-foreground">{prop.baths}</span>
-                              <span>Baths</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs">
-                              <span className="font-semibold text-foreground">{prop.area}</span>
-                              <span>sq.ft</span>
+                              <div className="flex items-center gap-1 text-xs">
+                                <span className="font-semibold text-foreground">{prop.area}</span>
+                                <span>sq.ft</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12 bg-muted/30 rounded-2xl border border-dashed">
+                    <Home className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
+                    <p className="text-muted-foreground">No similar properties found in this area.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

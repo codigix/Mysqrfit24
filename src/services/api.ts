@@ -143,6 +143,14 @@ export const apiService = {
       });
       return handleResponse(response);
     },
+
+    getSimilar: async (id: string): Promise<Property[]> => {
+      const response = await fetch(`${API_BASE_URL}/properties/${id}/similar`, {
+        headers: getHeaders(),
+        credentials: 'include',
+      });
+      return handleResponse(response);
+    },
   },
 
   locations: {

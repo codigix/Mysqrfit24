@@ -22,6 +22,16 @@ export const useProperty = (id: string) => {
   });
 };
 
+export const useSimilarProperties = (id: string) => {
+  return useQuery({
+    queryKey: ['properties', 'similar', id],
+    queryFn: async () => {
+      return apiService.properties.getSimilar(id);
+    },
+    enabled: !!id,
+  });
+};
+
 export const useCreateProperty = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();

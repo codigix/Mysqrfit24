@@ -183,6 +183,9 @@ export const createProperty = async (req, res) => {
       video_tour_url,
       map_virtual_tour_url,
       is_featured,
+      lease_amount,
+      lease_duration,
+      lease_deposit,
     } = req.body;
 
     if (!title || price === undefined || !type || !property_type || !location || !address || !developer_name || !developer_phone) {
@@ -209,8 +212,9 @@ export const createProperty = async (req, res) => {
           area, plot_area, location, address, latitude, longitude, facing, flooring,
           parking, age, furnishing, features, images,
           developer_name, developer_email, developer_phone, developer_whatsapp, virtual_walkthrough_url,
-          video_tour_url, map_virtual_tour_url, is_featured, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')`,
+          video_tour_url, map_virtual_tour_url, is_featured, status,
+          lease_amount, lease_duration, lease_deposit
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available', ?, ?, ?)`,
         [
           propertyId,
           title,
@@ -243,6 +247,9 @@ export const createProperty = async (req, res) => {
           video_tour_url || null,
           map_virtual_tour_url || null,
           is_featured ? 1 : 0,
+          parseNumeric(lease_amount),
+          lease_duration || null,
+          parseNumeric(lease_deposit),
         ]
       );
 
@@ -295,7 +302,7 @@ export const updateProperty = async (req, res) => {
     const values = [];
 
     const jsonFields = ['features', 'images'];
-    const numericFields = ['price', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'area', 'plot_area', 'latitude', 'longitude', 'parking', 'age'];
+    const numericFields = ['price', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'area', 'plot_area', 'latitude', 'longitude', 'parking', 'age', 'lease_amount', 'lease_deposit'];
 
     const parseNumeric = (val) => {
       if (val === undefined || val === '' || val === null) return null;
@@ -384,5 +391,85 @@ export const deleteProperty = async (req, res) => {
   } catch (error) {
     console.error('Delete property error:', error);
     res.status(500).json({ error: 'Failed to delete property' });
+  }
+};
+
+export const getSimilarProperties = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const connection = await pool.getConnection();
+    
+    // 1. Get current property details
+    const [currentProperties] = await connection.query('SELECT * FROM properties WHERE id = ?', [id]);
+    
+    if (currentProperties.length === 0) {
+      connection.release();
+      return res.status(404).json({ error: 'Property not found' });
+    }
+
+    const current = currentProperties[0];
+    const { type, property_type, location, price } = current;
+
+    // 2. Build query for similar properties
+    // Strict requirements: Same type, same property_type, and same location
+    let query = `
+      SELECT * FROM properties 
+      WHERE id != ? 
+      AND status = "available"
+      AND type = ?
+      AND property_type = ?
+      AND location LIKE ?
+    `;
+    const params = [id, type, property_type, location ? `%${location}%` : '%%'];
+
+    // Optional: Add price range filtering (±30%)
+    if (price > 0) {
+      const minPrice = price * 0.7;
+      const maxPrice = price * 1.3;
+      query += ' AND price BETWEEN ? AND ?';
+      params.push(minPrice, maxPrice);
+    }
+
+    // Sort by relevance: closest price and latest
+    query += `
+      ORDER BY 
+        ABS(price - ?) ASC,
+        created_at DESC
+      LIMIT 6
+    `;
+    params.push(price);
+
+    const [similar] = await connection.query(query, params);
+    connection.release();
+
+    const formattedSimilar = similar.map(prop => {
+      let features = [];
+      let images = [];
+      
+      try {
+        if (prop.features) {
+          features = typeof prop.features === 'string' ? JSON.parse(prop.features) : prop.features;
+        }
+        if (prop.images) {
+          images = typeof prop.images === 'string' ? JSON.parse(prop.images) : prop.images;
+        }
+      } catch (e) {
+        // Fallback for non-JSON strings
+        if (typeof prop.features === 'string') features = prop.features.split(',').map(f => f.trim()).filter(f => f);
+        if (typeof prop.images === 'string') images = prop.images.split(',').map(i => i.trim()).filter(i => i);
+      }
+
+      return {
+        ...prop,
+        features,
+        images,
+      };
+    });
+
+    res.json(formattedSimilar);
+  } catch (error) {
+    console.error('Get similar properties error:', error);
+    res.status(500).json({ error: 'Failed to fetch similar properties' });
   }
 };

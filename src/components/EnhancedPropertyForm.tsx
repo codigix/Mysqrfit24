@@ -29,6 +29,9 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
     min_price: '',
     max_price: '',
     price: '',
+    lease_amount: '',
+    lease_duration: '',
+    lease_deposit: '',
     type: 'sale' as 'sale' | 'rent' | 'lease',
     property_type: 'apartment' as string,
     bedrooms: '',
@@ -50,7 +53,6 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
     developer_whatsapp: '',
     amenities: [] as string[],
     images: [] as string[],
-    virtual_walkthrough_url: '',
     video_tour_url: '',
     map_virtual_tour_url: '',
     is_featured: false,
@@ -64,6 +66,9 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
       min_price: '',
       max_price: '',
       price: '',
+      lease_amount: '',
+      lease_duration: '',
+      lease_deposit: '',
       type: 'sale',
       property_type: 'apartment',
       bedrooms: '',
@@ -85,7 +90,6 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
       developer_whatsapp: '',
       amenities: [],
       images: [],
-      virtual_walkthrough_url: '',
       video_tour_url: '',
       map_virtual_tour_url: '',
       is_featured: false,
@@ -123,7 +127,7 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
           return;
         }
         priceValue = minPrice;
-      } else {
+      } else if (formData.type === 'rent') {
         if (isNaN(priceValue)) {
           toast.error('Please enter valid rent price');
           setLoading(false);
@@ -131,6 +135,16 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
         }
         minPrice = priceValue;
         maxPrice = priceValue;
+      } else if (formData.type === 'lease') {
+        const leaseAmount = parseFloat(formData.lease_amount);
+        if (isNaN(leaseAmount)) {
+          toast.error('Please enter valid lease amount');
+          setLoading(false);
+          return;
+        }
+        priceValue = leaseAmount;
+        minPrice = leaseAmount;
+        maxPrice = leaseAmount;
       }
 
       const payload = {
@@ -160,10 +174,12 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
         developer_whatsapp: formData.developer_whatsapp || null,
         features: formData.amenities.length > 0 ? formData.amenities : null,
         images: formData.images.length > 0 ? formData.images : null,
-        virtual_walkthrough_url: formData.virtual_walkthrough_url || null,
         video_tour_url: formData.video_tour_url || null,
         map_virtual_tour_url: formData.map_virtual_tour_url || null,
         is_featured: formData.is_featured,
+        lease_amount: formData.type === 'lease' && formData.lease_amount ? parseFloat(formData.lease_amount) : null,
+        lease_duration: formData.type === 'lease' ? formData.lease_duration : null,
+        lease_deposit: formData.type === 'lease' && formData.lease_deposit ? parseFloat(formData.lease_deposit) : null,
       };
 
       await apiService.properties.create(payload as Record<string, unknown>);
@@ -256,7 +272,7 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
                           />
                         </div>
                       </>
-                    ) : (
+                    ) : formData.type === 'rent' ? (
                       <div>
                         <Label className="font-semibold">Rent Price (per month) *</Label>
                         <Input
@@ -267,6 +283,38 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
                           required
                         />
                       </div>
+                    ) : (
+                      <>
+                        <div>
+                          <Label className="font-semibold">Lease Amount *</Label>
+                          <Input
+                            type="number"
+                            value={formData.lease_amount}
+                            onChange={(e) => setFormData({ ...formData, lease_amount: e.target.value })}
+                            placeholder="e.g. 50000"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label className="font-semibold">Lease Duration *</Label>
+                          <Input
+                            value={formData.lease_duration}
+                            onChange={(e) => setFormData({ ...formData, lease_duration: e.target.value })}
+                            placeholder="e.g. 2 years"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label className="font-semibold">Lease Deposit *</Label>
+                          <Input
+                            type="number"
+                            value={formData.lease_deposit}
+                            onChange={(e) => setFormData({ ...formData, lease_deposit: e.target.value })}
+                            placeholder="e.g. 100000"
+                            required
+                          />
+                        </div>
+                      </>
                     )}
                     <div>
                       <Label className="font-semibold">Property Type *</Label>
@@ -583,21 +631,6 @@ export const EnhancedPropertyForm = ({ onPropertyAdded }: EnhancedPropertyFormPr
                   🎥 Video & Virtual Tour
                 </AccordionTrigger>
                 <AccordionContent className="bg-white p-4 space-y-4">
-                  <div>
-                    <Label className="font-semibold">360° Virtual Walkthrough URL</Label>
-                    <Input
-                      value={formData.virtual_walkthrough_url}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          virtual_walkthrough_url: e.target.value,
-                        })
-                      }
-                      placeholder="https://my.matterport.com/show/..."
-                      type="url"
-                    />
-                    <p className="text-sm text-gray-500 mt-2">Enter the URL for your 360° virtual walkthrough (e.g., Matterport, Kuula)</p>
-                  </div>
                   <div>
                     <Label className="font-semibold">YouTube Video Link</Label>
                     <Input

@@ -47,6 +47,9 @@ CREATE TABLE IF NOT EXISTS properties (
   map_virtual_tour_url VARCHAR(500),
   is_featured BOOLEAN DEFAULT FALSE,
   status ENUM('available', 'sold', 'rented') DEFAULT 'available',
+  lease_amount DECIMAL(15, 2),
+  lease_duration VARCHAR(100),
+  lease_deposit DECIMAL(15, 2),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_type (type),
@@ -55,6 +58,7 @@ CREATE TABLE IF NOT EXISTS properties (
   INDEX idx_status (status),
   INDEX idx_price (price),
   INDEX idx_created_at (created_at),
+  INDEX idx_lease_amount (lease_amount),
   FULLTEXT INDEX ft_title_description (title, description)
 );
 

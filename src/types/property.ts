@@ -31,6 +31,9 @@ export interface Property {
   map_virtual_tour_url?: string;
   is_featured?: boolean;
   status?: 'available' | 'sold' | 'rented';
+  lease_amount?: number;
+  lease_duration?: string;
+  lease_deposit?: number;
   created_at?: string;
   updated_at?: string;
 }
