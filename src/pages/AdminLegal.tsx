@@ -217,7 +217,7 @@ const AdminLegal = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    navigate('/admin-login');
+    navigate('/');
   };
 
   return (

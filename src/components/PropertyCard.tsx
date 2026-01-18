@@ -58,6 +58,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
       }
       return formatter.format(price || minPrice || 0);
+    } else if (type === 'lease') {
+      const amount = property.lease_amount || price || 0;
+      return `${formatter.format(amount)} (Lease)`;
     } else {
       const formatted = formatter.format(price || minPrice || 0);
       return `${formatted} / month`;
@@ -164,10 +167,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           className={`absolute bottom-3 left-3 ${
             property.type === 'sale'
               ? 'bg-primary text-primary-foreground'
-              : 'bg-accent text-accent-foreground'
+              : (property.type === 'lease' ? 'bg-green-600 text-white' : 'bg-accent text-accent-foreground')
           }`}
         >
-          For {property.type === 'sale' ? 'Sale' : 'Rent'}
+          For {property.type === 'sale' ? 'Sale' : (property.type === 'lease' ? 'Lease' : 'Rent')}
         </Badge>
       </div>
 
@@ -247,7 +250,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <Button
               size="sm"
               className="flex-1"
-              onClick={() => handleContact(property.type === 'sale' ? 'buy' : 'rent')}
+              onClick={() => handleContact(property.type === 'sale' ? 'buy' : (property.type === 'lease' ? 'lease' as any : 'rent'))}
             >
               <MessageCircle className="w-4 h-4 mr-1" />
               Contact

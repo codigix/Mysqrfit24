@@ -1,16 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Home, Building, Users, Menu, Phone, Settings } from 'lucide-react';
+import { Home, Building, Users, Menu, Phone, Settings, LogOut, User as UserIcon } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import logoImage from '@/assets/mysqfit.png';
-import { apiService } from '@/services/api';
+import { apiService, getFileUrl } from '@/services/api';
+import { useAuth } from '@/admin-app/hooks/useAuth';
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(!!apiService.auth.getToken());
+  const { user, isAuthenticated, logout } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
@@ -18,13 +21,21 @@ export const Navigation = () => {
     { href: '/about', label: 'About Us', icon: Users },
   ];
 
+  useEffect(() => {
+    setIsAdmin(isAuthenticated && (user?.role === 'admin' || user?.is_admin));
+  }, [isAuthenticated, user]);
+
   const goToAdminPanel = () => {
-    const token = apiService.auth.getToken();
-    if (token) {
+    if (isAuthenticated) {
       navigate('/admin/dashboard');
     } else {
       navigate('/admin/login');
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   const NavLink = ({ href, label, mobile = false }: { 
@@ -77,29 +88,54 @@ export const Navigation = () => {
               <span>+1 206-741-0340</span>
             </a>
 
-            {/* Admin Button */}
-            {isAdmin && (
-              <Button
-                onClick={goToAdminPanel}
-                variant="outline"
-                size="sm"
-                className="hidden md:flex items-center gap-2"
-                title="Go to Admin Panel (opens in new tab)"
-              >
-                <Settings className="h-4 w-4" />
-                <span>Admin</span>
-              </Button>
-            )}
-            {!isAdmin && (
-              <Button
-                onClick={goToAdminPanel}
-                variant="ghost"
-                size="sm"
-                className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-primary"
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            )}
+            {/* Admin/User Section */}
+            <div className="flex items-center gap-2">
+              {isAuthenticated ? (
+                <div className="flex items-center gap-3">
+                  {isAdmin && (
+                    <Button
+                      onClick={goToAdminPanel}
+                      variant="outline"
+                      size="sm"
+                      className="hidden md:flex items-center gap-2"
+                    >
+                      <Settings className="h-4 w-4" />
+                      <span>Dashboard</span>
+                    </Button>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-9 w-9 border-2 border-primary/10">
+                      <AvatarImage src={user?.avatar ? getFileUrl(user.avatar) : ''} />
+                      <AvatarFallback className="bg-primary/5 text-primary">
+                        {user?.email?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="hidden lg:block text-left">
+                      <p className="text-xs font-semibold text-foreground truncate max-w-[100px]">
+                        {user?.name || user?.email?.split('@')[0]}
+                      </p>
+                      <button 
+                        onClick={handleLogout}
+                        className="text-[10px] text-muted-foreground hover:text-red-500 transition-colors flex items-center gap-1"
+                      >
+                        <LogOut className="h-3 w-3" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  onClick={goToAdminPanel}
+                  variant="ghost"
+                  size="sm"
+                  className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-primary"
+                >
+                  <UserIcon className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
+              )}
+            </div>
 
             {/* Mobile Navigation */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -110,6 +146,18 @@ export const Navigation = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-72">
                 <div className="flex flex-col space-y-1 mt-8">
+                  {isAuthenticated && (
+                    <div className="flex items-center gap-3 p-4 mb-4 bg-primary/5 rounded-xl">
+                      <Avatar className="h-10 w-10 border-2 border-primary/20">
+                        <AvatarImage src={user?.avatar ? getFileUrl(user.avatar) : ''} />
+                        <AvatarFallback>{user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-foreground truncate">{user?.name || user?.email}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                      </div>
+                    </div>
+                  )}
                   {navItems.map((item) => (
                     <NavLink key={item.href} href={item.href} label={item.label} mobile />
                   ))}
@@ -120,13 +168,32 @@ export const Navigation = () => {
                     <Phone className="h-4 w-4 inline mr-2" />
                     +1 206-741-0340
                   </a>
-                  {isAdmin && (
+                  {isAuthenticated ? (
+                    <>
+                      {isAdmin && (
+                        <button
+                          onClick={() => { goToAdminPanel(); setIsOpen(false); }}
+                          className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-primary/5 rounded-lg text-sm font-medium transition-colors"
+                        >
+                          <Settings className="h-4 w-4 inline mr-2" />
+                          Admin Dashboard
+                        </button>
+                      )}
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left py-3 px-4 text-red-500 hover:bg-red-50 rounded-lg text-sm font-medium transition-colors mt-4"
+                      >
+                        <LogOut className="h-4 w-4 inline mr-2" />
+                        Logout
+                      </button>
+                    </>
+                  ) : (
                     <button
                       onClick={() => { goToAdminPanel(); setIsOpen(false); }}
                       className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-primary/5 rounded-lg text-sm font-medium transition-colors"
                     >
-                      <Settings className="h-4 w-4 inline mr-2" />
-                      Admin Panel
+                      <UserIcon className="h-4 w-4 inline mr-2" />
+                      Login / Admin
                     </button>
                   )}
                 </div>

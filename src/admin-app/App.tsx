@@ -39,9 +39,7 @@ function AdminAppContent() {
 
 function AdminApp() {
   return (
-    <AuthProvider>
-      <AdminAppContent />
-    </AuthProvider>
+    <AdminAppContent />
   );
 }
 
