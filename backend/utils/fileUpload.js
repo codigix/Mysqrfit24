@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const ensureUploadDirs = () => {
-  const uploadsDir = path.join(__dirname, '../uploads');
+  const uploadsDir = process.env.UPLOADS_PATH || path.join(__dirname, '../uploads');
   const docsDir = path.join(uploadsDir, 'documents');
   const imagesDir = path.join(uploadsDir, 'images');
 
@@ -60,4 +60,11 @@ export const getFileMimeType = (filename) => {
     '.zip': 'application/zip',
   };
   return mimeTypes[ext] || 'application/octet-stream';
+};
+
+export const getFullUrl = (filePath) => {
+  if (!filePath) return '';
+  if (filePath.startsWith('http')) return filePath;
+  const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+  return `${baseUrl}/${filePath.startsWith('/') ? filePath.slice(1) : filePath}`;
 };

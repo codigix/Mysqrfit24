@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
+import { getFullUrl } from '../utils/fileUpload.js';
 
 export const getProperties = async (req, res) => {
   try {
@@ -72,6 +73,8 @@ export const getProperties = async (req, res) => {
           }
         }
         
+        images = images.map(img => getFullUrl(img));
+        
         return {
           ...prop,
           features,
@@ -134,6 +137,8 @@ export const getPropertyById = async (req, res) => {
         }
       }
     }
+    
+    images = images.map(img => getFullUrl(img));
     
     property.features = features;
     property.images = images;
@@ -291,6 +296,10 @@ export const createProperty = async (req, res) => {
         try { property.images = JSON.parse(property.images); } catch (e) { property.images = []; }
       }
 
+      if (Array.isArray(property.images)) {
+        property.images = property.images.map(img => getFullUrl(img));
+      }
+
       res.status(201).json(property);
     } catch (dbError) {
       connection.release();
@@ -376,6 +385,10 @@ export const updateProperty = async (req, res) => {
       }
       if (property.images && typeof property.images === 'string') {
         try { property.images = JSON.parse(property.images); } catch (e) { property.images = []; }
+      }
+
+      if (Array.isArray(property.images)) {
+        property.images = property.images.map(img => getFullUrl(img));
       }
 
       res.json(property);

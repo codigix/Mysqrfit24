@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
+import { getFullUrl } from '../utils/fileUpload.js';
 
 const slugify = (text) => {
   return text
@@ -36,7 +37,12 @@ export const getBlogPosts = async (req, res) => {
     const [posts] = await connection.query(query, params);
     connection.release();
 
-    res.json(posts);
+    const formattedPosts = posts.map(post => ({
+      ...post,
+      image_url: getFullUrl(post.image_url)
+    }));
+
+    res.json(formattedPosts);
   } catch (error) {
     console.error('Get blog posts error:', error);
     res.status(500).json({ error: 'Failed to fetch blog posts' });
@@ -56,6 +62,7 @@ export const getBlogPostById = async (req, res) => {
     }
 
     const post = posts[0];
+    post.image_url = getFullUrl(post.image_url);
 
     // Increment views
     await connection.query('UPDATE blog_posts SET views = views + 1 WHERE id = ?', [id]);
@@ -82,6 +89,7 @@ export const getBlogPostBySlug = async (req, res) => {
     }
 
     const post = posts[0];
+    post.image_url = getFullUrl(post.image_url);
 
     // Increment views
     await connection.query('UPDATE blog_posts SET views = views + 1 WHERE id = ?', [post.id]);

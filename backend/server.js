@@ -45,7 +45,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.use(express.static('public'));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const uploadsPath = process.env.UPLOADS_PATH || path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsPath));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
@@ -65,8 +66,16 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });
 });
 
+// Debug middleware to see incoming requests in production logs
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  }
+  next();
+});
+
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  res.status(404).json({ error: 'Route not found', path: req.url });
 });
 
 app.use(errorHandler);
@@ -74,8 +83,8 @@ app.use(errorHandler);
 (async () => {
   ensureUploadDirs();
   await initializeDatabase();
-  app.listen(PORT, '127.0.0.1', () => {
-    console.log(`✓ Backend server running on http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✓ Backend server running on port ${PORT}`);
     console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`✓ Database: ${process.env.DB_NAME}`);
   });

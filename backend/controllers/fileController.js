@@ -36,13 +36,16 @@ export const uploadFile = async (req, res) => {
     );
     connection.release();
 
+    const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+    const url = `${baseUrl}/${fileRelPath}`;
+
     res.status(201).json({
       id: fileId,
       filename: originalName,
       storedName,
       fileSize: file.size,
       fileType: ext.slice(1),
-      url: `/${fileRelPath}`,
+      url,
       uploadedAt: new Date(),
     });
   } catch (error) {

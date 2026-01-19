@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
+import { getFullUrl } from '../utils/fileUpload.js';
 
 export const getTeamMembers = async (req, res) => {
   try {
@@ -21,6 +22,7 @@ export const getTeamMembers = async (req, res) => {
 
     const formattedMembers = members.map(member => ({
       ...member,
+      image_url: getFullUrl(member.image_url),
       social_links: member.social_links ? JSON.parse(member.social_links) : {},
     }));
 
@@ -44,6 +46,7 @@ export const getTeamMemberById = async (req, res) => {
     }
 
     const member = members[0];
+    member.image_url = getFullUrl(member.image_url);
     member.social_links = member.social_links ? JSON.parse(member.social_links) : {};
 
     res.json(member);

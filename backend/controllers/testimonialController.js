@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
+import { getFullUrl } from '../utils/fileUpload.js';
 
 export const getTestimonials = async (req, res) => {
   try {
@@ -24,7 +25,12 @@ export const getTestimonials = async (req, res) => {
     const [testimonials] = await connection.query(query, params);
     connection.release();
 
-    res.json(testimonials);
+    const formattedTestimonials = testimonials.map(t => ({
+      ...t,
+      image_url: getFullUrl(t.image_url)
+    }));
+
+    res.json(formattedTestimonials);
   } catch (error) {
     console.error('Get testimonials error:', error);
     res.status(500).json({ error: 'Failed to fetch testimonials' });
@@ -43,7 +49,10 @@ export const getTestimonialById = async (req, res) => {
       return res.status(404).json({ error: 'Testimonial not found' });
     }
 
-    res.json(testimonials[0]);
+    const testimonial = testimonials[0];
+    testimonial.image_url = getFullUrl(testimonial.image_url);
+
+    res.json(testimonial);
   } catch (error) {
     console.error('Get testimonial error:', error);
     res.status(500).json({ error: 'Failed to fetch testimonial' });
