@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from '../config/database.js';
-import { ensureUploadDirs } from '../utils/fileUpload.js';
+import { ensureUploadDirs, getFullUrl } from '../utils/fileUpload.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -73,7 +73,12 @@ export const getFiles = async (req, res) => {
     const [files] = await connection.query('SELECT * FROM files ORDER BY created_at DESC LIMIT 100');
     connection.release();
 
-    res.json(files);
+    const formattedFiles = files.map(file => ({
+      ...file,
+      url: getFullUrl(file.file_path)
+    }));
+
+    res.json(formattedFiles);
   } catch (error) {
     console.error('Get files error:', error);
     res.status(500).json({ error: 'Failed to fetch files' });
