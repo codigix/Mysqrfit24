@@ -43,6 +43,21 @@ export const deleteFile = (filePath) => {
   return false;
 };
 
+export const deleteFileByRelativePath = (relativePath) => {
+  if (!relativePath) return false;
+  
+  const { uploadsDir } = ensureUploadDirs();
+  
+  // If relativePath starts with 'uploads/', remove it because uploadsDir points to the actual folder
+  const cleanPath = relativePath.startsWith('uploads/') 
+    ? relativePath.replace('uploads/', '') 
+    : relativePath;
+    
+  const fullPath = path.join(uploadsDir, cleanPath);
+  
+  return deleteFile(fullPath);
+};
+
 export const getFileMimeType = (filename) => {
   const ext = path.extname(filename).toLowerCase();
   const mimeTypes = {

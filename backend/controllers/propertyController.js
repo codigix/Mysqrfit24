@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
-import { getFullUrl } from '../utils/fileUpload.js';
+import { getFullUrl, deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 export const getProperties = async (req, res) => {
   try {
@@ -341,7 +341,31 @@ export const updateProperty = async (req, res) => {
     };
 
     for (const [key, value] of Object.entries(updates)) {
-      if (jsonFields.includes(key)) {
+      if (key === 'images' && value !== undefined) {
+        // Handle image cleanup for properties (array of images)
+        let oldImages = [];
+        try {
+          oldImages = typeof existing[0].images === 'string' ? JSON.parse(existing[0].images) : existing[0].images;
+        } catch (e) {
+          oldImages = typeof existing[0].images === 'string' ? existing[0].images.split(',').map(i => i.trim()).filter(i => i) : [];
+        }
+
+        let newImages = [];
+        try {
+          newImages = typeof value === 'string' ? JSON.parse(value) : value;
+        } catch (e) {
+          newImages = Array.isArray(value) ? value : [];
+        }
+
+        if (Array.isArray(oldImages) && Array.isArray(newImages)) {
+          // Find images that were in oldImages but NOT in newImages
+          const removedImages = oldImages.filter(img => !newImages.includes(img));
+          removedImages.forEach(img => deleteFileByRelativePath(img));
+        }
+
+        setClause.push(`${key} = ?`);
+        values.push(value ? (typeof value === 'string' ? value : JSON.stringify(value)) : '[]');
+      } else if (jsonFields.includes(key)) {
         setClause.push(`${key} = ?`);
         values.push(value ? (typeof value === 'string' ? value : JSON.stringify(value)) : '[]');
       } else if (numericFields.includes(key)) {
@@ -416,6 +440,20 @@ export const deleteProperty = async (req, res) => {
     if (existing.length === 0) {
       connection.release();
       return res.status(404).json({ error: 'Property not found' });
+    }
+
+    const property = existing[0];
+    if (property.images) {
+      let images = [];
+      try {
+        images = typeof property.images === 'string' ? JSON.parse(property.images) : property.images;
+      } catch (e) {
+        images = typeof property.images === 'string' ? property.images.split(',').map(i => i.trim()).filter(i => i) : [];
+      }
+      
+      if (Array.isArray(images)) {
+        images.forEach(img => deleteFileByRelativePath(img));
+      }
     }
 
     await connection.query('DELETE FROM properties WHERE id = ?', [id]);

@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from '../config/database.js';
-import { ensureUploadDirs, getFullUrl } from '../utils/fileUpload.js';
+import { ensureUploadDirs, getFullUrl, deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -98,12 +98,9 @@ export const deleteFile = async (req, res) => {
     }
 
     const file = fileRecord[0];
-    const uploadsDir = path.join(__dirname, '../uploads');
-    const fullPath = path.join(uploadsDir, file.file_path.replace('uploads/', ''));
-
-    if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath);
-    }
+    
+    // Delete from filesystem
+    deleteFileByRelativePath(file.file_path);
 
     await connection.query('DELETE FROM files WHERE id = ?', [fileId]);
     connection.release();

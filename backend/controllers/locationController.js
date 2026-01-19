@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
+import { deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 export const getLocations = async (req, res) => {
   try {
@@ -74,6 +75,11 @@ export const updateLocation = async (req, res) => {
     const { id } = req.params;
     const { name, description, image_url, lat, lng } = req.body;
 
+    const [rows] = await pool.query('SELECT image_url FROM locations WHERE id = ?', [id]);
+    if (rows.length > 0 && rows[0].image_url && rows[0].image_url !== image_url) {
+      deleteFileByRelativePath(rows[0].image_url);
+    }
+
     const [result] = await pool.query(
       'UPDATE locations SET name = ?, description = ?, image_url = ?, lat = ?, lng = ?, updated_at = NOW() WHERE id = ?',
       [name, description || null, image_url || null, lat || null, lng || null, id]
@@ -93,6 +99,11 @@ export const updateLocation = async (req, res) => {
 export const deleteLocation = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const [rows] = await pool.query('SELECT image_url FROM locations WHERE id = ?', [id]);
+    if (rows.length > 0 && rows[0].image_url) {
+      deleteFileByRelativePath(rows[0].image_url);
+    }
 
     const [result] = await pool.query(
       'DELETE FROM locations WHERE id = ?',

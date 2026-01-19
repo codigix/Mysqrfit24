@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
-import { getFullUrl } from '../utils/fileUpload.js';
+import { getFullUrl, deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 export const getTestimonials = async (req, res) => {
   try {
@@ -101,7 +101,14 @@ export const updateTestimonial = async (req, res) => {
     const values = [];
 
     for (const [key, value] of Object.entries(updates)) {
-      if (value !== undefined && value !== null) {
+      if (key === 'image_url' && value !== undefined) {
+        // Delete old image if it's being replaced or removed
+        if (existing[0].image_url && existing[0].image_url !== value) {
+          deleteFileByRelativePath(existing[0].image_url);
+        }
+        setClause.push(`${key} = ?`);
+        values.push(value);
+      } else if (value !== undefined && value !== null) {
         setClause.push(`${key} = ?`);
         values.push(value);
       }
@@ -139,6 +146,11 @@ export const deleteTestimonial = async (req, res) => {
     if (existing.length === 0) {
       connection.release();
       return res.status(404).json({ error: 'Testimonial not found' });
+    }
+
+    const testimonial = existing[0];
+    if (testimonial.image_url) {
+      deleteFileByRelativePath(testimonial.image_url);
     }
 
     await connection.query('DELETE FROM testimonials WHERE id = ?', [id]);

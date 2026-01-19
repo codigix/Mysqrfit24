@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
-import { getFullUrl } from '../utils/fileUpload.js';
+import { getFullUrl, deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 const slugify = (text) => {
   return text
@@ -181,6 +181,10 @@ export const updateBlogPost = async (req, res) => {
       values.push(excerpt || null);
     }
     if (image_url !== undefined) {
+      // Delete old image if it's being replaced or removed
+      if (existing[0].image_url && existing[0].image_url !== image_url) {
+        deleteFileByRelativePath(existing[0].image_url);
+      }
       setClause.push('image_url = ?');
       values.push(image_url || null);
     }
@@ -228,6 +232,11 @@ export const deleteBlogPost = async (req, res) => {
     if (existing.length === 0) {
       connection.release();
       return res.status(404).json({ error: 'Blog post not found' });
+    }
+
+    const post = existing[0];
+    if (post.image_url) {
+      deleteFileByRelativePath(post.image_url);
     }
 
     await connection.query('DELETE FROM blog_posts WHERE id = ?', [id]);

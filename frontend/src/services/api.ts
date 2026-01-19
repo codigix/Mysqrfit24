@@ -5,7 +5,7 @@ import { BlogPost } from '../types/blog';
 import { SiteSetting, UploadedFile, Inquiry, ContactMessage, Testimonial, TeamMember, NewsletterSubscriber, LegalContent, ContactStats } from '../types/site';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-export const FILE_BASE_URL = import.meta.env.VITE_FILE_URL || 'http://localhost:5000';
+export const FILE_BASE_URL = import.meta.env.VITE_FILE_URL || 'https://mysqft24.codigix.co';
 
 export const getFileUrl = (path: string) => {
   if (!path) return '';
