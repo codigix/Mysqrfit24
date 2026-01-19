@@ -61,8 +61,7 @@ const AdminDashboard = () => {
               )}
             </button>
             <div>
-              {/* <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">MySqrfit</h1> */}
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
                 MySqrfit
               </h1>
 
