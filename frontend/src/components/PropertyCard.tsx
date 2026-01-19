@@ -176,11 +176,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
       {/* Content Section */}
       <CardContent className="p-3">
-        <div className="space-y-5">
+        <div >
           {/* Title & Location */}
           <div>
             <h3 
-              className="text-xl font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors cursor-pointer leading-snug mb-2"
+              className="text-xl  text-foreground line-clamp-2 group-hover:text-primary transition-colors cursor-pointer leading-snug mb-2"
               onClick={handleViewDetails}
             >
               {property.title}
@@ -195,32 +195,32 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </div>
 
           {/* Price - Enhanced */}
-          <div className="py-3 px-3 bg-primary/10 rounded-lg border border-primary/20">
-            <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Price</p>
-            <p className="text-xl font-bold text-primary">
+          <div >
+            
+            <p className="text-md font-bold text-primary mt-2">
               {formatPrice(property.price, property.type, property.min_price, property.max_price)}
             </p>
           </div>
 
           {/* Specs - Grid */}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 mt-2">
             {property.bedrooms && (
-              <div className="bg-gray-50 p-3 rounded-lg text-center hover:bg-gray-100 transition-colors">
-                <Bed className="w-5 h-5 mx-auto text-primary mb-1" />
+              <div className="bg-gray-50 p-2 rounded-lg text-center hover:bg-gray-100 transition-colors flex items-center gap-2 justify-center">
+                <Bed className="w-5 h-5  text-primary mb-1" />
                 <div className="text-sm font-bold text-foreground">{property.bedrooms}</div>
                 <div className="text-xs text-muted-foreground">Bed</div>
               </div>
             )}
             {property.bathrooms && (
-              <div className="bg-gray-50 p-3 rounded-lg text-center hover:bg-gray-100 transition-colors">
-                <Bath className="w-5 h-5 mx-auto text-primary mb-1" />
+              <div className="bg-gray-50 p-2 rounded-lg text-center hover:bg-gray-100 transition-colors flex items-center gap-2 justify-center">
+                <Bath className="w-5 h-5  text-primary mb-1" />
                 <div className="text-sm font-bold text-foreground">{property.bathrooms}</div>
                 <div className="text-xs text-muted-foreground">Bath</div>
               </div>
             )}
             {property.area && (
-              <div className="bg-gray-50 p-3 rounded-lg text-center hover:bg-gray-100 transition-colors">
-                <Square className="w-5 h-5 mx-auto text-primary mb-1" />
+              <div className="bg-gray-50 p-2 rounded-lg text-center hover:bg-gray-100 transition-colors flex items-center gap-2 justify-center">
+                <Square className="w-5 h-5  text-primary mb-1" />
                 <div className="text-sm font-bold text-foreground">{(property.area / 1000).toFixed(1)}k</div>
                 <div className="text-xs text-muted-foreground">sqft</div>
               </div>
@@ -229,7 +229,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
           {/* Features */}
           {property.features && property.features.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mt-2">
               {property.features.slice(0, 3).map((feature) => (
                 <Badge key={feature} className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium">
                   {feature}

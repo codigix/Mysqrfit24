@@ -230,123 +230,129 @@ const Properties = () => {
         <div className="absolute bottom-0 left-0 w-80  bg-primary/15 rounded-full blur-3xl -ml-40 -mb-40"></div>
 
         {/* Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 text-center py-8">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 text-center py-12">
           <h1 className="text-3xl md:text-3xl lg:text-3xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
             Discover Your Dream Property
           </h1>
-          <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md mb-12">
+          <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
             Explore our carefully curated collection of premium properties tailored to your lifestyle
           </p>
         </div>
-
-        {/* Filters Section - Overlaid on Image */}
-        <div className="relative z-20 w-full max-w-6xl mx-auto px-4 pb-16">
-          <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-2xl p-2 border border-white/20">
-            <PropertyFilters filters={filters} onFiltersChange={setFilters} />
-          </div>
-        </div>
       </section>
 
-      {/* Results Section */}
+      {/* Results Section with Sidebar Layout */}
       <section className="py-12 px-4 bg-background">
         <div className="max-w-7xl mx-auto">
-          {/* Header with controls */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                {isLoading ? '...' : `${sortedProperties?.length || 0} Properties`}
-              </h2>
-              <p className="text-muted-foreground">
-                {Object.keys(filters).length > 0 
-                  ? 'Filtered results based on your preferences' 
-                  : 'Browse all available properties'}
-              </p>
-            </div>
-
-            {/* View Controls */}
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Sort Dropdown */}
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="h-5 w-5 text-muted-foreground" />
-                <Select value={sortBy} onValueChange={(val) => setSortBy(val as any)}>
-                  <SelectTrigger className="w-40 h-10">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="price-low">Price: Low to High</SelectItem>
-                    <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* View Toggle */}
-              <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="px-3"
-                >
-                  <Grid3x3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="px-3"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left Sidebar - Filters */}
+            <div className="w-full lg:w-80 flex-shrink-0">
+              <div className="sticky top-10 bg-white rounded-md shadow-lg p-4 border border-border/50 h-fit">
+                <h3 className="text-lg font-bold text-foreground mb-3">Filters</h3>
+                <PropertyFilters filters={filters} onFiltersChange={setFilters} isCompact={true} />
               </div>
             </div>
-          </div>
 
-          {/* Error State */}
-          {error && (
-            <div className="text-center py-16 mb-8">
-              <div className="inline-block p-8 bg-destructive/10 rounded-2xl border border-destructive/20">
-                <p className="text-destructive font-semibold text-lg">Failed to load properties. Please try again.</p>
-              </div>
-            </div>
-          )}
-
-          {/* Loading State */}
-          {isLoading ? (
-            <div className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' 
-              : 'space-y-4'}>
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className={`bg-muted animate-pulse rounded-2xl ${viewMode === 'grid' ? 'h-96' : 'h-32'}`}></div>
-              ))}
-            </div>
-          ) : sortedProperties && sortedProperties.length === 0 ? (
-            <div className="text-center py-24">
-              <div className="inline-block">
-                <div className="mx-auto mb-6 p-8 bg-primary/10 rounded-full w-24 h-24 flex items-center justify-center">
-                  <Building className="h-12 w-12 text-primary" />
+            {/* Right Content - Properties */}
+            <div className="flex-1 min-w-0">
+              {/* Header with controls */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                    {isLoading ? '...' : `${sortedProperties?.length || 0} Properties`}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {Object.keys(filters).length > 0 
+                      ? 'Filtered results based on your preferences' 
+                      : 'Browse all available properties'}
+                  </p>
                 </div>
-                <h3 className="text-3xl font-bold mb-3 text-foreground">No properties found</h3>
-                <p className="text-muted-foreground text-lg max-w-md">Try adjusting your search filters or explore different locations to find your perfect property</p>
-              </div>
-            </div>
-          ) : (
-            <>
-              {viewMode === 'grid' ? (
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-                  {sortedProperties?.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
+
+                {/* View Controls */}
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Sort Dropdown */}
+                  <div className="flex items-center gap-2">
+                    <ArrowUpDown className="h-5 w-5 text-muted-foreground" />
+                    <Select value={sortBy} onValueChange={(val) => setSortBy(val as any)}>
+                      <SelectTrigger className="w-40 h-10">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="newest">Newest First</SelectItem>
+                        <SelectItem value="price-low">Price: Low to High</SelectItem>
+                        <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* View Toggle */}
+                  <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('grid')}
+                      className="px-3"
+                    >
+                      <Grid3x3 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                      className="px-3"
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-              ) : (
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2'>
-                  {sortedProperties?.map((property) => (
-                    <PropertyListItem key={property.id} property={property} />
-                  ))}
+              </div>
+
+              {/* Error State */}
+              {error && (
+                <div className="text-center py-16 mb-8">
+                  <div className="inline-block p-8 bg-destructive/10 rounded-2xl border border-destructive/20">
+                    <p className="text-destructive font-semibold text-lg">Failed to load properties. Please try again.</p>
+                  </div>
                 </div>
               )}
-            </>
-          )}
+
+              {/* Loading State */}
+              {isLoading ? (
+                <div className={viewMode === 'grid' 
+                  ? 'grid grid-cols-1 md:grid-cols-2 gap-8' 
+                  : 'space-y-4'}>
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className={`bg-muted animate-pulse rounded-2xl ${viewMode === 'grid' ? 'h-96' : 'h-32'}`}></div>
+                  ))}
+                </div>
+              ) : sortedProperties && sortedProperties.length === 0 ? (
+                <div className="text-center py-24">
+                  <div className="inline-block">
+                    <div className="mx-auto mb-6 p-8 bg-primary/10 rounded-full w-24 h-24 flex items-center justify-center">
+                      <Building className="h-12 w-12 text-primary" />
+                    </div>
+                    <h3 className="text-3xl font-bold mb-3 text-foreground">No properties found</h3>
+                    <p className="text-muted-foreground text-lg max-w-md">Try adjusting your search filters or explore different locations to find your perfect property</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {viewMode === 'grid' ? (
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                      {sortedProperties?.map((property) => (
+                        <PropertyCard key={property.id} property={property} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className='space-y-4'>
+                      {sortedProperties?.map((property) => (
+                        <PropertyListItem key={property.id} property={property} />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </section>
     </div>
