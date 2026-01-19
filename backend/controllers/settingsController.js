@@ -1,4 +1,5 @@
 import pool from '../config/database.js';
+import { deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 export const getSettings = async (req, res) => {
   try {
@@ -70,7 +71,13 @@ export const updateSetting = async (req, res) => {
     }
 
     const currentType = rows[0].setting_type;
+    const oldValue = rows[0].setting_value;
     const newType = setting_type || currentType;
+
+    // If it's an image or looks like a file path, delete the old one
+    if ((currentType === 'image' || (typeof oldValue === 'string' && oldValue.startsWith('uploads/'))) && oldValue !== value) {
+      deleteFileByRelativePath(oldValue);
+    }
 
     const [result] = await pool.query(
       'UPDATE site_settings SET setting_value = ?, setting_type = ?, description = ?, updated_at = NOW() WHERE setting_key = ?',
@@ -91,6 +98,14 @@ export const updateSetting = async (req, res) => {
 export const deleteSetting = async (req, res) => {
   try {
     const { key } = req.params;
+
+    const [rows] = await pool.query('SELECT * FROM site_settings WHERE setting_key = ?', [key]);
+    if (rows.length > 0) {
+      const { setting_value, setting_type } = rows[0];
+      if (setting_type === 'image' || (typeof setting_value === 'string' && setting_value.startsWith('uploads/'))) {
+        deleteFileByRelativePath(setting_value);
+      }
+    }
 
     const [result] = await pool.query(
       'DELETE FROM site_settings WHERE setting_key = ?',

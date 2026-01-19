@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
+import { getFullUrl, deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 export const getTeamMembers = async (req, res) => {
   try {
@@ -21,6 +22,7 @@ export const getTeamMembers = async (req, res) => {
 
     const formattedMembers = members.map(member => ({
       ...member,
+      image_url: getFullUrl(member.image_url),
       social_links: member.social_links ? JSON.parse(member.social_links) : {},
     }));
 
@@ -44,6 +46,7 @@ export const getTeamMemberById = async (req, res) => {
     }
 
     const member = members[0];
+    member.image_url = getFullUrl(member.image_url);
     member.social_links = member.social_links ? JSON.parse(member.social_links) : {};
 
     res.json(member);
@@ -109,6 +112,13 @@ export const updateTeamMember = async (req, res) => {
       if (key === 'social_links' && value !== undefined && value !== null) {
         setClause.push(`${key} = ?`);
         values.push(JSON.stringify(value));
+      } else if (key === 'image_url' && value !== undefined) {
+        // Delete old image if it's being replaced or removed
+        if (existing[0].image_url && existing[0].image_url !== value) {
+          deleteFileByRelativePath(existing[0].image_url);
+        }
+        setClause.push(`${key} = ?`);
+        values.push(value);
       } else if (value !== undefined && value !== null) {
         setClause.push(`${key} = ?`);
         values.push(value);
@@ -147,6 +157,11 @@ export const deleteTeamMember = async (req, res) => {
     if (existing.length === 0) {
       connection.release();
       return res.status(404).json({ error: 'Team member not found' });
+    }
+
+    const member = existing[0];
+    if (member.image_url) {
+      deleteFileByRelativePath(member.image_url);
     }
 
     await connection.query('DELETE FROM team_members WHERE id = ?', [id]);

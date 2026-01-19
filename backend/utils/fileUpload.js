@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const ensureUploadDirs = () => {
-  const uploadsDir = path.join(__dirname, '../uploads');
+  const uploadsDir = process.env.UPLOADS_PATH || path.join(__dirname, '../uploads');
   const docsDir = path.join(uploadsDir, 'documents');
   const imagesDir = path.join(uploadsDir, 'images');
 
@@ -43,6 +43,21 @@ export const deleteFile = (filePath) => {
   return false;
 };
 
+export const deleteFileByRelativePath = (relativePath) => {
+  if (!relativePath) return false;
+  
+  const { uploadsDir } = ensureUploadDirs();
+  
+  // If relativePath starts with 'uploads/', remove it because uploadsDir points to the actual folder
+  const cleanPath = relativePath.startsWith('uploads/') 
+    ? relativePath.replace('uploads/', '') 
+    : relativePath;
+    
+  const fullPath = path.join(uploadsDir, cleanPath);
+  
+  return deleteFile(fullPath);
+};
+
 export const getFileMimeType = (filename) => {
   const ext = path.extname(filename).toLowerCase();
   const mimeTypes = {
@@ -60,4 +75,35 @@ export const getFileMimeType = (filename) => {
     '.zip': 'application/zip',
   };
   return mimeTypes[ext] || 'application/octet-stream';
+};
+
+export const getFullUrl = (filePath) => {
+  if (!filePath) return '';
+
+  // 1. Force cleanup: if the path has "localhost:5000", remove it
+  let pathOnly = filePath;
+  if (typeof filePath === 'string' && filePath.includes('localhost:5000')) {
+    pathOnly = filePath.split('localhost:5000').pop();
+  } else if (typeof filePath === 'string' && filePath.startsWith('http')) {
+    // If it's already a correct external URL, return it
+    return filePath;
+  }
+
+  // 2. Determine the Base URL
+  // We hardcode your production domain as the primary fallback for VPS
+  let baseUrl = process.env.BASE_URL;
+  
+  if (!baseUrl || baseUrl.includes('localhost')) {
+    if (process.env.NODE_ENV === 'production') {
+      baseUrl = 'https://mysqft24.codigix.co';
+    } else {
+      baseUrl = baseUrl || `http://localhost:${process.env.PORT || 5000}`;
+    }
+  }
+
+  // 3. Clean up slashes
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const cleanFilePath = pathOnly.startsWith('/') ? pathOnly.slice(1) : pathOnly;
+
+  return `${cleanBaseUrl}/${cleanFilePath}`;
 };

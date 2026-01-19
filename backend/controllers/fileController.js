@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from '../config/database.js';
-import { ensureUploadDirs } from '../utils/fileUpload.js';
+import { ensureUploadDirs, getFullUrl, deleteFileByRelativePath } from '../utils/fileUpload.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -36,13 +36,15 @@ export const uploadFile = async (req, res) => {
     );
     connection.release();
 
+    const url = getFullUrl(fileRelPath);
+
     res.status(201).json({
       id: fileId,
       filename: originalName,
       storedName,
       fileSize: file.size,
       fileType: ext.slice(1),
-      url: `/${fileRelPath}`,
+      url,
       uploadedAt: new Date(),
     });
   } catch (error) {
@@ -70,7 +72,12 @@ export const getFiles = async (req, res) => {
     const [files] = await connection.query('SELECT * FROM files ORDER BY created_at DESC LIMIT 100');
     connection.release();
 
-    res.json(files);
+    const formattedFiles = files.map(file => ({
+      ...file,
+      url: getFullUrl(file.file_path)
+    }));
+
+    res.json(formattedFiles);
   } catch (error) {
     console.error('Get files error:', error);
     res.status(500).json({ error: 'Failed to fetch files' });
@@ -91,12 +98,9 @@ export const deleteFile = async (req, res) => {
     }
 
     const file = fileRecord[0];
-    const uploadsDir = path.join(__dirname, '../uploads');
-    const fullPath = path.join(uploadsDir, file.file_path.replace('uploads/', ''));
-
-    if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath);
-    }
+    
+    // Delete from filesystem
+    deleteFileByRelativePath(file.file_path);
 
     await connection.query('DELETE FROM files WHERE id = ?', [fileId]);
     connection.release();
