@@ -77,7 +77,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="bg-housiey-dark text-housiey-dark-foreground py-16 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <Link to="/" className="flex items-center mb-4">

@@ -26,7 +26,7 @@ export const TeamSection = () => {
   if (isLoading) {
     return (
       <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
-        <div className="max-w-6xl mx-auto flex justify-center items-center min-h-[400px]">
+        <div className="max-w-7xl mx-auto flex justify-center items-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </section>
@@ -70,7 +70,7 @@ export const TeamSection = () => {
 
   return (
     <section className="py-20 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-primary font-semibold text-sm uppercase tracking-wide">meet our team</span>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">

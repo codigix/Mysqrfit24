@@ -36,7 +36,7 @@ export const Testimonials = () => {
   if (isLoading) {
     return (
       <section className="py-20 px-4 bg-background">
-        <div className="max-w-6xl mx-auto flex justify-center items-center min-h-[400px]">
+        <div className="max-w-7xl mx-auto flex justify-center items-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </section>
@@ -72,7 +72,7 @@ export const Testimonials = () => {
 
   return (
     <section className="py-20 px-4 bg-background">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-md md:text-4xl font-bold mb-4 text-foreground">
             Client Testimonials

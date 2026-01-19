@@ -182,7 +182,7 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
             </Label>
             <div className="space-y-3">
               <Slider
-                defaultValue={priceRange}
+                value={priceRange}
                 min={0}
                 max={10000000}
                 step={50000}
@@ -395,7 +395,7 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
               </Label>
               <div className="space-y-4">
                 <Slider
-                  defaultValue={priceRange}
+                  value={priceRange}
                   min={0}
                   max={10000000}
                   step={50000}

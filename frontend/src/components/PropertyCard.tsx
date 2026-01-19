@@ -254,7 +254,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </Button>
             <Button
               className="flex-1 font-semibold rounded-lg bg-primary hover:bg-primary/90"
-              onClick={() => handleContact(property.type === 'sale' ? 'buy' : (property.type === 'lease' ? 'lease' as any : 'rent'))}
+              onClick={() => handleContact(property.type === 'rent' ? 'rent' : 'buy')}
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               Inquire

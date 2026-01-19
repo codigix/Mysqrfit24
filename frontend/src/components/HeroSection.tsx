@@ -135,7 +135,7 @@ const HeroSection = () => {
             </p>
 
             {/* Enhanced Search Form */}
-            <form onSubmit={handleSearch} className="mb-20 max-w-6xl mx-auto">
+            <form onSubmit={handleSearch} className="mb-20 max-w-7xl mx-auto">
               <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-2 lg:p-3 border border-white/20">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3 lg:gap-4">
                   {/* Location Search with Dropdown */}

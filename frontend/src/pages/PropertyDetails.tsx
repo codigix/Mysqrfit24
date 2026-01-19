@@ -354,7 +354,14 @@ const PropertyDetails = () => {
   };
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth' });
+    if (ref.current) {
+      const offset = 100;
+      const elementPosition = ref.current.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - offset,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const getPropertyAnalysisData = () => {
@@ -520,14 +527,44 @@ const PropertyDetails = () => {
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Primary Tabs Navigation (always visible) */}
+        <div className="flex gap-1 overflow-x-auto mb-6 pb-3 border-b border-border/50 scrollbar-hide">
+          {[
+            { id: 'overview', label: 'Overview', ref: overviewRef },
+            { id: 'description', label: 'Description', ref: descriptionRef },
+            { id: 'address', label: 'Address', ref: addressRef },
+            { id: 'details', label: 'Details', ref: detailsRef },
+            { id: 'features', label: 'Features', ref: featuresRef },
+            { id: 'video', label: 'Video', ref: videoRef },
+            { id: 'map', label: 'Map', ref: mapRef },
+            { id: 'schedule', label: 'Schedule a tour', ref: scheduleRef },
+            { id: 'similar', label: 'Similar Listings', ref: similarRef },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveTab(tab.id);
+                scrollToSection(tab.ref);
+              }}
+              className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border-b-2 ${activeTab === tab.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         {/* Breadcrumb Navigation */}
 
 
+        {/* Sticky Tabs (appears on scroll) */}
         <div
           ref={tabsContainerRef}
-          className={`flex gap-2 overflow-x-auto justify-between pb-2 scrollbar-hide  transition-all duration-300 ${isTabsSticky
-            ? 'fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm px-4 shadow-sm  opacity-100 py-2'
-            : 'hidden pointer-events-none mb-6'
+          className={`flex gap-2 overflow-x-auto justify-start pb-2 scrollbar-hide transition-all duration-300 ${isTabsSticky
+            ? 'fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm px-4 shadow-md opacity-100 py-3'
+            : 'hidden pointer-events-none'
             }`}
         >
           {[
@@ -538,7 +575,6 @@ const PropertyDetails = () => {
             { id: 'features', label: 'Features', ref: featuresRef },
             { id: 'video', label: 'Video', ref: videoRef },
             { id: 'map', label: 'Map', ref: mapRef },
-            { id: 'floorPlans', label: 'Floor Plans', ref: floorPlansRef },
             { id: 'schedule', label: 'Schedule a tour', ref: scheduleRef },
             { id: 'similar', label: 'Similar Listings', ref: similarRef },
           ].map((tab) => (
@@ -875,6 +911,7 @@ const PropertyDetails = () => {
                   </AccordionContent>
                 </AccordionItem>
 
+                <div ref={addressRef} />
                 <AccordionItem value="address" className="px-6 bg-white rounded-lg">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
@@ -921,6 +958,7 @@ const PropertyDetails = () => {
                   </AccordionContent>
                 </AccordionItem>
 
+                <div ref={detailsRef} />
                 <AccordionItem value="details" className="px-6 bg-white rounded-lg">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
@@ -1013,6 +1051,7 @@ const PropertyDetails = () => {
                   </AccordionContent>
                 </AccordionItem>
 
+                <div ref={featuresRef} />
                 <AccordionItem value="features" className="px-6 bg-white rounded-lg">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
@@ -1087,6 +1126,7 @@ const PropertyDetails = () => {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
+                <div ref={mapRef} />
                 <AccordionItem value="map" className="px-6 bg-white rounded-lg ">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
@@ -1204,6 +1244,7 @@ const PropertyDetails = () => {
                   </AccordionContent>
                 </AccordionItem>
 
+                <div ref={videoRef} />
                 <AccordionItem value="virtualtour" className="px-6 bg-white rounded-lg">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
@@ -1237,6 +1278,7 @@ const PropertyDetails = () => {
                   </AccordionContent>
                 </AccordionItem>
 
+                <div ref={scheduleRef} />
                 <AccordionItem value="schedule" className="px-6 bg-white rounded-lg">
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">

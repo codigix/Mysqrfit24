@@ -166,7 +166,7 @@ const PropertyListItem = ({ property }: { property: Property }) => {
           </Button>
           <Button
             className="flex-1 font-semibold rounded-lg bg-primary hover:bg-primary/90"
-            onClick={() => handleContact(property.type === 'sale' ? 'buy' : (property.type === 'lease' ? 'lease' as any : 'rent'))}
+            onClick={() => handleContact(property.type === 'rent' ? 'rent' : 'buy')}
           >
             <MessageCircle className="w-4 h-4 mr-2" />
             Inquire
@@ -272,7 +272,7 @@ const Properties = () => {
                   {/* Sort Dropdown */}
                   <div className="flex items-center gap-2">
                     <ArrowUpDown className="h-5 w-5 text-muted-foreground" />
-                    <Select value={sortBy} onValueChange={(val) => setSortBy(val as any)}>
+                    <Select value={sortBy} onValueChange={(val) => setSortBy(val as 'newest' | 'price-low' | 'price-high')}>
                       <SelectTrigger className="w-40 h-10">
                         <SelectValue />
                       </SelectTrigger>

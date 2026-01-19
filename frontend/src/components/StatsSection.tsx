@@ -50,7 +50,7 @@ export const StatsSection = () => {
   if (isLoading) {
     return (
       <section className="py-16 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
-        <div className="max-w-6xl mx-auto flex justify-center items-center min-h-[200px]">
+        <div className="max-w-7xl mx-auto flex justify-center items-center min-h-[200px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </section>
@@ -59,7 +59,7 @@ export const StatsSection = () => {
 
   return (
     <section className="py-16 px-4 bg-gradient-to-r from-primary/5 to-accent/5">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stats.map((stat, index) => {
             const Icon = stat.icon;

@@ -83,7 +83,7 @@ const About = () => {
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 bg-housiey-dark">
-        <div className="max-w-6xl mx-auto text-center">
+        <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-housiey-dark-foreground mb-4">
             About MySqfit
           </h1>
@@ -96,7 +96,7 @@ const About = () => {
 
       {/* Stats Section */}
       <section className="py-16 px-4 -mt-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {stats.map((stat) => {
               const Icon = stat.icon;
@@ -116,7 +116,7 @@ const About = () => {
 
       {/* Our Story Section */}
       <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-md font-bold text-foreground mb-6">Our Story</h2>
@@ -156,7 +156,7 @@ const About = () => {
 
       {/* Values Section */}
       <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-md font-bold text-foreground mb-3">Our Values</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -185,7 +185,7 @@ const About = () => {
 
       {/* Team Section */}
       <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-md font-bold text-foreground mb-3">Meet Our Team</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -248,7 +248,7 @@ const About = () => {
 
       {/* Footer */}
       <footer className="bg-housiey-dark border-t border-housiey-dark-foreground/10 py-8 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center justify-center space-y-4">
             <Link to="/" className="flex items-center">
               <img src={logoImage} className="h-auto w-40" alt="MySqft 24" />
