@@ -64,25 +64,31 @@ export const getFileMimeType = (filename) => {
 
 export const getFullUrl = (filePath) => {
   if (!filePath) return '';
-  if (filePath.startsWith('http')) return filePath;
-  
-  // Try to get Base URL from env
+
+  // 1. Force cleanup: if the path has "localhost:5000", remove it
+  let pathOnly = filePath;
+  if (typeof filePath === 'string' && filePath.includes('localhost:5000')) {
+    pathOnly = filePath.split('localhost:5000').pop();
+  } else if (typeof filePath === 'string' && filePath.startsWith('http')) {
+    // If it's already a correct external URL, return it
+    return filePath;
+  }
+
+  // 2. Determine the Base URL
+  // We hardcode your production domain as the primary fallback for VPS
   let baseUrl = process.env.BASE_URL;
   
-  // If BASE_URL is missing but we are in production, force the production domain
-  if (!baseUrl && process.env.NODE_ENV === 'production') {
-    baseUrl = 'https://mysqft24.codigix.co';
+  if (!baseUrl || baseUrl.includes('localhost')) {
+    if (process.env.NODE_ENV === 'production') {
+      baseUrl = 'https://mysqft24.codigix.co';
+    } else {
+      baseUrl = baseUrl || `http://localhost:${process.env.PORT || 5000}`;
+    }
   }
-  
-  // Final fallback to localhost if still missing
-  if (!baseUrl) {
-    baseUrl = `http://localhost:${process.env.PORT || 5000}`;
-  }
-  
-  // Remove trailing slash from baseUrl if exists
+
+  // 3. Clean up slashes
   const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-  // Remove leading slash from filePath if exists
-  const cleanFilePath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
-  
+  const cleanFilePath = pathOnly.startsWith('/') ? pathOnly.slice(1) : pathOnly;
+
   return `${cleanBaseUrl}/${cleanFilePath}`;
 };

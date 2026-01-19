@@ -1,18 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const envPath = path.resolve(__dirname, '.env');
-const result = dotenv.config({ path: envPath });
-
-if (result.error) {
-  console.error('CRITICAL: Failed to load .env file:', result.error);
-} else {
-  console.log('✓ .env file loaded successfully from:', envPath);
-}
 
 import { errorHandler } from './middleware/errorHandler.js';
 import { initializeDatabase } from './config/initDb.js';
