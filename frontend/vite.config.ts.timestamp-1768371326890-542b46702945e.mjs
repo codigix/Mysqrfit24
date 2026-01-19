@@ -2,7 +2,7 @@
 import { defineConfig } from "file:///e:/codigix-project/Mysqrfit24/node_modules/vite/dist/node/index.js";
 import react from "file:///e:/codigix-project/Mysqrfit24/node_modules/@vitejs/plugin-react-swc/index.js";
 import path from "path";
-import { componentTagger } from "file:///e:/codigix-project/Mysqrfit24/node_modules/lovable-tagger/dist/index.js";
+import { componentTagger } from "file:///e:/codigix-project/Mysqrfit24/node_modules/My24sqfit-tagger/dist/index.js";
 var __vite_injected_original_dirname = "e:\\codigix-project\\Mysqrfit24";
 var vite_config_default = defineConfig(({ mode }) => ({
   server: {
