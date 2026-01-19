@@ -65,6 +65,24 @@ export const getFileMimeType = (filename) => {
 export const getFullUrl = (filePath) => {
   if (!filePath) return '';
   if (filePath.startsWith('http')) return filePath;
-  const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
-  return `${baseUrl}/${filePath.startsWith('/') ? filePath.slice(1) : filePath}`;
+  
+  // Try to get Base URL from env
+  let baseUrl = process.env.BASE_URL;
+  
+  // If BASE_URL is missing but we are in production, force the production domain
+  if (!baseUrl && process.env.NODE_ENV === 'production') {
+    baseUrl = 'https://mysqft24.codigix.co';
+  }
+  
+  // Final fallback to localhost if still missing
+  if (!baseUrl) {
+    baseUrl = `http://localhost:${process.env.PORT || 5000}`;
+  }
+  
+  // Remove trailing slash from baseUrl if exists
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  // Remove leading slash from filePath if exists
+  const cleanFilePath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+  
+  return `${cleanBaseUrl}/${cleanFilePath}`;
 };
