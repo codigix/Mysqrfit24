@@ -39,10 +39,10 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
       {/* Search Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
           <Input
-            placeholder="Search by location..."
-            className="pl-10 h-12"
+            placeholder="Search by location, area, or property name..."
+            className="pl-12 h-12 rounded-xl text-base font-medium border-2 border-border/50 focus:border-primary focus:ring-0"
             value={localFilters.location || ''}
             onChange={(e) => handleFilterChange('location', e.target.value)}
             onKeyDown={(e) => {
@@ -57,20 +57,24 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
           <Button
             variant={isOpen ? "default" : "outline"}
             onClick={() => setIsOpen(!isOpen)}
-            className="h-12 px-4"
+            className="h-12 px-6 rounded-xl font-semibold text-base"
           >
-            <Filter className="h-4 w-4 mr-2" />
+            <Filter className="h-5 w-5 mr-2" />
             Filters
             {hasActiveFilters && (
-              <span className="ml-2 bg-housiey-red text-housiey-red-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+              <span className="ml-2 bg-primary text-primary-foreground rounded-full w-6 h-6 text-xs flex items-center justify-center font-bold">
                 {Object.keys(filters).length}
               </span>
             )}
           </Button>
 
           {hasActiveFilters && (
-            <Button variant="ghost" onClick={clearFilters} className="h-12">
-              <X className="h-4 w-4 mr-1" />
+            <Button 
+              variant="outline" 
+              onClick={clearFilters} 
+              className="h-12 px-6 rounded-xl font-semibold text-base border-2"
+            >
+              <X className="h-5 w-5 mr-1" />
               Clear
             </Button>
           )}
@@ -79,17 +83,17 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
 
       {/* Advanced Filters */}
       {isOpen && (
-        <Card className="shadow-card animate-fade-in">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card className="shadow-lg border-0 rounded-2xl animate-fade-in">
+          <CardContent className="p-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
               {/* Property Type */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Type</Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-bold text-foreground">Type</Label>
                 <Select
                   value={localFilters.type || ''}
                   onValueChange={(value) => handleFilterChange('type', value === 'all' ? undefined : value)}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-11 rounded-lg border-2 border-border/50 font-medium">
                     <SelectValue placeholder="All Types" />
                   </SelectTrigger>
                   <SelectContent>
@@ -102,13 +106,13 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
               </div>
 
               {/* Property Type */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Property Type</Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-bold text-foreground">Property Type</Label>
                 <Select
                   value={localFilters.property_type || ''}
                   onValueChange={(value) => handleFilterChange('property_type', value === 'all' ? undefined : value)}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-11 rounded-lg border-2 border-border/50 font-medium">
                     <SelectValue placeholder="All Property Types" />
                   </SelectTrigger>
                   <SelectContent>
@@ -157,13 +161,13 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
               </div>
 
               {/* Bedrooms */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Bedrooms</Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-bold text-foreground">Bedrooms</Label>
                 <Select
                   value={localFilters.bedrooms?.toString() || ''}
                   onValueChange={(value) => handleFilterChange('bedrooms', value === 'any' ? undefined : Number(value))}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-11 rounded-lg border-2 border-border/50 font-medium">
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
@@ -178,13 +182,13 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
               </div>
 
               {/* Bathrooms */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Bathrooms</Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-bold text-foreground">Bathrooms</Label>
                 <Select
                   value={localFilters.bathrooms?.toString() || ''}
                   onValueChange={(value) => handleFilterChange('bathrooms', value === 'any' ? undefined : Number(value))}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-11 rounded-lg border-2 border-border/50 font-medium">
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,27 +203,27 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
             </div>
 
             {/* Price Range */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8 pt-6 border-t border-border/50">
+              <div className="space-y-3">
+                <Label className="text-sm font-bold text-foreground">
                   {localFilters.type === 'rent' || localFilters.type === 'lease' ? 'Min Rent' : 'Min Price'}
                 </Label>
                 <Input
                   type="number"
                   placeholder="₹ Min"
-                  className="h-10"
+                  className="h-11 rounded-lg border-2 border-border/50 font-medium"
                   value={localFilters.min_price || ''}
                   onChange={(e) => handleFilterChange('min_price', e.target.value ? Number(e.target.value) : undefined)}
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">
+              <div className="space-y-3">
+                <Label className="text-sm font-bold text-foreground">
                   {localFilters.type === 'rent' || localFilters.type === 'lease' ? 'Max Rent' : 'Max Price'}
                 </Label>
                 <Input
                   type="number"
                   placeholder="₹ Max"
-                  className="h-10"
+                  className="h-11 rounded-lg border-2 border-border/50 font-medium"
                   value={localFilters.max_price || ''}
                   onChange={(e) => handleFilterChange('max_price', e.target.value ? Number(e.target.value) : undefined)}
                 />
@@ -227,11 +231,18 @@ export const PropertyFilters = ({ filters, onFiltersChange }: PropertyFiltersPro
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsOpen(false)}>
+            <div className="flex justify-end gap-3 pt-6 border-t border-border/50">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsOpen(false)}
+                className="px-6 py-2.5 rounded-lg font-semibold"
+              >
                 Cancel
               </Button>
-              <Button onClick={applyFilters}>
+              <Button 
+                onClick={applyFilters}
+                className="px-8 py-2.5 rounded-lg font-semibold bg-primary hover:bg-primary/90"
+              >
                 Apply Filters
               </Button>
             </div>

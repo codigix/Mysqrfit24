@@ -87,9 +87,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   };
 
   return (
-    <Card className="group overflow-hidden hover:shadow-elegant transition-all duration-300 hover:-translate-y-1">
+    <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-white">
       {/* Image Section */}
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 rounded-t-2xl">
         {property.is_featured && (
           <div className="absolute top-3 left-3 z-10">
             <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-yellow-900 font-semibold">
@@ -175,91 +175,95 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       </div>
 
       {/* Content Section */}
-      <CardContent className="p-5">
-        <div className="space-y-4">
+      <CardContent className="p-3">
+        <div className="space-y-5">
           {/* Title & Location */}
           <div>
             <h3 
-              className="text-lg font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors cursor-pointer"
+              className="text-xl font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors cursor-pointer leading-snug mb-2"
               onClick={handleViewDetails}
             >
               {property.title}
             </h3>
             <button 
-              className="flex items-center text-muted-foreground mt-1 hover:text-primary transition-colors"
+              className="flex items-center text-muted-foreground hover:text-primary transition-colors text-sm"
               onClick={() => openLocationInMap(property.latitude, property.longitude, property.address)}
             >
-              <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-              <span className="text-sm line-clamp-1">{property.location}</span>
+              <MapPin className="w-4 h-4 mr-2 flex-shrink-0 text-primary" />
+              <span className="line-clamp-1">{property.location}</span>
             </button>
           </div>
 
-          {/* Price */}
-          <div className="text-xl font-bold text-primary">
-            {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+          {/* Price - Enhanced */}
+          <div className="py-3 px-3 bg-primary/10 rounded-lg border border-primary/20">
+            <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Price</p>
+            <p className="text-xl font-bold text-primary">
+              {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+            </p>
           </div>
 
-          {/* Specs */}
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          {/* Specs - Grid */}
+          <div className="grid grid-cols-3 gap-2">
             {property.bedrooms && (
-              <div className="flex items-center gap-1">
-                <Bed className="w-4 h-4" />
-                <span>{property.bedrooms}</span>
+              <div className="bg-gray-50 p-3 rounded-lg text-center hover:bg-gray-100 transition-colors">
+                <Bed className="w-5 h-5 mx-auto text-primary mb-1" />
+                <div className="text-sm font-bold text-foreground">{property.bedrooms}</div>
+                <div className="text-xs text-muted-foreground">Bed</div>
               </div>
             )}
             {property.bathrooms && (
-              <div className="flex items-center gap-1">
-                <Bath className="w-4 h-4" />
-                <span>{property.bathrooms}</span>
+              <div className="bg-gray-50 p-3 rounded-lg text-center hover:bg-gray-100 transition-colors">
+                <Bath className="w-5 h-5 mx-auto text-primary mb-1" />
+                <div className="text-sm font-bold text-foreground">{property.bathrooms}</div>
+                <div className="text-xs text-muted-foreground">Bath</div>
               </div>
             )}
             {property.area && (
-              <div className="flex items-center gap-1">
-                <Square className="w-4 h-4" />
-                <span>{property.area.toLocaleString()} sqft</span>
+              <div className="bg-gray-50 p-3 rounded-lg text-center hover:bg-gray-100 transition-colors">
+                <Square className="w-5 h-5 mx-auto text-primary mb-1" />
+                <div className="text-sm font-bold text-foreground">{(property.area / 1000).toFixed(1)}k</div>
+                <div className="text-xs text-muted-foreground">sqft</div>
               </div>
             )}
           </div>
 
           {/* Features */}
           {property.features && property.features.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2">
               {property.features.slice(0, 3).map((feature) => (
-                <Badge key={feature} variant="secondary" className="text-xs">
+                <Badge key={feature} className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium">
                   {feature}
                 </Badge>
               ))}
               {property.features.length > 3 && (
-                <Badge variant="secondary" className="text-xs">
-                  +{property.features.length - 3}
+                <Badge className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium">
+                  +{property.features.length - 3} more
                 </Badge>
               )}
             </div>
           )}
 
           {/* Actions */}
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-2 pt-3">
             <Button
               variant="outline"
-              size="sm"
-              className="flex-1"
+              className="flex-1 font-semibold rounded-lg"
               onClick={handleViewDetails}
             >
-              View Details
+              Details
             </Button>
             <Button
-              size="sm"
-              className="flex-1"
+              className="flex-1 font-semibold rounded-lg bg-primary hover:bg-primary/90"
               onClick={() => handleContact(property.type === 'sale' ? 'buy' : (property.type === 'lease' ? 'lease' as any : 'rent'))}
             >
-              <MessageCircle className="w-4 h-4 mr-1" />
-              Contact
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Inquire
             </Button>
           </div>
 
-          {/* Developer */}
-          <div className="text-xs text-muted-foreground pt-2 border-t border-border">
-            Developer: <span className="font-medium text-foreground">{property.developer_name}</span>
+          {/* Developer - Enhanced */}
+          <div className="text-xs text-muted-foreground pt-3 border-t border-border/50">
+            <span className="block font-semibold text-foreground mb-1">By {property.developer_name}</span>
           </div>
         </div>
       </CardContent>
