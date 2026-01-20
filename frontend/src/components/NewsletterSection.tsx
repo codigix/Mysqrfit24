@@ -38,36 +38,36 @@ export const NewsletterSection = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-r from-primary/10 to-accent/10">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-elegant p-12 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="bg-primary/10 p-4 rounded-full">
-              <Mail className="h-8 w-8 text-primary" />
+    <section className="py-6 px-4 bg-gradient-to-b from-background via-primary/5 to-background">
+      <div className="m mx-auto">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-4 text-center border border-white/50">
+          <div className="flex justify-center mb-8">
+            <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-5 rounded-2xl border border-primary/10">
+              <Mail className="h-5 w-5 text-primary" strokeWidth={1.5} />
             </div>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-3xl font-bold text-foreground mb-6 tracking-tight">
             Stay Updated
           </h2>
           
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-xs text-muted-foreground mb-5 max-w-2xl mx-auto leading-relaxed">
             Subscribe to our newsletter to receive the latest property listings, market insights, and exclusive offers directly in your inbox.
           </p>
 
-          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto mb-8">
             <Input
               type="email"
               placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 border-gray-300 focus:border-primary focus:ring-primary"
+              className="flex-1 h-12 border-2 border-gray-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 text-base"
               required
             />
             <Button
               type="submit"
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold whitespace-nowrap"
+              className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-semibold whitespace-nowrap h-12 rounded-lg px-8 transition-all duration-300 shadow-lg hover:shadow-xl"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -82,12 +82,12 @@ export const NewsletterSection = () => {
           </form>
 
           {subscribed && (
-            <p className="mt-4 text-green-600 font-semibold">
+            <p className="text-green-600 font-semibold text-base mb-4">
               ✓ Thank you for subscribing!
             </p>
           )}
 
-          <p className="text-sm text-muted-foreground mt-6">
+          <p className="text-sm text-muted-foreground/70">
             We respect your privacy. Unsubscribe at any time.
           </p>
         </div>

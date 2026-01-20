@@ -45,7 +45,7 @@ const PropertyListItem = ({ property }: { property: Property }) => {
   };
 
   return (
-    <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-border/50 flex flex-col sm:flex-row">
+    <div className="group bg-white rounded-md shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-border/50 flex flex-col sm:flex-row">
       {/* Image */}
       <div className="relative w-full sm:w-72 h-64 sm:h-auto flex-shrink-0 overflow-hidden">
         {property.is_featured && (
@@ -182,6 +182,8 @@ const Properties = () => {
   const [filters, setFilters] = useState<IPropertyFilters>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'newest' | 'price-low' | 'price-high'>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     const location = searchParams.get('location');
@@ -198,7 +200,12 @@ const Properties = () => {
     if (Object.keys(initialFilters).length > 0) {
       setFilters(initialFilters);
     }
+    setCurrentPage(1);
   }, [searchParams]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sortBy, viewMode]);
 
   const { data: properties, isLoading, error } = useProperties(filters);
 
@@ -207,6 +214,14 @@ const Properties = () => {
     if (sortBy === 'price-high') return (b.price || 0) - (a.price || 0);
     return 0;
   }) : properties;
+
+  const paginatedProperties = sortedProperties
+    ? sortedProperties.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+    : sortedProperties;
+
+  const totalPages = sortedProperties
+    ? Math.ceil(sortedProperties.length / ITEMS_PER_PAGE)
+    : 1;
 
   return (
     <div className="min-h-screen bg-background">
@@ -257,13 +272,25 @@ const Properties = () => {
               {/* Header with controls */}
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                    {isLoading ? '...' : `${sortedProperties?.length || 0} Properties`}
-                  </h2>
-                  <p className="text-muted-foreground">
-                    {Object.keys(filters).length > 0 
-                      ? 'Filtered results based on your preferences' 
-                      : 'Browse all available properties'}
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-3xl md:text-3xl font-bold text-foreground">
+                      {isLoading ? '...' : `${sortedProperties?.length || 0} Properties`}
+                    </h2>
+                    {filters.property_type && (
+                      <Badge className="bg-primary text-primary-foreground capitalize">
+                        {filters.property_type}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground text-xs">
+                    {filters.property_type && (
+                      <>
+                        Showing {filters.property_type.charAt(0).toUpperCase() + filters.property_type.slice(1)} properties
+                        {Object.keys(filters).length > 1 && ' with additional filters applied'}
+                      </>
+                    )}
+                    {Object.keys(filters).length > 0 && !filters.property_type && 'Filtered results based on your preferences'}
+                    {Object.keys(filters).length === 0 && 'Browse all available properties'}
                   </p>
                 </div>
 
@@ -309,7 +336,7 @@ const Properties = () => {
               {/* Error State */}
               {error && (
                 <div className="text-center py-16 mb-8">
-                  <div className="inline-block p-8 bg-destructive/10 rounded-2xl border border-destructive/20">
+                  <div className="inline-block p-8 bg-destructive/10 rounded-md border border-destructive/20">
                     <p className="text-destructive font-semibold text-lg">Failed to load properties. Please try again.</p>
                   </div>
                 </div>
@@ -321,7 +348,7 @@ const Properties = () => {
                   ? 'grid grid-cols-1 md:grid-cols-2 gap-8' 
                   : 'space-y-4'}>
                   {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`bg-muted animate-pulse rounded-2xl ${viewMode === 'grid' ? 'h-96' : 'h-32'}`}></div>
+                    <div key={i} className={`bg-muted animate-pulse rounded-md ${viewMode === 'grid' ? 'h-96' : 'h-32'}`}></div>
                   ))}
                 </div>
               ) : sortedProperties && sortedProperties.length === 0 ? (
@@ -337,17 +364,97 @@ const Properties = () => {
               ) : (
                 <>
                   {viewMode === 'grid' ? (
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-                      {sortedProperties?.map((property) => (
-                        <PropertyCard key={property.id} property={property} />
-                      ))}
-                    </div>
+                    <>
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                        {paginatedProperties?.map((property) => (
+                          <PropertyCard key={property.id} property={property} />
+                        ))}
+                      </div>
+
+                      <div className="flex items-center justify-center gap-2 mt-12 pt-8 border-t border-border/50">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                          disabled={currentPage === 1}
+                        >
+                          Previous
+                        </Button>
+
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <Button
+                              key={page}
+                              variant={currentPage === page ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => setCurrentPage(page)}
+                              className="w-10 h-10 p-0"
+                            >
+                              {page}
+                            </Button>
+                          ))}
+                        </div>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                          disabled={currentPage === totalPages}
+                        >
+                          Next
+                        </Button>
+
+                        <div className="text-sm text-muted-foreground ml-4">
+                          Page {currentPage} of {totalPages}
+                        </div>
+                      </div>
+                    </>
                   ) : (
-                    <div className='space-y-4'>
-                      {sortedProperties?.map((property) => (
-                        <PropertyListItem key={property.id} property={property} />
-                      ))}
-                    </div>
+                    <>
+                      <div className='space-y-4'>
+                        {paginatedProperties?.map((property) => (
+                          <PropertyListItem key={property.id} property={property} />
+                        ))}
+                      </div>
+
+                      <div className="flex items-center justify-center gap-2 mt-12 pt-8 border-t border-border/50">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                          disabled={currentPage === 1}
+                        >
+                          Previous
+                        </Button>
+
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <Button
+                              key={page}
+                              variant={currentPage === page ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => setCurrentPage(page)}
+                              className="w-10 h-10 p-0"
+                            >
+                              {page}
+                            </Button>
+                          ))}
+                        </div>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                          disabled={currentPage === totalPages}
+                        >
+                          Next
+                        </Button>
+
+                        <div className="text-sm text-muted-foreground ml-4">
+                          Page {currentPage} of {totalPages}
+                        </div>
+                      </div>
+                    </>
                   )}
                 </>
               )}

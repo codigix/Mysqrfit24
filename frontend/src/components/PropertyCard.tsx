@@ -176,8 +176,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
       {/* Content Section */}
       <CardContent className="p-3">
-        <div >
-          {/* Title & Location */}
+        {/* Title & Location */}
           <div>
             <h3 
               className="text-xl  text-foreground line-clamp-2 group-hover:text-primary transition-colors cursor-pointer leading-snug mb-2"
@@ -261,10 +260,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </Button>
           </div>
 
-          {/* Developer - Enhanced */}
-          <div className="text-xs text-muted-foreground pt-3 border-t border-border/50">
-            <span className="block font-semibold text-foreground mb-1">By {property.developer_name}</span>
-          </div>
+        {/* Developer - Enhanced */}
+        <div className="text-xs text-muted-foreground pt-3 border-t border-border/50">
+          <span className="block font-semibold text-foreground mb-1">By {property.developer_name}</span>
         </div>
       </CardContent>
 

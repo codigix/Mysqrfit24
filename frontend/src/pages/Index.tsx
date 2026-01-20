@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { BestListingsSection } from '@/components/BestListingsSection';
 import { Navigation } from '@/components/Navigation';
-import { StatsSection } from '@/components/StatsSection';
 import { Testimonials } from '@/components/Testimonials';
 import { FeaturedNeighborhoods } from '@/components/FeaturedNeighborhoods';
 import { BlogSection } from '@/components/BlogSection';
@@ -31,7 +30,6 @@ const Index = () => {
       <BestListingsSection />
       <FeaturedNeighborhoods />
       <Testimonials />
-<StatsSection />
 
       {/* Testimonials Section */}
       
@@ -49,68 +47,85 @@ const Index = () => {
       <NewsletterSection />
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary to-primary/80">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
-            Your digital presence is about to take off
-          </h2>
-          <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-            Ready to find your dream property or list your home?
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-white text-primary hover:bg-white/90 font-semibold px-8"
-            >
-              Contact Us
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-primary-foreground hover:bg-white/10 font-semibold px-8"
-            >
-              Search Listings
-            </Button>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Footer */}
-      <footer className="bg-housiey-dark text-housiey-dark-foreground py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-white py-6 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent rounded-full blur-3xl" />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            {/* Brand */}
             <div>
-              <Link to="/" className="flex items-center mb-4">
+              <Link to="/" className="flex items-center mb-6">
                 <img src={logoImage} className="h-10 w-auto" alt="MySqft 24" />
               </Link>
-              <p className="text-sm opacity-80">
+              <p className="text-sm text-white/70 leading-relaxed">
                 Connecting you with premium properties worldwide.
               </p>
             </div>
+
+            {/* Quick Links */}
             <div>
-              <h4 className="font-semibold mb-4 text-housiey-dark-foreground">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/" className="opacity-80 hover:opacity-100 transition-opacity">Home</Link></li>
-                <li><Link to="/properties" className="opacity-80 hover:opacity-100 transition-opacity">Properties</Link></li>
-                <li><Link to="/about" className="opacity-80 hover:opacity-100 transition-opacity">About Us</Link></li>
+              <h4 className="font-bold text-lg mb-6 text-white">Quick Links</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <Link to="/" className="text-white/70 hover:text-white transition-colors duration-300">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/properties" className="text-white/70 hover:text-white transition-colors duration-300">
+                    Properties
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="text-white/70 hover:text-white transition-colors duration-300">
+                    About Us
+                  </Link>
+                </li>
               </ul>
             </div>
+
+            {/* Resources */}
             <div>
-              <h4 className="font-semibold mb-4 text-housiey-dark-foreground">Resources</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Contact</a></li>
-                <li><a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Terms of Use</a></li>
-                <li><a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Privacy Policy</a></li>
+              <h4 className="font-bold text-lg mb-6 text-white">Resources</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
+                    Terms of Use
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
+                    Privacy Policy
+                  </a>
+                </li>
               </ul>
             </div>
+
+            {/* Contact */}
             <div>
-              <h4 className="font-semibold mb-4 text-housiey-dark-foreground">Contact</h4>
-              <p className="text-sm opacity-80 mb-2">120 Main St, Napa, CA</p>
-              <p className="text-sm opacity-80">Tel: +1 206-741-0340</p>
+              <h4 className="font-bold text-lg mb-6 text-white">Contact</h4>
+              <div className="space-y-3 text-sm text-white/70">
+                <p>120 Main St, Napa, CA</p>
+                <p className="text-white/70 hover:text-white transition-colors">Tel: +1 206-741-0340</p>
+              </div>
             </div>
           </div>
-          <div className="border-t border-housiey-dark-foreground/20 pt-8 text-center text-sm opacity-80">
-            <p>© 2024 MySqft24. All rights reserved.</p>
+
+          {/* Divider */}
+          <div className="border-t border-white/10 pt-8 text-center">
+            <p className="text-sm text-white/60">
+              © 2024 MySqft24. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

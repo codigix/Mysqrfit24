@@ -91,45 +91,10 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Property Types</SelectItem>
-                {localFilters.type === 'sale' && (
-                  <>
-                    <SelectItem value="openland">Open Land</SelectItem>
-                    <SelectItem value="apartments">Apartments</SelectItem>
-                    <SelectItem value="flats">Flats</SelectItem>
-                    <SelectItem value="rowhouses">Row Houses</SelectItem>
-                    <SelectItem value="godowns">Godowns</SelectItem>
-                    <SelectItem value="shops">Shops</SelectItem>
-                  </>
-                )}
-                {localFilters.type === 'rent' && (
-                  <>
-                    <SelectItem value="apartments">Apartments</SelectItem>
-                    <SelectItem value="flats">Flats</SelectItem>
-                    <SelectItem value="rowhouses">Row Houses</SelectItem>
-                    <SelectItem value="godowns">Godowns</SelectItem>
-                    <SelectItem value="shops">Shops</SelectItem>
-                  </>
-                )}
-                {localFilters.type === 'lease' && (
-                  <>
-                    <SelectItem value="openland">Open Land</SelectItem>
-                    <SelectItem value="apartments">Apartments</SelectItem>
-                    <SelectItem value="flats">Flats</SelectItem>
-                    <SelectItem value="rowhouses">Row Houses</SelectItem>
-                    <SelectItem value="godowns">Godowns</SelectItem>
-                    <SelectItem value="shops">Shops</SelectItem>
-                  </>
-                )}
-                {!localFilters.type && (
-                  <>
-                    <SelectItem value="apartments">Apartments</SelectItem>
-                    <SelectItem value="flats">Flats</SelectItem>
-                    <SelectItem value="rowhouses">Row Houses</SelectItem>
-                    <SelectItem value="godowns">Godowns</SelectItem>
-                    <SelectItem value="shops">Shops</SelectItem>
-                    <SelectItem value="openland">Open Land</SelectItem>
-                  </>
-                )}
+                <SelectItem value="residential">Residential</SelectItem>
+                <SelectItem value="commercial">Commercial</SelectItem>
+                <SelectItem value="vineyard">Vineyard</SelectItem>
+                <SelectItem value="land">Land</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -269,7 +234,7 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
 
       {/* Advanced Filters */}
       {isOpen && (
-        <Card className="shadow-lg border-0 rounded-2xl animate-fade-in">
+        <Card className="shadow-lg border-0 rounded-md animate-fade-in">
           <CardContent className="p-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
               {/* Property Type */}
@@ -303,45 +268,10 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Property Types</SelectItem>
-                    {localFilters.type === 'sale' && (
-                      <>
-                        <SelectItem value="openland">Open Land</SelectItem>
-                        <SelectItem value="apartments">Apartments</SelectItem>
-                        <SelectItem value="flats">Flats</SelectItem>
-                        <SelectItem value="rowhouses">Row Houses</SelectItem>
-                        <SelectItem value="godowns">Godowns</SelectItem>
-                        <SelectItem value="shops">Shops</SelectItem>
-                      </>
-                    )}
-                    {localFilters.type === 'rent' && (
-                      <>
-                        <SelectItem value="apartments">Apartments</SelectItem>
-                        <SelectItem value="flats">Flats</SelectItem>
-                        <SelectItem value="rowhouses">Row Houses</SelectItem>
-                        <SelectItem value="godowns">Godowns</SelectItem>
-                        <SelectItem value="shops">Shops</SelectItem>
-                      </>
-                    )}
-                    {localFilters.type === 'lease' && (
-                      <>
-                        <SelectItem value="openland">Open Land</SelectItem>
-                        <SelectItem value="apartments">Apartments</SelectItem>
-                        <SelectItem value="flats">Flats</SelectItem>
-                        <SelectItem value="rowhouses">Row Houses</SelectItem>
-                        <SelectItem value="godowns">Godowns</SelectItem>
-                        <SelectItem value="shops">Shops</SelectItem>
-                      </>
-                    )}
-                    {!localFilters.type && (
-                      <>
-                        <SelectItem value="apartments">Apartments</SelectItem>
-                        <SelectItem value="flats">Flats</SelectItem>
-                        <SelectItem value="rowhouses">Row Houses</SelectItem>
-                        <SelectItem value="godowns">Godowns</SelectItem>
-                        <SelectItem value="shops">Shops</SelectItem>
-                        <SelectItem value="openland">Open Land</SelectItem>
-                      </>
-                    )}
+                    <SelectItem value="residential">Residential</SelectItem>
+                    <SelectItem value="commercial">Commercial</SelectItem>
+                    <SelectItem value="vineyard">Vineyard</SelectItem>
+                    <SelectItem value="land">Land</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -1118,7 +1118,7 @@ const PropertyDetails = () => {
                       )}
 
                       {(!property.features || property.features.length === 0) && (
-                        <div className="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <div className="text-center py-12 bg-gray-50 rounded-md border border-dashed border-gray-200">
                           <Star className="h-10 w-10 text-gray-300 mx-auto mb-3" />
                           <p className="text-gray-500 font-medium">No specific features listed for this property.</p>
                         </div>
@@ -1526,7 +1526,7 @@ const PropertyDetails = () => {
                     </Card>
                   ))
                 ) : (
-                  <div className="col-span-full text-center py-12 bg-muted/30 rounded-2xl border border-dashed">
+                  <div className="col-span-full text-center py-12 bg-muted/30 rounded-md border border-dashed">
                     <Home className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
                     <p className="text-muted-foreground">No similar properties found in this area.</p>
                   </div>

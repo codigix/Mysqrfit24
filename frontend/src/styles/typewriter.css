@@ -1,0 +1,23 @@
+.typewriter-text {
+  position: relative;
+  letter-spacing: 0.05em;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background-color: currentColor;
+  margin-left: 2px;
+  animation: typewriter-blink 1s infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes typewriter-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}

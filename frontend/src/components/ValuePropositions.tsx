@@ -42,7 +42,7 @@ const ValuePropositions = () => {
             return (
               <div 
                 key={index} 
-                className=" p-6 rounded-2xl text-center shadow-card hover:shadow-elegant transition-shadow duration-300"
+                className=" p-6 rounded-md text-center shadow-card hover:shadow-elegant transition-shadow duration-300"
               >
                 <div className="w-14 h-14 bg-housiey-green rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon className="h-7 w-7 text-housiey-green-foreground" />

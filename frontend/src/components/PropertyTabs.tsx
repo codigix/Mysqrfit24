@@ -65,7 +65,7 @@ export const PropertyTabs = ({ filters }: PropertyTabsProps) => {
     viewAllLink: string;
     viewAllText: string;
   }) => (
-    <section className={isFeatured ? "py-10 px-6 bg-muted/30 rounded-2xl" : ""}>
+    <section className={isFeatured ? "py-10 px-6 bg-muted/30 rounded-md" : ""}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold text-foreground">{title}</h2>

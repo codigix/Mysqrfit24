@@ -138,7 +138,7 @@ const About = () => {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-video rounded-2xl overflow-hidden bg-housiey-dark">
+              <div className="aspect-video rounded-md overflow-hidden bg-housiey-dark">
                 <img 
                   src={getFileUrl("https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop")}
                   alt="Modern building"
