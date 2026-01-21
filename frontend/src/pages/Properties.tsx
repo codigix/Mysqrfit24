@@ -148,7 +148,7 @@ const PropertyListItem = ({ property }: { property: Property }) => {
             onClick={() => handleContact(property.type === 'rent' ? 'rent' : 'buy')}
           >
             <MessageCircle className="w-4 h-4 mr-2" />
-            Inquire
+            Send Enquiry
           </Button>
         </div>
       </div>

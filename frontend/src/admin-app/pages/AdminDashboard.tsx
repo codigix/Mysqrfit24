@@ -41,7 +41,7 @@ const AdminDashboard = () => {
     { id: "images", label: "Images", icon: Image },
     { id: "users", label: "Users", icon: Users },
     { id: "blog", label: "Blog", icon: BookOpen },
-    { id: "inquiries", label: "Inquiries", icon: MessageSquare },
+    { id: "Enquires", label: "Enquires", icon: MessageSquare },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
@@ -119,7 +119,7 @@ const AdminDashboard = () => {
               {activeTab === "images" && <ImagesManagement />}
               {activeTab === "users" && <UsersManagement />}
               {activeTab === "blog" && <BlogManagement />}
-              {activeTab === "inquiries" && <InquiriesManagement />}
+              {activeTab === "Enquiries" && <InquiriesManagement />}
               {activeTab === "settings" && <SettingsManagement />}
             </div>
           </div>

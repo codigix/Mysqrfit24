@@ -1620,7 +1620,7 @@ const PropertyDetails = () => {
                       disabled={inquiryLoading}
                     >
                       <MessageSquare className="h-4 w-4" />
-                      {inquiryLoading ? 'Sending...' : 'Send Inquiry'}
+                      {inquiryLoading ? 'Sending...' : 'Send Enquiry'}
                     </Button>
                   </form>
 
