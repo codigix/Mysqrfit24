@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Loader2, MapPin, Home, Bed, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -165,15 +165,15 @@ const HeroSection = () => {
     }
   }, [isLoading]);
 
-  const getSettingValue = (key: string, defaultValue: string) => {
+  const getSettingValue = useCallback((key: string, defaultValue: string) => {
     const setting = settings.find(s => s.setting_key === key);
     return setting?.setting_value || defaultValue;
-  };
+  }, [settings]);
 
   useEffect(() => {
     const title = getSettingValue('hero_title', "The Finest Napa's\nReal Estate Properties");
     heroTitleRef.current = title;
-  }, [settings]);
+  }, [settings, getSettingValue]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,7 +202,7 @@ const HeroSection = () => {
   const statsCustomers = getSettingValue('stats_satisfied_customers', '1,000+');
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-visible mb-20">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-fixed"
@@ -215,11 +215,11 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/40" />
       
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -mr-48 -mt-48"></div>
+      <div className=""></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/15 rounded-full blur-3xl -ml-40 -mb-40"></div>
 
       {/* Content */}
-      <div className="relative w-full max-w-7xl mx-auto px-4 py-20 text-center">
+      <div className="relative w-full max-w-7xl mx-auto px-4 pt-10 pb-10 text-center">
         {isLoading ? (
           <div className="flex justify-center items-center min-h-[400px]">
             <Loader2 className="h-16 w-16 animate-spin text-white" />
@@ -243,8 +243,8 @@ const HeroSection = () => {
             </p>
 
             {/* Enhanced Search Form */}
-            <form onSubmit={handleSearch} className="mb-20 max-w-7xl mx-auto">
-              <div className="bg-white/10 w-fit m-auto backdrop-blur-md border border-white/20 rounded-md p-6 hover:bg-white/20 transition-all duration-300 relative z-[999]">
+            <form onSubmit={handleSearch} className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-full max-w-5xl px-4">
+              <div className="bg-white border border-white/20 rounded-xl p-6 shadow-2xl  transition-all duration-300 w-fit m-auto">
                 <div className="flex flex-wrap gap-3 items-center justify-center relative">
                   {/* Location Search with Dropdown */}
                   <div className="relative md:col-span-1 overflow-visible">

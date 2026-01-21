@@ -5,7 +5,8 @@ import logoImage from '@/assets/mysqfit.png';
 import { Building, Users, Target, Award, Phone, Mail, MapPin, Linkedin, Twitter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { getFileUrl } from '@/services/api';
+import { getFileUrl, apiService } from '@/services/api';
+import { TeamMember } from '@/types/site';
 
 const About = () => {
   const stats = [
@@ -33,7 +34,7 @@ const About = () => {
     },
   ];
 
-  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -56,24 +57,32 @@ const About = () => {
       role: 'Founder & CEO',
       image_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
       bio: '15+ years in real estate with a vision to make property buying transparent.',
+      email: 'rahul@mysqfit.com',
+      phone: '+91 98765 43210'
     },
     {
       name: 'Priya Patel',
       role: 'Head of Operations',
       image_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face',
       bio: 'Expert in streamlining processes and ensuring seamless customer experiences.',
+      email: 'priya@mysqfit.com',
+      phone: '+91 98765 43211'
     },
     {
       name: 'Amit Kumar',
       role: 'Chief Technology Officer',
       image_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
       bio: 'Tech enthusiast building innovative solutions for the real estate industry.',
+      email: 'amit@mysqfit.com',
+      phone: '+91 98765 43212'
     },
     {
       name: 'Sneha Reddy',
       role: 'Head of Customer Success',
       image_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
       bio: 'Dedicated to ensuring every customer finds their perfect property.',
+      email: 'sneha@mysqfit.com',
+      phone: '+91 98765 43213'
     },
   ];
 
@@ -84,7 +93,7 @@ const About = () => {
       {/* Hero Section */}
       <section className="relative py-20 px-4 bg-housiey-dark">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-housiey-dark-foreground mb-4">
+          <h1 className="text-4xl md:text-4xl font-bold text-housiey-dark-foreground mb-4">
             About MySqfit
           </h1>
           <p className="text-lg text-housiey-dark-foreground/80 max-w-2xl mx-auto">
@@ -206,7 +215,27 @@ const About = () => {
                 <CardContent className="pt-4 text-center">
                   <h3 className="font-semibold text-foreground">{member.name}</h3>
                   <p className="text-sm text-housiey-red mb-2">{member.role}</p>
-                  <p className="text-xs text-muted-foreground">{member.bio}</p>
+                  <p className="text-xs text-muted-foreground mb-4">{member.bio}</p>
+                  <div className="flex justify-center gap-3">
+                    {member.email && (
+                      <a 
+                        href={`mailto:${member.email}`} 
+                        className="p-2 bg-muted hover:bg-housiey-red/10 text-muted-foreground hover:text-housiey-red rounded-full transition-colors"
+                        title={member.email}
+                      >
+                        <Mail className="h-4 w-4" />
+                      </a>
+                    )}
+                    {member.phone && (
+                      <a 
+                        href={`tel:${member.phone}`} 
+                        className="p-2 bg-muted hover:bg-housiey-red/10 text-muted-foreground hover:text-housiey-red rounded-full transition-colors"
+                        title={member.phone}
+                      >
+                        <Phone className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}

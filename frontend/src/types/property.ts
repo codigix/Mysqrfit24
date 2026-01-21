@@ -1,3 +1,11 @@
+export interface Review {
+  id: number;
+  author: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
 export interface Property {
   id: string;
   title: string;
@@ -13,6 +21,7 @@ export interface Property {
   plot_area?: number;
   location?: string;
   address?: string;
+  city?: string;
   latitude?: number;
   longitude?: number;
   facing?: string;
@@ -26,6 +35,7 @@ export interface Property {
   developer_email?: string;
   developer_phone?: string;
   developer_whatsapp?: string;
+  developer_avatar?: string;
   virtual_walkthrough_url?: string;
   video_tour_url?: string;
   map_virtual_tour_url?: string;
@@ -36,6 +46,15 @@ export interface Property {
   lease_deposit?: number;
   created_at?: string;
   updated_at?: string;
+  propertyId?: string;
+  yearBuilt?: number;
+  floorPlanImage?: string;
+  videoThumbnail?: string;
+  videoUrl?: string;
+  rooms?: number;
+  garages?: number;
+  lotSize?: number;
+  reviews?: Review[];
 }
 
 export interface PropertyFilters {

@@ -119,7 +119,7 @@ admin-panel/
 - **Descriptions**: Each setting has a description for clarity
 
 ### 7. Inquiries & Messages
-- **Chatbot Inquiries**: View property inquiries from the chatbot
+- **Chatbot Enquiries**: View property inquiries from the chatbot
 - **Contact Messages**: View contact form submissions
 - **Expandable Details**: Click to see full message content
 - **Message Status**: New, read, or replied status tracking

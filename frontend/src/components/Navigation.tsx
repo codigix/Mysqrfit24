@@ -63,7 +63,7 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className=" z-50 w-full bg-background/98 backdrop-blur supports-[backdrop-filter]:bg-background/95 border-b border-border/40 shadow-sm">
+    <nav className="sticky top-0 z-50 w-full bg-background/98 backdrop-blur supports-[backdrop-filter]:bg-background/95 border-b border-border/40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}

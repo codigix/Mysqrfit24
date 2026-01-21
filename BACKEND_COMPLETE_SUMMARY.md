@@ -436,7 +436,7 @@ src/
 - ✅ Authentication (JWT)
 - ✅ Property Management (CRUD)
 - ✅ Property Filtering & Search
-- ✅ Chatbot Inquiries
+- ✅ Chatbot Enquiries
 - ✅ Property Reviews
 
 ### ✅ New Features (This Update)

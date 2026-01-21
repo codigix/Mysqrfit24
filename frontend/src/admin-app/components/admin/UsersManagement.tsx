@@ -70,7 +70,11 @@ const UsersManagement = () => {
               ) : (
                 users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="p-2 text-xs text-gray-900">{user.email}</td>
+                    <td className="p-2 text-xs text-gray-900">
+                      <a href={`mailto:${user.email}`} className="hover:text-primary transition-colors">
+                        {user.email}
+                      </a>
+                    </td>
                     <td className="p-2 text-gray-600">{user.name || '-'}</td>
                     <td className="p-2">
                       <span className={`p-2 rounded-full text-xs ${

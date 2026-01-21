@@ -212,7 +212,7 @@ Expected response:
 
 1. Click on "Inquiries" in the sidebar
 2. Switch between:
-   - **Chatbot Inquiries**: Property search requests
+   - **Chatbot Enquiries**: Property search requests
    - **Contact Messages**: General contact form submissions
 3. Click to expand and view full messages
 

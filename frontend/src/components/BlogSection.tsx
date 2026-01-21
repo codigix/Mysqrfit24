@@ -82,7 +82,7 @@ export const BlogSection = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {displayPosts.map((post: any, idx) => (
+          {displayPosts.map((post: BlogPost, idx) => (
             <Card key={post.id || idx} className="border-0 overflow-hidden hover:shadow-elegant transition-all duration-300 group flex flex-col">
               <CardContent className="p-0 flex-1 flex flex-col">
                 <div className="relative h-48 overflow-hidden">

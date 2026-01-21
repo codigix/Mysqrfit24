@@ -336,6 +336,233 @@ const transformProperty = (prop: Property): ListProperty => {
   };
 };
 
+const MOCK_PROPERTIES: Property[] = [
+  {
+    id: 'mock-1',
+    title: "Luxury Sky Apartment",
+    price: 4500000,
+    type: 'sale',
+    property_type: 'apartment',
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 1200,
+    images: ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800'],
+    developer_name: "Urban Excellence",
+  },
+  {
+    id: 'mock-2',
+    title: "Modern Studio Flat",
+    price: 15000,
+    type: 'rent',
+    property_type: 'flats',
+    bedrooms: 1,
+    bathrooms: 1,
+    area: 450,
+    images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+    developer_name: "City Living",
+  },
+  {
+    id: 'mock-3',
+    title: "Spacious Godown Space",
+    price: 50000,
+    type: 'lease',
+    property_type: 'godowns',
+    area: 5000,
+    images: ['https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800'],
+    developer_name: "Logistics Pro",
+  },
+  {
+    id: 'mock-4',
+    title: "Premium Commercial Shop",
+    price: 8500000,
+    type: 'sale',
+    property_type: 'shops',
+    area: 800,
+    images: ['https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800'],
+    developer_name: "Retail Hub",
+  },
+  {
+    id: 'mock-5',
+    title: "Elegant Row House",
+    price: 12000000,
+    type: 'sale',
+    property_type: 'rowhouses',
+    bedrooms: 4,
+    bathrooms: 4,
+    area: 2800,
+    images: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'],
+    developer_name: "Heritage Homes",
+  },
+  {
+    id: 'mock-6',
+    title: "Budget Friendly Apartment",
+    price: 12000,
+    type: 'rent',
+    property_type: 'apartment',
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 850,
+    images: ['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800'],
+    developer_name: "Starter Homes",
+  },
+  {
+    id: 'mock-7',
+    title: "Prime Open Land",
+    price: 25000,
+    type: 'lease',
+    property_type: 'openland',
+    area: 10000,
+    images: ['https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800'],
+    developer_name: "Terra Group",
+  },
+  {
+    id: 'mock-8',
+    title: "Penthouse with View",
+    price: 25000000,
+    type: 'sale',
+    property_type: 'apartment',
+    bedrooms: 5,
+    bathrooms: 5,
+    area: 4500,
+    images: ['https://images.unsplash.com/photo-1512918766674-ed62b979ad8e?w=800'],
+    developer_name: "Skyline Developers",
+  },
+  {
+    id: 'mock-9',
+    title: "Compact Flat for Students",
+    price: 8000,
+    type: 'rent',
+    property_type: 'flats',
+    bedrooms: 1,
+    bathrooms: 1,
+    area: 350,
+    images: ['https://images.unsplash.com/photo-1536376074432-8f6425c399a3?w=800'],
+    developer_name: "Student Stays",
+  },
+  {
+    id: 'mock-10',
+    title: "Large Industrial Godown",
+    price: 150000,
+    type: 'lease',
+    property_type: 'godowns',
+    area: 15000,
+    images: ['https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=800'],
+    developer_name: "Industrial Hub",
+  },
+  {
+    id: 'mock-11',
+    title: "Modern Row House Unit",
+    price: 9500000,
+    type: 'sale',
+    property_type: 'rowhouses',
+    bedrooms: 3,
+    bathrooms: 3,
+    area: 1800,
+    images: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800'],
+    developer_name: "Classic Builders",
+  },
+  {
+    id: 'mock-12',
+    title: "Boutique Shop Space",
+    price: 35000,
+    type: 'rent',
+    property_type: 'shops',
+    area: 400,
+    images: ['https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800'],
+    developer_name: "Vogue Estates",
+  },
+  {
+    id: 'mock-13',
+    title: "Garden View Apartment",
+    price: 18000,
+    type: 'rent',
+    property_type: 'apartment',
+    bedrooms: 2,
+    bathrooms: 2,
+    area: 1100,
+    images: ['https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800'],
+    developer_name: "Green Acres",
+  },
+  {
+    id: 'mock-14',
+    title: "Industrial Plot",
+    price: 50000000,
+    type: 'sale',
+    property_type: 'openland',
+    area: 20000,
+    images: ['https://images.unsplash.com/photo-1531973486161-5fa472f1395b?w=800'],
+    developer_name: "Global Infra",
+  },
+  {
+    id: 'mock-15',
+    title: "Suburban Row House",
+    price: 8000000,
+    type: 'sale',
+    property_type: 'rowhouses',
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 1500,
+    images: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'],
+    developer_name: "Suburban Life",
+  },
+  {
+    id: 'mock-16',
+    title: "High Street Shop",
+    price: 75000,
+    type: 'lease',
+    property_type: 'shops',
+    area: 1200,
+    images: ['https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800'],
+    developer_name: "Market Leaders",
+  },
+  {
+    id: 'mock-17',
+    title: "Cozy Studio Apartment",
+    price: 5500000,
+    type: 'sale',
+    property_type: 'apartment',
+    bedrooms: 1,
+    bathrooms: 1,
+    area: 550,
+    images: ['https://images.unsplash.com/photo-1536376074432-8f6425c399a3?w=800'],
+    developer_name: "Compact Homes",
+  },
+  {
+    id: 'mock-18',
+    title: "Executive Flat",
+    price: 25000,
+    type: 'rent',
+    property_type: 'flats',
+    bedrooms: 2,
+    bathrooms: 2,
+    area: 1250,
+    images: ['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800'],
+    developer_name: "Executive Living",
+  },
+  {
+    id: 'mock-19',
+    title: "Distribution Center",
+    price: 200000,
+    type: 'lease',
+    property_type: 'godowns',
+    area: 25000,
+    images: ['https://images.unsplash.com/photo-1565891741441-6ad9652bb790?w=800'],
+    developer_name: "Logistics Hub",
+  },
+  {
+    id: 'mock-20',
+    title: "Coastal Row House",
+    price: 15000000,
+    type: 'sale',
+    property_type: 'rowhouses',
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 2200,
+    images: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'],
+    developer_name: "Coastal Estates",
+  }
+];
+
 export const BestListingsSection = () => {
   const listingsRef = useRef<HTMLDivElement>(null);
   const [activePrimaryTab, setActivePrimaryTab] = useState('rent');
@@ -351,12 +578,15 @@ export const BestListingsSection = () => {
         setLoading(true);
         setError(null);
         const data = await apiService.properties.list();
-        const transformedProperties = (data.data || data || []).map(transformProperty);
-        setProperties(transformedProperties);
+        const apiProperties = (data.data || data || []).map(transformProperty);
+        const transformedMockProperties = MOCK_PROPERTIES.map(transformProperty);
+        setProperties([...transformedMockProperties, ...apiProperties]);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load properties';
         setError(errorMessage);
         console.error('Error fetching properties:', err);
+        // Fallback to mock data if API fails
+        setProperties(MOCK_PROPERTIES.map(transformProperty));
       } finally {
         setLoading(false);
       }
@@ -412,114 +642,102 @@ export const BestListingsSection = () => {
     <>
 
 
-      <section ref={listingsRef} className="py-24 px-4 bg-gradient-to-b from-background via-background to-blue-50">
+      <section ref={listingsRef} className="py-16 px-4 bg-gradient-to-b from-background via-background to-blue-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
+          <div className="text-center mb-10">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">finest collection</span>
             <h2 className="text-3xl md:text-3xl font-bold mb-3 text-foreground">
               Best Listings Available
             </h2>
-            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-              Discover premium properties curated just for you. Browse through our finest selections across rent, buy, and lease.
-            </p>
           </div>
 
-          {/* Primary Tabs */}
-          <div className="bg-white rounded-md shadow-sm p-4 mb-10 w-fit mx-auto">
-            <div className="flex justify-center gap-12 flex-wrap">
-              {primaryTabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => {
-                      setActivePrimaryTab(tab.id);
-                      setActiveSubTab(subTabs[tab.id as keyof typeof subTabs][0].id);
-                    }}
-                    className={`flex flex-col items-center gap-3 px-6 py-4 rounded-xl transition-all group ${activePrimaryTab === tab.id
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-                      }`}
+          <div className="max-w-6xl mx-auto space-y-6 mb-10">
+            {/* Combined Filters Container */}
+            <div className="bg-white rounded-2xl shadow-sm border border-border/50 p-2">
+              <div className="flex flex-col md:flex-row gap-4 items-center">
+                {/* Primary Tabs - Pill Style */}
+                <div className="flex bg-gray-100/80 p-1 rounded-xl w-full md:w-auto shrink-0">
+                  {primaryTabs.map((tab) => {
+                    const isActive = activePrimaryTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => {
+                          setActivePrimaryTab(tab.id);
+                          setActiveSubTab(subTabs[tab.id as keyof typeof subTabs][0].id);
+                        }}
+                        className={`flex-1 md:flex-none px-8 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${isActive
+                            ? 'bg-white text-primary shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Sub Tabs - Horizontal scrollable pills */}
+                <div className="flex-1 w-full overflow-hidden">
+                  <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide px-2">
+                    {subTabs[activePrimaryTab as keyof typeof subTabs].map((tab) => {
+                      const isActive = activeSubTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveSubTab(tab.id)}
+                          className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 ${isActive
+                              ? 'bg-primary text-white shadow-md'
+                              : 'bg-gray-50 text-muted-foreground hover:bg-gray-100 border border-transparent'
+                            }`}
+                        >
+                          {tab.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* View Toggle - Compact */}
+                <div className="hidden lg:flex gap-1 bg-gray-100/80 p-1 rounded-lg shrink-0">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className={`h-9 w-9 p-0 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white text-primary shadow-sm hover:bg-white' : 'text-muted-foreground'}`}
                   >
-                    {Icon && (
-                      <Icon className={`h-8 w-8 transition-all ${activePrimaryTab === tab.id
-                          ? 'text-primary'
-                          : 'text-muted-foreground group-hover:text-primary'
-                        }`} strokeWidth={1.5} />
-                    )}
-                    <span className={`text-sm font-semibold transition-all ${activePrimaryTab === tab.id
-                        ? 'text-primary'
-                        : 'text-muted-foreground group-hover:text-primary'
-                      }`}>
-                      {tab.label}
-                    </span>
-                  </button>
-                );
-              })}
+                    <Grid3x3 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className={`h-9 w-9 p-0 rounded-md transition-all ${viewMode === 'list' ? 'bg-white text-primary shadow-sm hover:bg-white' : 'text-muted-foreground'}`}
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Sub Tabs */}
-          <div className="flex justify-center gap-3 mb-14 flex-wrap px-4">
-            {subTabs[activePrimaryTab as keyof typeof subTabs].map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveSubTab(tab.id)}
-                  className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg transition-all group ${activeSubTab === tab.id
-                      ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'bg-gray-100 text-muted-foreground hover:bg-gray-200 hover:text-primary'
-                    }`}
-                >
-                  {Icon && (
-                    <Icon className={`h-5 w-5 transition-all ${activeSubTab === tab.id
-                        ? 'text-primary-foreground'
-                        : 'text-muted-foreground group-hover:text-primary'
-                      }`} strokeWidth={1.5} />
-                  )}
-                  <span className={`text-xs font-semibold transition-all ${activeSubTab === tab.id
-                      ? 'text-primary-foreground'
-                      : 'text-muted-foreground group-hover:text-primary'
-                    }`}>
-                    {tab.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* View Mode Toggle & Info */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10 bg-white rounded-xl p-4">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Showing <span className="font-semibold text-foreground">{filteredProperties.length}</span> properties
+            {/* Stats Info */}
+            <div className="flex items-center justify-between px-2">
+              <p className="text-xs text-muted-foreground">
+                Found <span className="font-bold text-foreground">{filteredProperties.length}</span> luxury properties
               </p>
-            </div>
-            <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="px-4 gap-2"
-              >
-                <Grid3x3 className="h-4 w-4" />
-                <span className="hidden sm:inline text-xs">Grid</span>
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="px-4 gap-2"
-              >
-                <List className="h-4 w-4" />
-                <span className="hidden sm:inline text-xs">List</span>
-              </Button>
+              <div className="lg:hidden flex gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setViewMode('grid')} className={viewMode === 'grid' ? 'text-primary' : ''}>
+                  <Grid3x3 className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setViewMode('list')} className={viewMode === 'list' ? 'text-primary' : ''}>
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
 
           {/* Property Grid */}
-          <div className="bg-white rounded-md p-8 shadow-sm">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-border/40">
             {loading && (
               <div className="space-y-6">
                 {viewMode === 'grid' ? (
@@ -633,6 +851,10 @@ export const BestListingsSection = () => {
                         background: hsl(43 80% 37%);
                         opacity: 1;
                       }
+
+                      .slick-carousel-custom .slick-list {
+                        margin: 0 -12px;
+                      }
                     `}</style>
                     <Slider
                       dots={true}
@@ -677,7 +899,7 @@ export const BestListingsSection = () => {
                       className="slick-carousel-custom"
                     >
                       {filteredProperties.map((property) => (
-                        <div key={property.id} className="">
+                        <div key={property.id} className="px-3 pb-8">
                           <ListingCard property={property} viewMode="grid" />
                         </div>
                       ))}

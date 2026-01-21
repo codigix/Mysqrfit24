@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { BestListingsSection } from '@/components/BestListingsSection';
 import { Navigation } from '@/components/Navigation';
-import { Testimonials } from '@/components/Testimonials';
 import { FeaturedNeighborhoods } from '@/components/FeaturedNeighborhoods';
+import WhyChooseUsSection from '@/components/WhyChooseUsSection';
 import { BlogSection } from '@/components/BlogSection';
 import { NewsletterSection } from '@/components/NewsletterSection';
 import { CategoriesSection } from '@/components/CategoriesSection';
@@ -28,16 +28,11 @@ const Index = () => {
       
       {/* Best Listings Section */}
       <BestListingsSection />
+      <WhyChooseUsSection />
       <FeaturedNeighborhoods />
-      <Testimonials />
 
-      {/* Testimonials Section */}
       
 
-      {/* Featured Neighborhoods Section */}
-      
-
-      {/* Blog Section */}
       <BlogSection />
 
       {/* Categories Section */}

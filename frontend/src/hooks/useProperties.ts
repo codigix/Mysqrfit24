@@ -2,12 +2,35 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Property, PropertyFilters } from '@/types/property';
 import { useToast } from '@/hooks/use-toast';
 import { apiService } from '@/services/api';
+import { MOCK_PROPERTIES } from '@/constants/mockData';
 
 export const useProperties = (filters?: PropertyFilters) => {
   return useQuery({
     queryKey: ['properties', filters],
     queryFn: async () => {
-      return apiService.properties.list(filters);
+      try {
+        const response = await apiService.properties.list(filters);
+        const apiData = Array.isArray(response) ? response : (response?.data || []);
+        
+        // Filter mock properties based on filters
+        const filteredMock = MOCK_PROPERTIES.filter(p => {
+          if (filters?.type && p.type !== filters.type) return false;
+          if (filters?.property_type && p.property_type !== filters.property_type) return false;
+          if (filters?.min_price && p.price < filters.min_price) return false;
+          if (filters?.max_price && p.price > filters.max_price) return false;
+          if (filters?.bedrooms && p.bedrooms !== filters.bedrooms) return false;
+          return true;
+        });
+
+        return [...filteredMock, ...apiData];
+      } catch (error) {
+        console.error('Error fetching properties, using mock data:', error);
+        return MOCK_PROPERTIES.filter(p => {
+          if (filters?.type && p.type !== filters.type) return false;
+          if (filters?.property_type && p.property_type !== filters.property_type) return false;
+          return true;
+        });
+      }
     },
   });
 };
@@ -16,6 +39,10 @@ export const useProperty = (id: string) => {
   return useQuery({
     queryKey: ['property', id],
     queryFn: async () => {
+      if (id.startsWith('mock-')) {
+        const mock = MOCK_PROPERTIES.find(p => p.id === id);
+        if (mock) return mock;
+      }
       return apiService.properties.get(id);
     },
     enabled: !!id,

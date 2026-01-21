@@ -85,7 +85,7 @@ Fields:
 
 **Features**:
 - **Properties Management**: Add, edit, delete properties
-- **Chatbot Inquiries**: View and manage customer inquiries
+- **Chatbot Enquiries**: View and manage customer inquiries
 - **Contact Messages**: View and respond to contact form submissions
 
 ### 3. Legal & Settings Management

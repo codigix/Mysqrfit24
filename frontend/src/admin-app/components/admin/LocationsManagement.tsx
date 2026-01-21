@@ -29,8 +29,9 @@ const LocationsManagement = () => {
       setLoading(true);
       const data = await apiService.locations.getAll();
       setLocations(data);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch locations');
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message || 'Failed to fetch locations');
     } finally {
       setLoading(false);
     }
