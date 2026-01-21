@@ -538,11 +538,9 @@ const nearbyCategories = [
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: dbProperty, isLoading } = useProperty(id!);
+  const { data: property, isLoading } = useProperty(id!);
   const { data: similarListings } = useSimilarProperties(id!);
   const { data: allProperties } = useProperties();
-  const mockProperty = mockPropertyData[id || '1'];
-  const property = dbProperty || (isLoading ? null : mockProperty);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
   const [copied, setCopied] = useState(false);
