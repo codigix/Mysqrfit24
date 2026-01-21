@@ -4,6 +4,7 @@ import { useAuth } from '@/admin-app/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import logo from "@/assets/mysqfit.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div className="text-center mb-8">
+          <img src={logo} alt="MySqrfit Logo" className="h-16 w-auto mx-auto mb-4" />
           <h1 className="text-4xl font-bold text-primary mb-2">MySqrfit</h1>
           <p className="text-muted-foreground">Admin Panel</p>
         </div>

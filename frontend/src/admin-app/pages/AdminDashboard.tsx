@@ -9,6 +9,7 @@ import UsersManagement from "@/admin-app/components/admin/UsersManagement";
 import BlogManagement from "@/admin-app/components/admin/BlogManagement";
 import SettingsManagement from "@/admin-app/components/admin/SettingsManagement";
 import InquiriesManagement from "@/admin-app/components/admin/InquiriesManagement";
+import logo from "@/assets/mysqfit.png";
 import {
   LogOut,
   Home,
@@ -45,9 +46,9 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-white shadow-lg border-b border-slate-200">
+      <header className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -60,12 +61,9 @@ const AdminDashboard = () => {
                 <Menu className="h-5 w-5" />
               )}
             </button>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
-                MySqrfit
-              </h1>
-
-              <p className="text-xs text-slate-500">Admin Dashboard</p>
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="MySqrfit Logo" className="h-10 w-auto" />
+              
             </div>
           </div>
           <div className="flex items-center gap-6">
@@ -89,9 +87,9 @@ const AdminDashboard = () => {
       <div className="flex">
         {/* Sidebar */}
         <div
-          className={`${sidebarOpen ? "w-64" : "w-0"} transition-all duration-300 overflow-hidden`}
+          className={`${sidebarOpen ? "w-64" : "w-0"} transition-all duration-300 overflow-hidden border-r border-slate-200`}
         >
-          <nav className="bg-slate-900 text-white h-[calc(100vh-70px)] overflow-y-auto p-4 space-y-2">
+          <nav className="bg-white text-slate-600 h-[calc(100vh-70px)] overflow-y-auto p-4 space-y-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -100,8 +98,8 @@ const AdminDashboard = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
                     activeTab === tab.id
-                      ? "bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-lg"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      ? "bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-md"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
                   <Icon className="h-5 w-5 flex-shrink-0" />
@@ -115,7 +113,7 @@ const AdminDashboard = () => {
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
           <div className="p-6">
-            <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="bg-white rounded-md shadow-lg p-4">
               {activeTab === "properties" && <PropertiesManagement />}
               {activeTab === "locations" && <LocationsManagement />}
               {activeTab === "images" && <ImagesManagement />}

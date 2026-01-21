@@ -7,6 +7,7 @@ import { MapPin, Bed, Bath, Square, MessageCircle, ChevronLeft, ChevronRight, Ro
 import { useNavigate } from 'react-router-dom';
 import { Property360View } from './Property360View';
 import { getFileUrl } from '@/services/api';
+import { formatPrice } from '@/lib/utils';
 
 interface PropertyCardProps {
   property: Property;
@@ -43,28 +44,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     setCurrentImageIndex(prev => 
       prev === 0 ? property.images!.length - 1 : prev - 1
     );
-  };
-
-  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
-    const formatter = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    if (type === 'sale') {
-      if (minPrice && maxPrice && minPrice !== maxPrice) {
-        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
-      }
-      return formatter.format(price || minPrice || 0);
-    } else if (type === 'lease') {
-      const amount = property.lease_amount || price || 0;
-      return `${formatter.format(amount)} (Lease)`;
-    } else {
-      const formatted = formatter.format(price || minPrice || 0);
-      return `${formatted} / month`;
-    }
   };
 
   const handleContact = (action: 'rent' | 'buy') => {

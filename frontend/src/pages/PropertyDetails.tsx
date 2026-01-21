@@ -73,6 +73,7 @@ import {
 import { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 import { apiService, getFileUrl } from '@/services/api';
+import { formatPrice } from '@/lib/utils';
 
 interface ExtendedProperty extends Property {
   city?: string;
@@ -330,28 +331,6 @@ const PropertyDetails = () => {
   const scheduleRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
   const similarRef = useRef<HTMLDivElement>(null);
-
-  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
-    const formatter = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    if (type === 'sale') {
-      if (minPrice && maxPrice && minPrice !== maxPrice) {
-        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
-      }
-      return formatter.format(price || minPrice || 0);
-    } else if (type === 'lease') {
-      const formatted = formatter.format(property?.lease_amount || price || 0);
-      return `${formatted} (Lease)`;
-    } else {
-      const formatted = formatter.format(price || minPrice || 0);
-      return `${formatted} / month`;
-    }
-  };
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current) {

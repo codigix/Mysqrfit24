@@ -113,7 +113,7 @@ const BlogManagement = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Blog Posts</h2>
+          <h2 className="text-xl font-bold text-gray-900">Blog Posts</h2>
           <p className="text-gray-500 text-sm mt-1">Create and manage blog content</p>
         </div>
         <Button onClick={() => { setShowForm(true); setEditingId(null); }} className="gap-2 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white shadow-lg">

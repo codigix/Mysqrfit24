@@ -44,20 +44,20 @@ const UsersManagement = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Users Management</h2>
+        <h2 className="text-xl font-bold text-gray-900">Users Management</h2>
         <p className="text-gray-500 text-sm mt-1">Manage platform users and administrators</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded-md shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-                <th className="text-left py-4 px-6 font-semibold">Email</th>
-                <th className="text-left py-4 px-6 font-semibold">Name</th>
-                <th className="text-left py-4 px-6 font-semibold">Role</th>
-                <th className="text-left py-4 px-6 font-semibold">Created At</th>
-                <th className="text-right py-4 px-6 font-semibold">Actions</th>
+                <th className="text-left p-2 ">Email</th>
+                <th className="text-left p-2 ">Name</th>
+                <th className="text-left p-2 ">Role</th>
+                <th className="text-left p-2 ">Created At</th>
+                <th className="text-right p-2 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -70,10 +70,10 @@ const UsersManagement = () => {
               ) : (
                 users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-gray-900">{user.email}</td>
-                    <td className="py-4 px-6 text-gray-600">{user.name || '-'}</td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    <td className="p-2 text-xs text-gray-900">{user.email}</td>
+                    <td className="p-2 text-gray-600">{user.name || '-'}</td>
+                    <td className="p-2">
+                      <span className={`p-2 rounded-full text-xs ${
                         user.role === 'admin'
                           ? 'bg-purple-100 text-purple-800'
                           : 'bg-blue-100 text-blue-800'
@@ -81,10 +81,10 @@ const UsersManagement = () => {
                         {user.role.toUpperCase()}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-gray-600 text-sm">
+                    <td className="p-2 text-gray-600 text-sm">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
-                    <td className="py-4 px-6 flex gap-3 justify-end">
+                    <td className="p-2 flex gap-3 justify-end">
                       <button className="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors">
                         <Edit2 className="h-4 w-4" />
                       </button>
