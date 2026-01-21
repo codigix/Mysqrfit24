@@ -176,7 +176,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           <div >
             
             <p className="text-md font-bold text-primary mt-2">
-              {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+              {formatPrice(property.price, property.type, property.min_price, property.max_price, property.lease_amount)}
             </p>
           </div>
 

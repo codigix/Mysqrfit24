@@ -116,7 +116,7 @@ const PropertiesManagement = () => {
                     {property.location}
                   </td>
                   <td className="p-2  text-gray-900">
-                    {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+                    {formatPrice(property.price, property.type, property.min_price, property.max_price, property.lease_amount)}
                   </td>
                   <td className="p-2 text-gray-600 truncate max-w-[150px]">
                     {property.developer_email || '-'}

@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { apiService, getFileUrl } from '@/services/api';
+import { formatPrice } from '@/lib/utils';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -22,6 +23,7 @@ interface Property {
   area?: number;
   images?: string[];
   developer_name?: string;
+  lease_amount?: number;
 }
 
 interface ListProperty extends Property {
@@ -296,25 +298,6 @@ const ListingCard = ({ property, viewMode = 'grid' }: ListingCardProps & { viewM
 };
 
 const transformProperty = (prop: Property): ListProperty => {
-  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
-    const formatter = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    if (type === 'sale') {
-      if (minPrice && maxPrice && minPrice !== maxPrice) {
-        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
-      }
-      return formatter.format(price || minPrice || 0);
-    } else {
-      const formatted = formatter.format(price || minPrice || 0);
-      return `${formatted} / month`;
-    }
-  };
-
   const getStatusColor = (type: string) => {
     switch(type) {
       case 'sale': return 'bg-amber-600';
@@ -348,7 +331,7 @@ const transformProperty = (prop: Property): ListProperty => {
       avatar: getFileUrl('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop')
     },
     propertyType: `${prop.property_type}${prop.type === 'sale' ? '-sale' : prop.type === 'lease' ? '-lease' : ''}`,
-    price: formatPrice(prop.price, prop.type, prop.min_price, prop.max_price),
+    price: formatPrice(prop.price, prop.type, prop.min_price, prop.max_price, prop.lease_amount),
     badges: [getStatus(prop.type)]
   };
 };

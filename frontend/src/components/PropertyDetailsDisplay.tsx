@@ -2,6 +2,7 @@ import { Property } from '@/types/property';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { formatPrice } from '@/lib/utils';
 import {
   MapPin,
   Bed,
@@ -24,25 +25,6 @@ interface PropertyDetailsDisplayProps {
 export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [copiedPhone, setCopiedPhone] = useState(false);
-
-  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
-    const formatter = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    if (type === 'sale') {
-      if (minPrice && maxPrice && minPrice !== maxPrice) {
-        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
-      }
-      return formatter.format(price || minPrice || 0);
-    } else {
-      const formatted = formatter.format(price || minPrice || 0);
-      return `${formatted} / month`;
-    }
-  };
 
   const nextImage = () => {
     if (!property.images || property.images.length <= 1) return;
@@ -180,7 +162,7 @@ export const PropertyDetailsDisplay = ({ property }: PropertyDetailsDisplayProps
         </div>
 
         <div className="text-4xl font-bold text-primary">
-          {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+          {formatPrice(property.price, property.type, property.min_price, property.max_price, property.lease_amount)}
         </div>
       </div>
 

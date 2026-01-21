@@ -734,7 +734,7 @@ const PropertyDetails = () => {
                 </p>
               )}
               <p className="text-3xl font-bold text-primary mb-4">
-                {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+                {formatPrice(property.price, property.type, property.min_price, property.max_price, property.lease_amount)}
               </p>
               <div className="flex gap-2 justify-end">
                 <Button 

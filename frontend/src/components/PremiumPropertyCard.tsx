@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getFileUrl } from '@/services/api';
+import { formatPrice } from '@/lib/utils';
 
 interface PremiumPropertyCardProps {
   property: Property;
@@ -41,25 +42,6 @@ export const PremiumPropertyCard = ({ property }: PremiumPropertyCardProps) => {
     setCurrentImageIndex(prev => 
       prev === 0 ? property.images!.length - 1 : prev - 1
     );
-  };
-
-  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
-    const formatter = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    if (type === 'sale') {
-      if (minPrice && maxPrice && minPrice !== maxPrice) {
-        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
-      }
-      return formatter.format(price || minPrice || 0);
-    } else {
-      const formatted = formatter.format(price || minPrice || 0);
-      return `${formatted} / month`;
-    }
   };
 
   const handleViewDetails = () => {
@@ -145,7 +127,7 @@ export const PremiumPropertyCard = ({ property }: PremiumPropertyCardProps) => {
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-md font-bold text-primary">
-              {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+              {formatPrice(property.price, property.type, property.min_price, property.max_price, property.lease_amount)}
             </span>
             {property.area > 0 && (
               <span className="text-sm text-muted-foreground">

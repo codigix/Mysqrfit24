@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PropertyFilters as IPropertyFilters } from '@/types/property';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Search, Filter, X } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
+import { formatPrice as formatPriceUtil } from '@/lib/utils';
 
 interface PropertyFiltersProps {
   filters: IPropertyFilters;
@@ -18,9 +19,17 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
   const [isOpen, setIsOpen] = useState(!isCompact);
   const [localFilters, setLocalFilters] = useState<IPropertyFilters>(filters);
   const [priceRange, setPriceRange] = useState<[number, number]>([
-    localFilters.min_price || 0,
-    localFilters.max_price || 10000000
+    filters.min_price || 0,
+    filters.max_price || 10000000
   ]);
+
+  useEffect(() => {
+    setLocalFilters(filters);
+    setPriceRange([
+      filters.min_price || 0,
+      filters.max_price || 10000000
+    ]);
+  }, [filters]);
 
   const handleFilterChange = <K extends keyof IPropertyFilters>(key: K, value: IPropertyFilters[K]) => {
     const newFilters = { ...localFilters, [key]: value };
@@ -50,10 +59,7 @@ export const PropertyFilters = ({ filters, onFiltersChange, isCompact = false }:
   const hasActiveFilters = Object.keys(filters).length > 0;
 
   const formatPrice = (price: number) => {
-    if (price >= 10000000) return '10Cr+';
-    if (price >= 100000) return `₹${(price / 100000).toFixed(0)}L`;
-    if (price >= 1000) return `₹${(price / 1000).toFixed(0)}k`;
-    return `₹${price}`;
+    return formatPriceUtil(price);
   };
 
   if (isCompact) {

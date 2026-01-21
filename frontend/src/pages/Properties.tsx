@@ -11,31 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getFileUrl } from '@/services/api';
 import { Property } from '@/types/property';
+import { formatPrice } from '@/lib/utils';
 
 const PropertyListItem = ({ property }: { property: Property }) => {
   const navigate = useNavigate();
-
-  const formatPrice = (price: number, type: string, minPrice?: number, maxPrice?: number) => {
-    const formatter = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-
-    if (type === 'sale') {
-      if (minPrice && maxPrice && minPrice !== maxPrice) {
-        return `${formatter.format(minPrice)} - ${formatter.format(maxPrice)}`;
-      }
-      return formatter.format(price || minPrice || 0);
-    } else if (type === 'lease') {
-      const amount = property.lease_amount || price || 0;
-      return `${formatter.format(amount)} (Lease)`;
-    } else {
-      const formatted = formatter.format(price || minPrice || 0);
-      return `${formatted} / month`;
-    }
-  };
 
   const handleContact = (action: 'rent' | 'buy') => {
     const message = `Hi, I'm interested in ${action === 'rent' ? 'renting' : 'buying'} the property: ${property.title}`;
@@ -92,7 +71,7 @@ const PropertyListItem = ({ property }: { property: Property }) => {
           <div className='flex items-center gap-2 mb-4'>
             <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">Price:</p>
             <p className="text-md font-bold text-primary">
-              {formatPrice(property.price, property.type, property.min_price, property.max_price)}
+              {formatPrice(property.price, property.type, property.min_price, property.max_price, property.lease_amount)}
             </p>
           </div>
 
@@ -178,7 +157,8 @@ const PropertyListItem = ({ property }: { property: Property }) => {
 };
 
 const Properties = () => {
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<IPropertyFilters>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'newest' | 'price-low' | 'price-high'>('newest');
@@ -190,18 +170,32 @@ const Properties = () => {
     const type = searchParams.get('type') as IPropertyFilters['type'];
     const property_type = searchParams.get('property_type');
     const bedrooms = searchParams.get('bedrooms');
+    const bathrooms = searchParams.get('bathrooms');
+    const min_price = searchParams.get('min_price');
+    const max_price = searchParams.get('max_price');
 
     const initialFilters: IPropertyFilters = {};
     if (location) initialFilters.location = location;
     if (type) initialFilters.type = type;
     if (property_type) initialFilters.property_type = property_type;
     if (bedrooms) initialFilters.bedrooms = Number(bedrooms);
+    if (bathrooms) initialFilters.bathrooms = Number(bathrooms);
+    if (min_price) initialFilters.min_price = Number(min_price);
+    if (max_price) initialFilters.max_price = Number(max_price);
 
-    if (Object.keys(initialFilters).length > 0) {
-      setFilters(initialFilters);
-    }
+    setFilters(initialFilters);
     setCurrentPage(1);
   }, [searchParams]);
+
+  const handleFiltersChange = (newFilters: IPropertyFilters) => {
+    const params = new URLSearchParams();
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params.set(key, value.toString());
+      }
+    });
+    setSearchParams(params);
+  };
 
   useEffect(() => {
     setCurrentPage(1);
@@ -263,7 +257,7 @@ const Properties = () => {
             <div className="w-full lg:w-80 flex-shrink-0">
               <div className="sticky top-10 bg-white rounded-md shadow-lg p-4 border border-border/50 h-fit">
                 <h3 className="text-lg font-bold text-foreground mb-3">Filters</h3>
-                <PropertyFilters filters={filters} onFiltersChange={setFilters} isCompact={true} />
+                <PropertyFilters filters={filters} onFiltersChange={handleFiltersChange} isCompact={true} />
               </div>
             </div>
 
