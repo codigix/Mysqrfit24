@@ -54,7 +54,7 @@ const HeroSection = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const propertyTypeRef = useRef<HTMLDivElement>(null);
   const bedroomsRef = useRef<HTMLDivElement>(null);
-  const heroTitleRef = useRef('The Finest Napa\'s\nReal Estate Properties');
+  const heroTitleRef = useRef('Discover Spaces Built\nfor Your Future.');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -171,7 +171,7 @@ const HeroSection = () => {
   }, [settings]);
 
   useEffect(() => {
-    const title = getSettingValue('hero_title', "The Finest Napa's\nReal Estate Properties");
+    const title = getSettingValue('hero_title', "Discover Spaces Built\nfor Your Future.");
     heroTitleRef.current = title;
   }, [settings, getSettingValue]);
 
@@ -232,7 +232,7 @@ const HeroSection = () => {
             </div>
 
             {/* Main Heading with Typewriter Animation */}
-            <h1 className="text-2xl sm:text-2xl lg:text-6xl font-bold text-white mb-6 leading-tight whitespace-pre-line drop-shadow-lg typewriter-text">
+            <h1 className="text-2xl sm:text-2xl lg:text-5xl font-bold text-white mb-6 leading-tight whitespace-pre-line drop-shadow-lg typewriter-text">
               {displayedText}
               <span className="typewriter-cursor"></span>
             </h1>

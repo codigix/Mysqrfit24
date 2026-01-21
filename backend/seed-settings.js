@@ -10,7 +10,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const defaultSettings = [
   {
     key: 'hero_title',
-    value: "The Finest Napa's\nReal Estate Properties",
+    value: "Discover Spaces Built\nfor Your Future.",
     type: 'text',
     description: 'Main title displayed on the home page hero section'
   },

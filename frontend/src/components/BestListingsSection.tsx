@@ -6,25 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { apiService, getFileUrl } from '@/services/api';
 import { formatPrice } from '@/lib/utils';
+import { Property } from '@/types/property';
+import { useProperties } from '@/hooks/useProperties';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
-interface Property {
-  id: string | number;
-  title: string;
-  price: number;
-  min_price?: number;
-  max_price?: number;
-  type: 'sale' | 'rent' | 'lease';
-  property_type: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  area?: number;
-  images?: string[];
-  developer_name?: string;
-  lease_amount?: number;
-}
 
 interface ListProperty extends Property {
   status: string;

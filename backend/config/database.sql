@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 );
 
 INSERT INTO site_settings (id, setting_key, setting_value, setting_type, description) VALUES
-(UUID(), 'hero_title', 'The Finest Napa\'s\nReal Estate Properties', 'text', 'Main title displayed on the home page hero section'),
+(UUID(), 'hero_title', 'Discover Spaces Built\nfor Your Future.', 'text', 'Main title displayed on the home page hero section'),
 (UUID(), 'stats_sold_homes', '7,000+', 'text', 'Number of homes sold displayed in stats section'),
 (UUID(), 'stats_sales_volume', '$1B+', 'text', 'Total sales volume displayed in stats section'),
 (UUID(), 'stats_satisfied_customers', '1,000+', 'text', 'Number of satisfied customers displayed in stats section'),
