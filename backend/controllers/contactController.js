@@ -40,20 +40,25 @@ export const getContactMessages = async (req, res) => {
   try {
     const { status, property_id } = req.query;
 
-    let query = 'SELECT * FROM contact_messages WHERE 1=1';
+    let query = `
+      SELECT cm.*, p.title as property_name 
+      FROM contact_messages cm 
+      LEFT JOIN properties p ON cm.property_id = p.id 
+      WHERE 1=1
+    `;
     const params = [];
 
     if (status) {
-      query += ' AND status = ?';
+      query += ' AND cm.status = ?';
       params.push(status);
     }
 
     if (property_id) {
-      query += ' AND property_id = ?';
+      query += ' AND cm.property_id = ?';
       params.push(property_id);
     }
 
-    query += ' ORDER BY created_at DESC';
+    query += ' ORDER BY cm.created_at DESC';
 
     const connection = await pool.getConnection();
     const [messages] = await connection.query(query, params);
@@ -71,7 +76,12 @@ export const getContactMessageById = async (req, res) => {
     const { id } = req.params;
 
     const connection = await pool.getConnection();
-    const [messages] = await connection.query('SELECT * FROM contact_messages WHERE id = ?', [id]);
+    const [messages] = await connection.query(`
+      SELECT cm.*, p.title as property_name 
+      FROM contact_messages cm 
+      LEFT JOIN properties p ON cm.property_id = p.id 
+      WHERE cm.id = ?
+    `, [id]);
 
     if (messages.length === 0) {
       connection.release();

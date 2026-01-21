@@ -41,6 +41,7 @@ export interface ContactMessage {
   subject?: string;
   message: string;
   property_id?: string;
+  property_name?: string;
   status: 'new' | 'read' | 'replied';
   created_at?: string;
   updated_at?: string;

@@ -225,14 +225,18 @@ const About = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button size="lg" className="gap-2">
-              <Phone className="w-4 h-4" />
-              +91 98765 43210
-            </Button>
-            <Button size="lg" variant="outline" className="gap-2 bg-transparent border-housiey-dark-foreground/30 text-housiey-dark-foreground hover:bg-housiey-dark-foreground/10">
-              <Mail className="w-4 h-4" />
-              hello@mysqfit.com
-            </Button>
+            <a href="tel:+919876543210">
+              <Button size="lg" className="gap-2 w-full sm:w-auto">
+                <Phone className="w-4 h-4" />
+                +91 98765 43210
+              </Button>
+            </a>
+            <a href="mailto:hello@mysqfit.com">
+              <Button size="lg" variant="outline" className="gap-2 bg-transparent border-housiey-dark-foreground/30 text-housiey-dark-foreground hover:bg-housiey-dark-foreground/10 w-full sm:w-auto">
+                <Mail className="w-4 h-4" />
+                hello@mysqfit.com
+              </Button>
+            </a>
           </div>
           
           <div className="flex justify-center gap-4">

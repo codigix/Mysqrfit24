@@ -116,7 +116,7 @@ const Index = () => {
               <h4 className="font-bold text-lg mb-6 text-white">Contact</h4>
               <div className="space-y-3 text-sm text-white/70">
                 <p>120 Main St, Napa, CA</p>
-                <p className="text-white/70 hover:text-white transition-colors">Tel: +1 206-741-0340</p>
+                <a href="tel:+12067410340" className="block text-white/70 hover:text-white transition-colors">Tel: +1 206-741-0340</a>
               </div>
             </div>
           </div>

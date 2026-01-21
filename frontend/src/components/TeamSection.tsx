@@ -101,14 +101,20 @@ export const TeamSection = () => {
                     {member.role}
                   </p>
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2 hover:text-primary transition-colors">
+                    <a 
+                      href={`mailto:${member.email}`} 
+                      className="flex items-center gap-2 hover:text-primary transition-colors w-fit"
+                    >
                       <Mail className="h-4 w-4" />
                       <span className="truncate">{member.email}</span>
-                    </div>
-                    <div className="flex items-center gap-2 hover:text-primary transition-colors">
+                    </a>
+                    <a 
+                      href={`tel:${member.phone}`} 
+                      className="flex items-center gap-2 hover:text-primary transition-colors w-fit"
+                    >
                       <Phone className="h-4 w-4" />
                       <span>{member.phone}</span>
-                    </div>
+                    </a>
                   </div>
                 </div>
               </CardContent>
